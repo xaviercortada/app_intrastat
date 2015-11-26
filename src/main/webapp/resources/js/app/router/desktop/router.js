@@ -272,6 +272,7 @@ var Router = Backbone.Router.extend({
             window.URL.revokeObjectURL(objectUrl);
 		  }
 		};
+		
 		 
 		xhr.send();
 	}

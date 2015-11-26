@@ -1,0 +1,39 @@
+@CHARSET "UTF-8";
+
+.selectbox{
+	cursor:pointer;
+}
+
+.dropdown li{
+	color: #555555;
+    vertical-align: middle;
+    background-color: #ffffff;
+    background-image: none;
+    border: 1px solid #cccccc;
+    border-radius: 4px;	
+	list-style:none;
+}
+
+li{
+	height:35px;
+	cursor:pointer;
+	position:relative;
+}
+
+li span{
+	left:30px;
+	position:absolute;
+	top:12px;
+}
+ li img{
+	left:9px;
+	position:absolute;
+	top:13px;
+}
+
+.dropdown-paises{
+	max-height:180px;/*The important part*/
+    overflow-y:auto;/*Also...*/
+    overflow-x:hidden;/*And the end of the important part*/	
+    left: 18px;	
+}

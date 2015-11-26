@@ -1,0 +1,34 @@
+<td>
+    <div>
+		<input id="id" class="form-control" readonly="true" value="{{model.id}}"/>
+	</div>
+</td>
+<td>
+    <div>
+        <select class="form-control" id="category" placeholder="seleccionar categoria">
+            <option selected="true" value="-1">-- Seleccionar categoria --</option>
+        </select>
+    </div>
+</td>
+<td>
+    <div>
+    	<input id="importe" class="form-control"  value="{{model.importe}}" placeholder="Introducir importe"/>
+    </div>
+<td>
+    <div>
+    	<input id="peso" class="form-control" value="{{model.peso}}" placeholder="Introducir peso"/>
+    </div>
+</td>
+<td>
+    <div>
+    	<input id="unidades" class="form-control" value="{{model.unidades}}" placeholder="Introducir unidades"/>
+    </div>
+</td>
+
+<td>
+    <div>
+	    <button class="btn delete">
+	        <span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;Delete{{index}}
+	    </button>
+    </div>
+</td>

@@ -1,0 +1,94 @@
+<div style="background-color: #d3d7cf; padding: 10px; padding-bottom: 40px;">
+<div class="page-header">
+	<h3>Mantenimiento de facturas</h3>
+</div>
+<div>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="control-label col-sm-2" >Codigo:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" value="{{model.codigo}}" id="codigo" placeholder="Introducir codigo"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="entrega">Entrega:</label>
+            <div class="col-sm-10">
+                <select type="text" class="form-control" value="{{model.entrega}}" id="entrega" placeholder="Seleccionar entrega">
+                    <option value="EXW">EXW - En Fábrica</option>
+                    <option value="FCA">FCA - Franco transportista</option>
+                    <option value="FAS">FAS - Franco al costado del buque</option>
+                    <option value="FOB">FOB - Franco a Bordo</option>
+                    <option value="CFR">CFR - Coste y flete (C&F)</option>
+                    <option value="CIF">CIF - Coste seguro y flete</option>
+                    <option value="CPT">CPT - Porte pagado hasta punto de destino</option>
+                    <option value="CIP">CIP - Porte pagado + seguro hasta punto de destino incl.</option>
+                    <option value="DAF">DAF - Franco frontera</option>
+                    <option value="DES">DES - Franco (ex ship)</option>
+                    <option value="DEQ">DEQ - Franco sobre muelle</option>
+                    <option value="DDU">DDU - Franco sin despachar en aduana</option>
+                    <option value="DDP">DDP - Franco despacho en aduana</option>
+                    <option value="XXX">XXX - Otras condiciones distintas</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" >Fecha:</label>
+            <div class="col-sm-10">
+                <input class="datepicker form-control" data-date-format="mm/dd/yyyy" value="{{model.fecha}}" id="fecha" placeholder="Introducir fecha"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" >Transporte:</label>
+            <div class="col-sm-10">
+                <select id="transporte" class="form-control">
+                	<option selected="true" value="-1">-- Seleccionar transporte --</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" >Proveedor:</label>
+            <div class="col-sm-10">
+                <select id="proveedor" class="form-control">
+                	<option selected="true" value="-1">-- Seleccionar proveedor --</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+         	<label class="control-label col-sm-2" >Pais:</label>
+			<div class="col-sm-10">
+ 			  <div class="col-sm-10 form-control selectbox"><span class="pais-default">-- Seleccionar pais  --</span><span class="caret pull-right"></span></div>
+			  <ul class="col-sm-10 dropdown-paises dropdown">
+			  </ul>
+		  </div>
+		</div>
+        <div class="col-sm-offset-2 col-sm-10">
+        </div>
+	  	<div class="pull-right">
+			<a class="btn btn-success save" role="button">Guardar</a>
+	  	</div>
+        
+    </form>
+</div>
+<div>
+    <table id="tb_materiales" class="table">
+        <thead>
+        <tr>
+            <th class="col-md-1">id</th>
+            <th class="col-md-7">categoria</th>
+            <th class="col-md-1">importe</th>
+            <th class="col-md-1">peso</th>
+            <th class="col-md-1">unidades</th>
+            <th class="col-md-1">accion</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div>
+       <button class="btn addMat">  
+           <span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;Nuevo registro
+       </button>
+    </div>
+</div>
+</div>
+

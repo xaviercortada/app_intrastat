@@ -13,10 +13,6 @@ define([
 		id: "codigo",
 		comparator: function(model){
 			return model.codigo;
-		},
-		refresh: function () {
-			this.fetch();
-			setTimeout(this.refresh.bind(this), this.wait);
 		}
 	});
 	return Paises;

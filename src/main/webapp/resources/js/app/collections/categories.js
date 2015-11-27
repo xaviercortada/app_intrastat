@@ -13,10 +13,6 @@ define([
 		id: "id",
 		comparator: function(model){
 			return model.codigo;
-		},
-		refresh: function () {
-			this.fetch();
-			setTimeout(this.refresh.bind(this), this.wait);
 		}
 	});
 	return Categories;

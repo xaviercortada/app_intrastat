@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -25,9 +24,6 @@ import cat.alkaid.projects.intrastat.service.ProveedorService;
 @Produces({ "application/xml", "application/json" })
 @Consumes({ "application/xml", "application/json" })
 public class ProveedorEndpoint {
-	@Inject
-	private EntityManager em;
-
 	@Inject
     private ProveedorService service;
 	

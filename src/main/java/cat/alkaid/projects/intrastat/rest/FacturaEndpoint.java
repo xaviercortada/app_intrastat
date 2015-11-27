@@ -26,9 +26,6 @@ import cat.alkaid.projects.intrastat.service.FacturaService;
 @Produces({ "application/xml", "application/json" })
 @Consumes({ "application/xml", "application/json" })
 public class FacturaEndpoint {
-	@PersistenceContext
-	private EntityManager em;
-
 	@Inject
     private FacturaService service;
 	

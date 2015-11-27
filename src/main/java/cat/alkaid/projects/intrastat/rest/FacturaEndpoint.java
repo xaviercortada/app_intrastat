@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -25,6 +26,7 @@ import javax.ws.rs.core.UriBuilder;
 import cat.alkaid.projects.intrastat.model.Category;
 import cat.alkaid.projects.intrastat.model.Factura;
 import cat.alkaid.projects.intrastat.model.Material;
+import cat.alkaid.projects.intrastat.service.FacturaService;
 
 @RequestScoped
 @Path("/facturas")
@@ -34,27 +36,14 @@ public class FacturaEndpoint {
 	@PersistenceContext
 	private EntityManager em;
 
-	@Resource
-    private UserTransaction utx;
+	@Inject
+    private FacturaService service;
 	
 	@POST
 	public Response create(final Factura factura) {
 		try{
-			utx.begin();
-			Set<Material> materiales = factura.getMateriales();
-			for(Material mat : materiales)
-			{
-				mat.setFactura(factura);
-				//em.persist(mat);
-			}
-			em.persist(factura); 
-			utx.commit();
+			service.create(factura);
 		}catch(Throwable e){
-			try{
-				utx.rollback();
-			}catch(Exception ex){
-				ex.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		//here we use Category#getId(), assuming that it provides the identifier to retrieve the created Category resource.
@@ -64,7 +53,7 @@ public class FacturaEndpoint {
 	@GET
 	@Path("/{id:[0-9][0-9]*}")
 	public Response findById(@PathParam("id") final Long id) {
-		Factura factura = em.find(Factura.class, id);
+		Factura factura = service.findById(id);
 		
 		if (factura == null) {
 			return Response.status(Status.NOT_FOUND).build();
@@ -76,8 +65,7 @@ public class FacturaEndpoint {
 	public List<Factura> listAll(@QueryParam("start") final Integer startPosition,
 			@QueryParam("max") final Integer maxResult) {
 		//TODO: retrieve the facturas 
-        TypedQuery<Factura>query = em.createQuery("SELECT p FROM Factura p",Factura.class);
-		final List<Factura> facturas = query.getResultList();
+		final List<Factura> facturas = service.findAll();
 		return facturas;
 	}
 
@@ -85,21 +73,8 @@ public class FacturaEndpoint {
 	@Path("/{id:[0-9][0-9]*}")
 	public Response update(@PathParam("id") Long id, final Factura factura) {
 		try{
-			utx.begin();
-			Set<Material> materiales = factura.getMateriales();
-			for(Material mat : materiales)
-			{
-				mat.setFactura(factura);
-				//em.persist(mat);
-			}
-			em.merge(factura);
-			utx.commit();
+			service.update(factura);
 		}catch(Throwable e){
-			try{
-				utx.rollback();
-			}catch(Exception ex){
-				ex.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		return Response.noContent().build();
@@ -109,10 +84,7 @@ public class FacturaEndpoint {
 	@Path("/{id:[0-9][0-9]*}")
 	public Response deleteById(@PathParam("id") final Long id) {
 		try{
-			utx.begin();
-			Factura factura = em.find(Factura.class, id);
-			em.remove(factura);
-			utx.commit();
+			service.delete(id);
 		}catch(Throwable e){
 			e.printStackTrace();
 		}

@@ -105,7 +105,7 @@ var Router = Backbone.Router.extend({
 	
 	category : function(id){
 
-		var category = new Category({id: id});
+		var category = Category.findOrCreate({id: id});
 		
 		var editCategoryView = new EditCategoryView({
 			model : category
@@ -167,7 +167,7 @@ var Router = Backbone.Router.extend({
 	},
 	
 	proveedor : function(id){
-		var proveedor = new Proveedor({id: id});
+		var proveedor = Proveedor.findOrCreate({id: id});
 		
 		var editProveedorView = new EditProveedorView({
 			model : proveedor
@@ -252,6 +252,7 @@ var Router = Backbone.Router.extend({
 		$('#content').append( editFacturaView.render().$el );
 		
 	},
+	
 	
 	report: function(){
 		var xhr = new XMLHttpRequest();

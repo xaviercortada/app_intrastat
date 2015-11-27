@@ -1,6 +1,7 @@
 package cat.alkaid.projects.intrastat.service;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -55,47 +56,28 @@ public class FacturaService {
 
 
     public boolean create(Factura factura){
-/*
-        for(Material mat : factura.getMateriales()){
-
-            em.persist(mat);
-
-        }
-*/
-
-        em.persist(factura);
+		try{
+			Set<Material> materiales = factura.getMateriales();
+			for(Material mat : materiales)
+			{
+				mat.setFactura(factura);
+				//em.persist(mat);
+			}
+			em.persist(factura); 
+		}catch(Throwable e){
+			e.printStackTrace();
+		}
         return true;
     }
 
     public boolean update(Factura factura){
-        Factura target = findById(factura.getId());
-
-        if(target != null) {
-            target.setCodigo(factura.getCodigo());
-
-            target.setFecha(factura.getFecha());
-
-            target.setProveedor(factura.getProveedor());
-            target.setPais(factura.getPais());
-            target.setEntrega(factura.getEntrega());
-            target.setTransporte(factura.getTransporte());
-
-            target.getMateriales().clear();
-
-            for(Material mat : factura.getMateriales()){
-
-                if(mat.getId() == null){
-                    em.persist(mat);
-                }else{
-                    em.merge(mat);
-                }
-
-                target.addMaterial(mat);
-            }
-
-            em.merge(target);
-            return true;
-        }
+		Set<Material> materiales = factura.getMateriales();
+		for(Material mat : materiales)
+		{
+			mat.setFactura(factura);
+			//em.persist(mat);
+		}
+		em.merge(factura);
         return false;
     }
 

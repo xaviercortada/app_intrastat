@@ -2,16 +2,10 @@ package cat.alkaid.projects.intrastat.rest;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-import javax.ejb.SessionContext;
-import javax.ejb.TransactionAttribute;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -23,9 +17,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriBuilder;
 
 import cat.alkaid.projects.intrastat.model.Category;
+import cat.alkaid.projects.intrastat.service.CategoryService;
 
 @RequestScoped
 @Path("/categories")
@@ -35,24 +29,17 @@ public class CategoryEndpoint {
 	@PersistenceContext
 	private EntityManager em;
 	
-	@Resource
-    private UserTransaction utx;
+	@Inject
+	private CategoryService service;
 	
 	@POST
 	public Response create(final Category category) {
 		try{
-			utx.begin();
-			em.persist(category); 
-			utx.commit();
+			service.create(category);
 		}catch(Throwable e){
-			try{
-				utx.rollback();
-			}catch(Exception ex){
-				ex.printStackTrace();
-			}
 			e.printStackTrace();
-		}
-		//here we use Category#getId(), assuming that it provides the identifier to retrieve the created Category resource.
+		}					
+
 		return Response.ok(category).build();
 //		return Response
 //				.created(UriBuilder.fromResource(CategoryEndpoint.class).path(String.valueOf(category.getId())).build())
@@ -62,7 +49,8 @@ public class CategoryEndpoint {
 	@GET
 	@Path("/{id:[0-9][0-9]*}")
 	public Response findById(@PathParam("id") final Long id) {
-		Category category = em.find(Category.class, id);
+		
+		Category category = service.findById(id);
 		
 		if (category == null) {
 			return Response.status(Status.NOT_FOUND).build();
@@ -73,24 +61,21 @@ public class CategoryEndpoint {
 	@GET
 	public List<Category> listAll(@QueryParam("start") final Integer startPosition,
 			@QueryParam("max") final Integer maxResult) {
-        TypedQuery<Category>query = em.createQuery("SELECT p FROM Category p",Category.class);
-		final List<Category> categories = query.getResultList();
-		return categories;
+		try{
+			final List<Category> categories = service.findAll();
+			return categories;
+		}catch(Throwable e){
+			e.printStackTrace();
+		}			
+		return null;
 	}
 
 	@PUT
 	@Path("/{id:[0-9][0-9]*}")
 	public Response update(@PathParam("id") Long id, final Category category) {
 		try{
-			utx.begin();
-			em.merge(category);
-			utx.commit();
+			service.update(category);
 		}catch(Throwable e){
-			try{
-				utx.rollback();
-			}catch(Exception ex){
-				ex.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		return Response.noContent().build();
@@ -101,10 +86,7 @@ public class CategoryEndpoint {
 	@Path("/{id:[0-9][0-9]*}")
 	public Response deleteById(@PathParam("id") final Long id) {
 		try{
-			utx.begin();
-			Category category = em.find(Category.class, id);
-			em.remove(category);
-			utx.commit();
+			service.delete(id);
 		}catch(Throwable e){
 			e.printStackTrace();
 		}

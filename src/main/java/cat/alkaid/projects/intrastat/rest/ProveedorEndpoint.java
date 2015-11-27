@@ -23,6 +23,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import cat.alkaid.projects.intrastat.model.Category;
 import cat.alkaid.projects.intrastat.model.Proveedor;
+import cat.alkaid.projects.intrastat.service.ProveedorService;
 
 @RequestScoped
 @Path("/proveedores")
@@ -32,22 +33,15 @@ public class ProveedorEndpoint {
 	@Inject
 	private EntityManager em;
 
-	@Resource
-    private UserTransaction utx;
+	@Inject
+    private ProveedorService service;
 	
 
 	@POST
 	public Response create(final Proveedor proveedor) {
 		try{
-			utx.begin();
-			em.persist(proveedor); 
-			utx.commit();
+			service.create(proveedor); 
 		}catch(Throwable e){
-			try{
-				utx.rollback();
-			}catch(Exception ex){
-				ex.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		return Response.ok(proveedor).build();
@@ -56,7 +50,7 @@ public class ProveedorEndpoint {
 	@GET
 	@Path("/{id:[0-9][0-9]*}")
 	public Response findById(@PathParam("id") final Long id) {
-		Proveedor proveedor = em.find(Proveedor.class, id);
+		Proveedor proveedor = service.findById(id);
 		if (proveedor == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
@@ -66,8 +60,7 @@ public class ProveedorEndpoint {
 	@GET
 	public List<Proveedor> listAll(@QueryParam("start") final Integer startPosition,
 			@QueryParam("max") final Integer maxResult) {
-        TypedQuery<Proveedor>query = em.createQuery("SELECT p FROM Proveedor p",Proveedor.class);
-		final List<Proveedor> proveedors = query.getResultList();
+		final List<Proveedor> proveedors = service.findAll();
 		return proveedors;
 	}
 
@@ -75,15 +68,8 @@ public class ProveedorEndpoint {
 	@Path("/{id:[0-9][0-9]*}")
 	public Response update(@PathParam("id") Long id, final Proveedor proveedor) {
 		try{
-			utx.begin();
-			em.merge(proveedor);
-			utx.commit();
+			service.update(proveedor);
 		}catch(Throwable e){
-			try{
-				utx.rollback();
-			}catch(Exception ex){
-				ex.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		return Response.noContent().build();
@@ -93,10 +79,7 @@ public class ProveedorEndpoint {
 	@Path("/{id:[0-9][0-9]*}")
 	public Response deleteById(@PathParam("id") final Long id) {
 		try{
-			utx.begin();
-			Proveedor proveedor = em.find(Proveedor.class, id);
-			em.remove(proveedor);
-			utx.commit();
+			service.delete(id);
 		}catch(Throwable e){
 			e.printStackTrace();
 		}

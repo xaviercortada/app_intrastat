@@ -252,8 +252,7 @@ var Router = Backbone.Router.extend({
 		$('#content').append( editFacturaView.render().$el );
 		
 	},
-	
-	
+		
 	report: function(){
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', 'rest/report/1', true);

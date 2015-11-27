@@ -91,7 +91,7 @@ var Router = Backbone.Router.extend({
 			collection : categories		
 		});
 
-		categories.refresh();
+		//categories.fetch();
 
 		$('#content').empty();
 	    
@@ -154,7 +154,7 @@ var Router = Backbone.Router.extend({
 			collection : proveedores		
 		});
 
-		proveedores.refresh();
+		//proveedores.fetch();
 
 		$('#content').empty();
 	    
@@ -215,7 +215,7 @@ var Router = Backbone.Router.extend({
 			collection : facturas		
 		});
 
-		facturas.refresh();
+		//facturas.fetch();
 
 		$('#content').empty();
 	    

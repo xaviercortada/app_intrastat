@@ -2,12 +2,9 @@ package cat.alkaid.projects.intrastat.rest;
 
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -19,9 +16,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriBuilder;
 
-import cat.alkaid.projects.intrastat.model.Category;
 import cat.alkaid.projects.intrastat.model.Proveedor;
 import cat.alkaid.projects.intrastat.service.ProveedorService;
 

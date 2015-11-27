@@ -16,7 +16,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import cat.alkaid.projects.intrastat.model.Pais;
-import cat.alkaid.projects.intrastat.model.Transporte;
 
 @RequestScoped
 @Path("/paises")

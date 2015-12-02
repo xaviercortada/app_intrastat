@@ -72,6 +72,6 @@ require([
 });
 
 define("configuration", {
-	baseUrl : "http://localhost:8080/appintrastat/"
-	//baseUrl : "http://appintrastat-xaviercortada.rhcloud.com/"
+	//baseUrl : "http://localhost:8080/appintrastat/"
+	baseUrl : "http://appintrastat-xaviercortada.rhcloud.com/"
 });

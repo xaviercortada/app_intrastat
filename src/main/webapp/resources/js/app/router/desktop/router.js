@@ -12,6 +12,9 @@ define("router", [
 	'app/collections/categories',
 	'app/views/desktop/editCategory',
 	'app/views/desktop/categories',
+	'app/models/nomenclature',
+	'app/collections/nomenclatures',
+	'app/views/desktop/nomenclatures',
 	'app/models/proveedor',
 	'app/collections/proveedores',
 	'app/views/desktop/editProveedor',
@@ -29,6 +32,9 @@ define("router", [
 			Categories,
 			EditCategoryView,
 			CategoriesView,
+			Nomenclature,
+			Nomenclatures,
+			NomenclaturesView,
 			Proveedor,
 			Proveedores,
 			EditProveedorView,
@@ -72,7 +78,8 @@ var Router = Backbone.Router.extend({
 		"facturas":"facturas",
 		"factura/:id":"factura",
 		"addFactura" : "addFactura",
-		"report" : "report"
+		"report" : "report",
+		"nomenclatures" : "nomenclatures"
 	},
 	home : function(){
 		//utilities.viewManager.showView(new HomeView({el:$("#content")}));
@@ -103,6 +110,25 @@ var Router = Backbone.Router.extend({
 		});
 	},
 	
+	nomenclatures: function(){
+		var nomenclatures = new Nomenclatures();
+		
+		var nomenclaturesView = new NomenclaturesView({
+			collection : nomenclatures		
+		});
+
+		$('#content').empty();
+	    
+//		nomenclatures.on("reset",
+//			function(){
+//				$('#content').append( nomenclaturesView.render().$el );
+//		}).fetch({
+//			reset : true
+//		});
+		
+		$('#content').append( nomenclaturesView.render().$el );
+	},
+
 	category : function(id){
 
 		var category = Category.findOrCreate({id: id});

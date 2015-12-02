@@ -8,13 +8,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @SuppressWarnings("serial")
 @Entity
 @XmlRootElement
+@XmlAccessorType(value = XmlAccessType.FIELD)
 @JsonIgnoreProperties("factura")
 public class Material implements Serializable{
 	
@@ -24,7 +28,7 @@ public class Material implements Serializable{
     private String codigo;
     private String entrega;
     @ManyToOne
-	private Category category;
+	private Nomenclature nomenclature;
     private Integer peso;
     private String importe;
     private Float price;
@@ -33,6 +37,7 @@ public class Material implements Serializable{
     
     @ManyToOne
     @NotNull
+    @XmlTransient
     private Factura factura;
     
 	public Long getId() {
@@ -53,11 +58,11 @@ public class Material implements Serializable{
 	public void setEntrega(String entrega) {
 		this.entrega = entrega;
 	}
-	public Category getCategory() {
-		return category;
+	public Nomenclature getNomenclature() {
+		return nomenclature;
 	}
-	public void setCategory(Category category) {
-		this.category = category;
+	public void setNomenclature(Nomenclature nomenclature) {
+		this.nomenclature = nomenclature;
 	}
 	public Integer getPeso() {
 		return peso;

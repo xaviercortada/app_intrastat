@@ -31,11 +31,11 @@ public class MaterialDto implements Comparable {
     private String name;
 
     public MaterialDto(Factura factura, Material material){
-        setCodCategory(material.getCategory().getCodigo());
+        setCodCategory(material.getNomenclature().getCode());
         setCodFactura(factura.getCodigo());
         setEntrega(material.getEntrega());
         setPrice(material.getPrice());
-        setNameCategory(material.getCategory().getName());
+        setNameCategory(material.getNomenclature().getDescription());
         setPeso(material.getPeso());
         setUnidades(material.getUnidades());
         setSiglas(factura.getPais().getSigla());

@@ -4,15 +4,15 @@
 
 define([
     'configuration',
-    'app/models/category',
+    'app/models/nomenclature',
     'backbone',
     'relational'
-    ],function(config, Category, backbone, relational){
+    ],function(config, Nomenclature, backbone, relational){
 		var Material = Backbone.RelationalModel.extend({
 			relations: [{
 				type: Backbone.HasOne,
-				key: 'category',
-				relatedModel: Category
+				key: 'nomenclature',
+				relatedModel: Nomenclature
 			}],
 			urlRoot: config.baseUrl + 'rest/materiales',
 			idAttribute: "id",
@@ -22,7 +22,7 @@ define([
 				"importe": 0,
 				"peso": 0,
 				"unidades" : 0,
-				"category" : {}
+				"nomenclature" : {}
 			}
 	});
 	

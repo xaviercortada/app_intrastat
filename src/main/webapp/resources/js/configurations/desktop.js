@@ -14,6 +14,7 @@ requirejs.config({
 		datepicker: 'libs/bootstrap-datepicker.min',
 		backbone: 'libs/backbone',
 		relational: 'libs/backbone-relational',
+		paginator: 'libs/backbone.paginator',
 		utilities: 'app/utilities',
 		plugins: 'app/plugins',
 		router:'app/router/desktop/router'
@@ -33,9 +34,13 @@ requirejs.config({
 			exports: '_'
 		},
 		
-  	    datepicker:{
+  	    'datepicker':{
 	        deps:['jquery','bootstrap'],
 	        exports:"datepicker"
+        },
+        
+        'paginator':{
+        	deps:['backbone']
         }
 	}
 });
@@ -46,7 +51,7 @@ define("initializer", ["jquery"],
 		// Configure jQuery to append timestamps to requests, to bypass browser caches
 		// Important for MSIE
 		$.ajaxSetup({cache:false});
-		$('head').append('<link rel="stylesheet" href="resources/css/bootstrap.css"	type="text/css" media="all"/>');
+		$('head').append('<link rel="stylesheet" href="resources/css/bootstrap.min.css"	type="text/css" media="all"/>');
 		$('head').append('<link rel="stylesheet" href="resources/css/bootstrap-theme.css" type="text/css" media="all"/>');
 		$('head').append('<link rel="stylesheet" href="resources/css/screen.css" type="text/css" media="all"/>');
 		$('head').append('<link rel="stylesheet" href="resources/css/dropdown.css" type="text/css" media="all"/>');
@@ -67,6 +72,6 @@ require([
 });
 
 define("configuration", {
-	//baseUrl : "http://localhost:8080/appintrastat/"
-	baseUrl : "http://appintrastat-xaviercortada.rhcloud.com/"
+	baseUrl : "http://localhost:8080/appintrastat/"
+	//baseUrl : "http://appintrastat-xaviercortada.rhcloud.com/"
 });

@@ -14,7 +14,6 @@ define([
 	'app/collections/proveedores',
 	'app/models/material',
 	'app/collections/materiales',
-	'app/models/category',
 	'app/models/pais',
 	'app/collections/paises',
 	'app/views/desktop/editMaterial',
@@ -31,7 +30,6 @@ define([
 		Proveedores,
 		Material,
 		Materiales,
-		Category,
 		Pais,
 		Paises,
 		MaterialView,
@@ -175,7 +173,7 @@ define([
 						"importe": $(e).find("#importe").val(),
 						"peso": $(e).find("#peso").val(),
 						"unidades" : $(e).find("#unidades").val(),
-						"category" : {id : $(e).find("#category").val()}
+						"nomenclature" : {code : $(e).find("#nomenclature").val()}
 		    		}))
 		    	});
 		    	
@@ -208,6 +206,7 @@ define([
 				}));
 				
 				//this.el.innerHTML = this.template;
+				this.$el.find("#tb_materiales tbody tr").remove();
 				var body = this.$el.find("#tb_materiales tbody");
 				this.model.get("materiales").forEach( function(item) {
 					body.append(new MaterialView({model: item}).render().el);

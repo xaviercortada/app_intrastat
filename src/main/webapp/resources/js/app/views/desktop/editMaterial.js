@@ -9,8 +9,8 @@ define([
 	'router',
 	'app/models/material',
 	'app/collections/materiales',
-	'app/models/category',
-	'app/collections/categories',
+	'app/models/favorito',
+	'app/collections/favoritos',
 	'text!../../../../templates/desktop/editMaterial.html'
 ], function (
 		utilities,
@@ -19,8 +19,8 @@ define([
 		router,
 		Material,
 		Materiales,
-		Category,
-		Categories,
+		Nomenclator,
+		Nomenclators,
 		htmlTemplate) {
 		
 		var EditMaterialView = Backbone.View.extend({
@@ -30,10 +30,10 @@ define([
 			initialize: function() {
 		        this.template = _.template(htmlTemplate);
 		        		        
-		        this.categories = new Categories();
+		        this.nomenclators = new Nomenclators();
 		        
-		        this.categories.on("reset", this.fillCategories, this);
-		        this.categories.fetch({
+		        this.nomenclators.on("reset", this.fillNomenclators, this);
+		        this.nomenclators.fetch({
 		        	reset : true
 		        });
 		        	        
@@ -42,21 +42,21 @@ define([
 		    	'click .delete' : 'destroy'
 		    },
 		    
-		    fillCategories : function(){
-		    	var p = this.model.get('category');
+		    fillNomenclators : function(){
+		    	var p = this.model.get('nomenclature');
 		    	var i = -1;
 		    	if(p != undefined) i = p.id;
 		    	
-				var opts = this.categories.map(function(item) {
+				var opts = this.nomenclators.map(function(item) {
 					var opt = item.toJSON();
-					return "<option value='"+opt.id+"'>"+opt.codigo+' - '+opt.name+"</option>";
+					return "<option value='"+opt.code+"'>"+opt.code+' - '+opt.description+"</option>";
 				});
-				this.$el.find("#category").append(opts);		
+				this.$el.find("#nomenclature").append(opts);		
 
-				var selection = this.model.get('category');
+				var selection = this.model.get('nomenclature');
 				if(selection != undefined){
-					this.$el.find('#category option').filter(function(index, e){
-						return e.value == selection.get('id');
+					this.$el.find('#nomenclature option').filter(function(index, e){
+						return e.value == selection.get('code');
 					}).prop("selected", true);
 				}
 
@@ -71,36 +71,6 @@ define([
 		    remove: function () {
 				 this.$el.fadeOut(Backbone.View.prototype.remove.bind(this));
 				 return false;
-		    },
-
-
-		    update: function(){
-		    	var fecha = new Date($("#fecha").val());
-		    	this.model.set({
-		    		name:$("#name").val(),
-		    		codigo: $("#codigo").val(),
-		    		entrega: $("#entrega").val(),
-		    		fecha: fecha,
-		    		proveedor: {id: $("#proveedor").val()},
-		    		transporte: {codigo: $("#transporte").val()}
-		    	});
-		    	
-		    	var router = this.router;
-		    	
-		    	this.model.save(null,{
-		    			error: function(model, response){
-		    				console.log(response.responseText);
-		    				router.navigate('/', true);
-		    			},
-		    			success: function(model, response){
-		    				router.navigate('/facturas', true);
-		    			}
-		    	});
-		    	
-				this.remove();
-				this.unbind();
-
-				return false;
 		    },
 		    
 			render:function () {

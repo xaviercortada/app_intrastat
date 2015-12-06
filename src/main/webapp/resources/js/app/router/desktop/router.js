@@ -8,10 +8,6 @@ define("router", [
 	'underscore',
 	'configuration',
 	'utilities',
-	'app/models/category',
-	'app/collections/categories',
-	'app/views/desktop/editCategory',
-	'app/views/desktop/categories',
 	'app/models/nomenclature',
 	'app/collections/nomenclatures',
 	'app/views/desktop/nomenclatures',
@@ -28,10 +24,6 @@ define("router", [
 			_,
 			config,
 			utilities,
-			Category,
-			Categories,
-			EditCategoryView,
-			CategoriesView,
 			Nomenclature,
 			Nomenclatures,
 			NomenclaturesView,
@@ -69,16 +61,14 @@ var Router = Backbone.Router.extend({
 	routes:{
 		"":"home",
 		"about":"home",
-		"categories":"categories",
-		"category/:id":"category",
-		"addCategory" : "addCategory",
 		"proveedores":"proveedores",
 		"proveedor/:id":"proveedor",
 		"addProveedor" : "addProveedor",
-		"facturas":"facturas",
+		"partidas":"partidas",
 		"factura/:id":"factura",
 		"addFactura" : "addFactura",
 		"report" : "report",
+		"export" : "export",
 		"nomenclatures" : "nomenclatures"
 	},
 	home : function(){
@@ -233,7 +223,7 @@ var Router = Backbone.Router.extend({
 		$('#content').append( editProveedorView.render().$el );
 		
 	},
-	facturas: function(){
+	partidas: function(){
 		
 		var facturas = new Facturas();
 		
@@ -281,7 +271,7 @@ var Router = Backbone.Router.extend({
 		
 	report: function(){
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', 'rest/report/1', true);
+		xhr.open('GET', 'rest/report/excel/1', true);
 		xhr.responseType = 'blob';
 		 
 		xhr.onload = function(e) {
@@ -301,8 +291,31 @@ var Router = Backbone.Router.extend({
 		
 		 
 		xhr.send();
-	}
+	},
 	
+	export: function(){
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', 'rest/report/csv/1', true);
+		xhr.responseType = 'blob';
+		 
+		xhr.onload = function(e) {
+		  if (this.status == 200) {
+		    // get binary data as a response
+		    var blob = this.response;
+            var a = document.createElement('a');
+            a.style = 'display : none';
+    		//var blob = new Blob([data.content], {type : 'application/vnd.oasis.opendocument.spreadsheet'});
+            var objectUrl = window.URL.createObjectURL(blob);
+            a.href = objectUrl;
+            a.download = 'intrastat.csv';
+            a.click();
+            window.URL.revokeObjectURL(objectUrl);
+		  }
+		};
+		
+		 
+		xhr.send();
+	}
 });
 
 // Create a router instance

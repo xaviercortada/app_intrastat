@@ -4,6 +4,10 @@
 	cursor:pointer;
 }
 
+.pais-name{
+	padding-left: 10px;
+}
+
 .dropdown li{
 	color: #555555;
     vertical-align: middle;
@@ -18,6 +22,8 @@ li{
 	height:35px;
 	cursor:pointer;
 	position:relative;
+	left: -40px;
+	width: 200px;
 }
 
 li span{
@@ -35,5 +41,5 @@ li span{
 	max-height:180px;/*The important part*/
     overflow-y:auto;/*Also...*/
     overflow-x:hidden;/*And the end of the important part*/	
-    left: 18px;	
+    left: 5px;	
 }

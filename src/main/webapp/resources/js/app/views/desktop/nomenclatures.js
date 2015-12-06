@@ -88,17 +88,30 @@ define([
 			    
 			    search : function(e){
 			    	$(".table tbody tr").remove();
-			    	this.items = new NomenclaturesP();
+    				$(".pagination .pageno").remove();
+
+    				this.items = new NomenclaturesP();
 			    	this.items.on("reset", this.fillItems, this);
 			    	
-			    	this.items.queryParams.texto = $("#texto").val();
-			    	
-			    	if(this.capitulo == -1){
-			    		//this.items.search($("#texto").val());
-			    		this.items.getFirstPage({reset : true});
+			    	var q = $("#texto").val();
+			    	if(q.length < 5){
+			            $group = $(e.target).closest('.form-group');				        
+				        $group.addClass('has-error');
+				        $group.find('.help-block').html('texto de busqueda minimo 5 caracteres').removeClass('hidden');
 			    	}else{
-			    		//this.items.findByTexto(this.capitulo, $("#texto").val());
-			    		this.items.getFirstPage();
+			            $group = $(e.target).closest('.form-group');				        
+				        $group.removeClass('has-error');
+				        $group.find('.help-block').html('').addClass('hidden');
+
+				    	this.items.queryParams.texto = q;
+				    				    	
+				    	if(this.capitulo == -1){
+				    		//this.items.search($("#texto").val());
+				    		this.items.getFirstPage({reset : true});
+				    	}else{
+				    		//this.items.findByTexto(this.capitulo, $("#texto").val());
+				    		this.items.getFirstPage();
+				    	}
 			    	}
 			    },
 			    
@@ -109,11 +122,17 @@ define([
 			    },
 			    
 			    nextPage : function(e){
-			    	this.items.getNextPage({reset : true});
+			    	var x = $(e.target);
+			    	if(!x.closest("li").hasClass('disabled')){
+				    	this.items.getNextPage({reset : true});			    		
+			    	}
 			    },
 
 			    prevPage : function(e){
-			    	this.items.getPreviousPage({reset : true});
+			    	var x = $(e.target);
+			    	if(!x.closest("li").hasClass('disabled')){
+			    		this.items.getPreviousPage({reset : true});
+			    	}
 			    },
 
 			    addFavorito : function(e){

@@ -13,7 +13,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import cat.alkaid.projects.intrastat.model.Category;
 import cat.alkaid.projects.intrastat.model.Nomenclature;
 import cat.alkaid.projects.intrastat.service.NomenclatureService;
 

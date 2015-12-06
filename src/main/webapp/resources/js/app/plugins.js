@@ -24,12 +24,13 @@ $.fn.selectBox =  function(){
 };
 
 selectPais = function(selected){
-	$(".selectbox").find('img').remove();
-	$('.selectbox').find('.pais-default').remove();
-	$('.selectbox').find('.pais-name').remove();
-	$('.selectbox').data('codigo', $(selected).data('codigo'));
-	$(".selectbox").append($(selected).find('img').clone());
-	$(".selectbox").append($(selected).find('.pais-name').clone());	        	
+	var sel = $(selected).parent().prev(".selectbox")
+	sel.find('img').remove();
+	sel.find('.pais-default').remove();
+	sel.find('.pais-name').remove();
+	sel.data('codigo', $(selected).data('codigo'));
+	sel.append($(selected).find('img').clone());
+	sel.append($(selected).find('.pais-name').clone());	        	
 };
 
 

@@ -8,7 +8,7 @@ define([
 ], function(Transporte, config){
 
 	var Transportes = Backbone.Collection.extend({
-		url: config.baseUrl + "rest/transportes",
+		url: config.baseUrl + "rest/resources/transportes",
 		model: Transporte,
 		id: "codigo",
 		comparator: function(model){

@@ -1,8 +1,10 @@
 package cat.alkaid.projects.intrastat.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -17,6 +19,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+
 @SuppressWarnings("serial")
 @Entity
 @XmlRootElement
@@ -29,6 +32,12 @@ public class Factura implements Serializable {
     private String codigo;
 
     private String entrega;
+    
+    private int transaccion;
+    
+    private int regimen;
+    
+    private String flujo;
 
     @Temporal(TemporalType.DATE)
     private Date fecha;
@@ -37,7 +46,13 @@ public class Factura implements Serializable {
 	private Transporte transporte;
 
     @ManyToOne
+	private Pais origen;
+
+    @ManyToOne
 	private Pais pais;
+
+    @ManyToOne
+	private Provincia provincia;
 
     @ManyToOne
 	private Proveedor proveedor;
@@ -106,6 +121,68 @@ public class Factura implements Serializable {
 	public void addMaterial(Material mat) {
 		materiales.add(mat);
 		
+	}
+	
+	
+	//Estado miembro de procedencia/destino(A2)
+	//Provincia de destino/origen(N2)
+	//Condiciones de entrega(A3)
+	//Naturaleza de la Transacción(N2)
+	//Modalidad de Transporte(N1)
+	//Puerto/Aeropuerto de Carga o Descarga(N4)
+	//Código de las mercancias(N8)
+	//País de Origen(A2)
+	//Régimen estadístico(N1)
+	//Masa Neta en Kg.(N12 ó N12,3)
+	//Unidades Suplementarias(N12 ó N12,3)
+	//Importe Facturado(N13,2)
+	//Valor Estadístico(N13,2)
+	//Ex: FR;31;FOB;11;3;;85182190;CN;1;115;162;15,37;15,37
+		//IT; 8;EXW;11;2;;38130000;ES;1;000;000;00000;00000
+
+	public List<String> toCSV(char delimeter, char endRecord){
+		List<String> output = new ArrayList<String>();
+		
+		for(Material mat : materiales){
+			String line = String.format("%2s%1c%2s%1c%3s%1c%2s%1c%2s%1c%1c%8s%1c%2s%1c%1d%1c%12d%1c%12d%1c%13.2f%1c%13.2f%c",
+					pais.getSigla(),delimeter,"08", delimeter, entrega, delimeter, "11", delimeter, transporte.getCodigo(), 
+					delimeter ,delimeter, mat.getNomenclature().getCodeCN8(), delimeter, "ES", delimeter, 1, delimeter, mat.getPeso(), 
+					delimeter, mat.getUnidades(), delimeter,	mat.getPrice(), delimeter, mat.getPrice(), endRecord );	
+			
+			output.add(line);
+		}
+		
+		return output;
+	}
+	public Provincia getProvincia() {
+		return provincia;
+	}
+	public void setProvincia(Provincia provincia) {
+		this.provincia = provincia;
+	}
+	public int getTransaccion() {
+		return transaccion;
+	}
+	public void setTransaccion(int transaccion) {
+		this.transaccion = transaccion;
+	}
+	public int getRegimen() {
+		return regimen;
+	}
+	public void setRegimen(int regimen) {
+		this.regimen = regimen;
+	}
+	public String getFlujo() {
+		return flujo;
+	}
+	public void setFlujo(String flujo) {
+		this.flujo = flujo;
+	}
+	public Pais getOrigen() {
+		return origen;
+	}
+	public void setOrigen(Pais origen) {
+		this.origen = origen;
 	}
 	
 

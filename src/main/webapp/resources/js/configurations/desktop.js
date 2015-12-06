@@ -11,14 +11,16 @@ requirejs.config({
 		underscore:'libs/underscore',
 		text:'libs/text',
 		bootstrap: 'libs/bootstrap',
-		datepicker: 'libs/bootstrap-datepicker.min',
 		backbone: 'libs/backbone',
 		relational: 'libs/backbone-relational',
 		paginator: 'libs/backbone.paginator',
+		validation: 'libs/backbone-validation-min',
 		utilities: 'app/utilities',
 		plugins: 'app/plugins',
-		router:'app/router/desktop/router'
+		router:'app/router/desktop/router',
+		jqueryui : 'libs/jquery-ui'
 	},
+	
 	// We shim Backbone.js and Underscore.js since they don't declare AMD modules
 	shim: {
 		'backbone': {
@@ -34,12 +36,15 @@ requirejs.config({
 			exports: '_'
 		},
 		
-  	    'datepicker':{
-	        deps:['jquery','bootstrap'],
-	        exports:"datepicker"
+  	    'jqueryui':{
+	        deps:['jquery'],
         },
         
         'paginator':{
+        	deps:['backbone']
+        },
+        
+        'validation':{
         	deps:['backbone']
         }
 	}
@@ -56,6 +61,7 @@ define("initializer", ["jquery"],
 		$('head').append('<link rel="stylesheet" href="resources/css/screen.css" type="text/css" media="all"/>');
 		$('head').append('<link rel="stylesheet" href="resources/css/dropdown.css" type="text/css" media="all"/>');
 		$('head').append('<link href="http://fonts.googleapis.com/css?family=Rokkitt" rel="stylesheet" type="text/css">');
+		$('head').append('<link rel="stylesheet" href="resources/css/jquery-ui.css" type="text/css" media="all">');
 		
 	});
 
@@ -63,13 +69,31 @@ define("initializer", ["jquery"],
 // This loads and runs the 'initializer' and 'router' modules. 
 require([
 	'initializer',
-	'router'
+	'router',
+	'validation'
 	], function(){
 		_.templateSettings = {
 				interpolate: /\{\{(.+?)\}\}/g
-	};
+		};
+		
+		_.extend(Backbone.Validation.callbacks, {
+		    valid: function (view, attr, selector) {
+		        var $el = view.$('[name=' + attr + ']'), 
+		            $group = $el.closest('.form-group');
+		        
+		        $group.removeClass('has-error');
+		        $group.find('.help-block').html('').addClass('hidden');
+		    },
+		    invalid: function (view, attr, error, selector) {
+		        var $el = view.$('[name=' + attr + ']'), 
+		            $group = $el.closest('.form-group');
+		        
+		        $group.addClass('has-error');
+		        $group.find('.help-block').html(error).removeClass('hidden');
+		    }
+		});
 	
-});
+	});
 
 define("configuration", {
 	//baseUrl : "http://localhost:8080/appintrastat/"

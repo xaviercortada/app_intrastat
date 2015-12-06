@@ -11,7 +11,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import cat.alkaid.projects.intrastat.model.Category;
 import cat.alkaid.projects.intrastat.model.Nomenclature;
 
 @Stateless

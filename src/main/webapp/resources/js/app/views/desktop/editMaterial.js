@@ -5,7 +5,6 @@
 define([
 	'utilities',
 	'bootstrap',
-	'datepicker',
 	'router',
 	'app/models/material',
 	'app/collections/materiales',
@@ -15,7 +14,6 @@ define([
 ], function (
 		utilities,
 		bootstrap,
-		datepicker,
 		router,
 		Material,
 		Materiales,

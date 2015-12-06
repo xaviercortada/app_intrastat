@@ -124,3 +124,26 @@ INSERT INTO Pais(CODIGO, NAME, SIGLA) VALUES(91, 'ESLOVENIA', 'SI');
 INSERT INTO Pais(CODIGO, NAME, SIGLA) VALUES(92, 'CROACIA', 'HR');
 INSERT INTO Pais(CODIGO, NAME, SIGLA) VALUES(600, 'CHIPRE', 'CY');
 
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(10,'1.','Transacciones que suponen un traslado de la propiedad legal de la mercancía',1);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(11,'1.1','Compra/venta en firme',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(12,'1.2','Suministro para la venta salvo aprobación o de prueba, para consignación o con la mediación de un agente comisionado',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(13,'1.3','Trueque (compensación en especie)',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(14,'1.4','Compras por particulares',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(15,'1.5','Arrendamiento financiero (alquiler-compra)',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(20,'2.','Transacciones que implican un retorno de la mercancía',1);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(21,'2.1','Devolución de mercancías tras registro de la transacción original en el epígrafe 1 (d); sustitución gratuita de mercancías',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(22,'2.2','Devolución de mercancías',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(23,'2.3','Sustitución de mercancías devueltas',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(24,'2.4','Sustitución (por ejemplo, bajo garantía) de mercancías no devueltas',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(30,'3.','Transacciones no temporales que supongan un cambio de propiedad sin contrapartida, ya sea ésta financiera o de otro tipo',1);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(31,'3.1','Mercancías entregadas en el marco de programas de ayuda gestionados o financiados parcial o totalmente por la Comunidad Europea',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(32,'3.2','Otras entregas de ayuda gubernamental',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(33,'3.3','Otras entregas de ayuda (particulares, organizaciones no gubernamentales)',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(34,'3.4','Otros',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(40,'4.0','Operaciones con miras al trabajo por encargo (e) (excepto las que se registren en el epígrafe 7)',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(50,'5.0','Operaciones tras el trabajo por encargo (e) (excepto las que se registren en el epígrafe)',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(60,'6.0','No se utiliza',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(70,'7.0','Operaciones en el marco de programas comunes de defensa u otros programas intergubernamentales de producción conjunta',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(80,'8.0','Suministro de materiales de construcción y maquinaria para trabajos en el marco de un contrato general de construcción o ingeniería',0);
+INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(90,'9.0','Otras transacciones',0);
+

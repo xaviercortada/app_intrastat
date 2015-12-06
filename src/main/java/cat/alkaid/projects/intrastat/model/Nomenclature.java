@@ -4,11 +4,15 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @SuppressWarnings("serial")
 @Entity
 @XmlRootElement
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Nomenclature implements Serializable {
 
 	private Integer level;
@@ -28,6 +32,12 @@ public class Nomenclature implements Serializable {
 	public String getCode() {
 		return code;
 	}
+	
+	@Transient
+	public String getCodeCN8() {
+		return code.substring(0, 8);
+	}
+	
 	public void setCode(String code) {
 		this.code = code;
 	}

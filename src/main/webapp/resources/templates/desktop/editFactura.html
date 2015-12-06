@@ -1,19 +1,110 @@
 <div style="background-color: #d3d7cf; padding: 10px; padding-bottom: 40px;">
 <div class="page-header">
-	<h3>Mantenimiento de facturas</h3>
+	<h3>Mantenimiento de partida</h3>
 </div>
 <div>
     <form class="form-horizontal" role="form">
-        <div class="form-group">
-            <label class="control-label col-sm-2" >Codigo:</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" value="{{model.codigo}}" id="codigo" placeholder="Introducir codigo"/>
-            </div>
+    	<div class="row">
+    		<div class="col-md-3">
+            	<fieldset>
+            	<legend style="margin: 0px; padding-top: 10px">Flujo</legend>
+            	<div class="form-group" style="margin: 0px">
+            	<label class="control-label" >Flujo</label>
+				<div class="radio-inline">
+				  <label><input type="radio" class="flujo" value="I" name="flujo">Introducción</label>
+				</div>
+				<div class="radio-inline">
+				  <label><input type="radio" class="flujo" value="E" name="flujo">Expedición</label>
+				</div>
+                <span class="help-block hidden"></span>
+                </div>
+				</fieldset>
+    		</div>
+    		<div class="col-md-3">
+            	<fieldset>
+            	<legend style="margin: 0px; padding-top: 10px">Código</legend>
+            	<div class="form-group" style="margin: 0px">
+            	<label class="control-label" >Código</label>
+            	<input type="text" name="codigo" id="codigo" class="form-control" value="{{model.codigo}}" placeholder="Introducir código"/>
+                <span class="help-block hidden"></span>
+                </div>
+				</fieldset>
+    		</div>
+    	</div>
+    	<div class="row">
+            <div class="col-md-10">
+            	<fieldset>
+            	<legend style="margin: 0px; padding-top: 10px">Régimen estadístico</legend>
+	            	<div class="form-group" style="margin: 0px">
+	            	<label class="control-label" >Régimen estadístico</label>
+	                <select type="text" class="form-control" value="{{model.regimen}}" id="regimen" name="regimen">
+	                   	<option selected="true" value="-1">-- Seleccionar régimen --</option>
+	                </select>
+	                <span class="help-block hidden"></span>
+	                </div>
+                </fieldset>
+             </div>
+         </div>
+         <div class="row">
+            <div class="col-md-6">
+            	<fieldset>
+	            	<legend style="margin: 0px; padding-top: 10px">Partida</legend>
+	            	<div class="form-group" style="margin: 0px">
+		            <label class="control-label" >Proveedor</label>
+	                <select id="proveedor" name="proveedor" class="form-control">
+	                	<option selected="true" value="-1">-- Seleccionar proveedor --</option>
+	                </select>
+	                <span class="help-block hidden"></span>
+	                </div>
+	            	<div class="form-group" style="margin: 0px">
+		            <label class="control-label" >Fecha</label>
+	                <input type="date" class="datepicker form-control" value="{{model.fecha}}" id="fecha" name="fecha" placeholder="Introducir fecha"/>
+	                <span class="help-block hidden"></span>
+	                </div>
+	                <div class="form-group" style="margin: 0px">
+		            <label class="control-label" >Transporte</label>
+	                <select id="transporte" name="transporte" class="form-control">
+	                	<option selected="true" value="-1">-- Seleccionar transporte --</option>
+	                </select>
+	                <span class="help-block hidden"></span>
+	                </div>
+		    	</fieldset>
+		    </div>
+            <div class="col-md-3">
+	           	<fieldset>
+			    	<legend style="margin: 0px; padding-top: 10px">Origen / Destino</legend>
+	            	<div class="form-group" style="margin: 0px">
+		         	<label class="control-label" >Pais procedencia/destino</label>
+	 			  	<div id="pais" class="form-control selectbox"><span class="pais-default">-- Seleccionar pais  --</span><span class="caret pull-right"></span></div>
+				  	<ul class="dropdown-paises dropdown" name="pais">
+				  	</ul>
+	              	<span class="help-block hidden"></span>
+	              	</div>
+	              	<div class="form-group" style="margin: 0px">
+		            <label class="control-label" >Provincia procedencia/destino</label>
+	                <select id="provincia" name="provincia" class="form-control">
+	                	<option selected="true" value="-1">-- Seleccionar provincia --</option>
+	                </select>
+	                <span class="help-block hidden"></span>
+	                </div>
+	            	<div class="form-group" style="margin: 0px">
+		         	<label class="control-label" >Pais origen</label>
+	 			  	<div id="pais_origen" class="form-control selectbox"><span class="pais-default">-- Seleccionar pais  --</span><span class="caret pull-right"></span></div>
+				  	<ul class="dropdown-paises dropdown" name="pais_origen">
+				  	</ul>
+	              	<span class="help-block hidden"></span>
+	              	</div>
+				</fieldset>
+			</div>
         </div>
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="entrega">Entrega:</label>
-            <div class="col-sm-10">
-                <select type="text" class="form-control" value="{{model.entrega}}" id="entrega" placeholder="Seleccionar entrega">
+        <div class="row">
+            <div class="col-md-6">
+            	<fieldset>
+            	<legend style="margin: 0px; padding-top: 10px">Entrega</legend>
+            	<div class="form-group" style="margin: 0px">
+            	<label class="control-label" for="entrega">Entrega:</label>
+                <select type="text" class="form-control" value="{{model.entrega}}" id="entrega" name="entrega">
+                	<option selected="true" value="-1">-- Seleccionar entrega --</option>
                     <option value="EXW">EXW - En Fábrica</option>
                     <option value="FCA">FCA - Franco transportista</option>
                     <option value="FAS">FAS - Franco al costado del buque</option>
@@ -29,38 +120,23 @@
                     <option value="DDP">DDP - Franco despacho en aduana</option>
                     <option value="XXX">XXX - Otras condiciones distintas</option>
                 </select>
+                <span class="help-block hidden"></span>
+                </div>
+                </fieldset>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-sm-2" >Fecha:</label>
-            <div class="col-sm-10">
-                <input class="datepicker form-control" data-date-format="mm/dd/yyyy" value="{{model.fecha}}" id="fecha" placeholder="Introducir fecha"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-sm-2" >Transporte:</label>
-            <div class="col-sm-10">
-                <select id="transporte" class="form-control">
-                	<option selected="true" value="-1">-- Seleccionar transporte --</option>
+            <div class="col-md-6">
+            	<fieldset>
+            	<legend style="margin: 0px; padding-top: 10px">Naturaleza transacción</legend>
+            	<div class="form-group" style="margin: 0px">
+            	<label class="control-label">Transaccion</label>
+                <select type="text" class="form-control" value="{{model.transaccion}}" id="transaccion" name="transaccion">
+                	<option selected="true" value="-1">-- Seleccionar transaccion --</option>
                 </select>
+                <span class="help-block hidden"></span>
+                </div>
+                </fieldset>
             </div>
         </div>
-        <div class="form-group">
-            <label class="control-label col-sm-2" >Proveedor:</label>
-            <div class="col-sm-10">
-                <select id="proveedor" class="form-control">
-                	<option selected="true" value="-1">-- Seleccionar proveedor --</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group">
-         	<label class="control-label col-sm-2" >Pais:</label>
-			<div class="col-sm-10">
- 			  <div class="col-sm-10 form-control selectbox"><span class="pais-default">-- Seleccionar pais  --</span><span class="caret pull-right"></span></div>
-			  <ul class="col-sm-10 dropdown-paises dropdown">
-			  </ul>
-		  </div>
-		</div>
         <div class="col-sm-offset-2 col-sm-10">
         </div>
 	  	<div class="pull-right">

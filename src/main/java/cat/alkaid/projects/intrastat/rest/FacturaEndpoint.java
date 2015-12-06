@@ -1,4 +1,4 @@
-package cat.alkaid.projects.intrastat.rest;
+	package cat.alkaid.projects.intrastat.rest;
 
 import java.util.List;
 

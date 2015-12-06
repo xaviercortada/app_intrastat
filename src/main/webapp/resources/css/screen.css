@@ -491,3 +491,7 @@ a.highlight-link {
     text-align: left;
     background-color: transparent;
 }
+
+.form-group{
+	margin: 0px;
+}

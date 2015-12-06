@@ -5,35 +5,44 @@
 define([
 	'utilities',
 	'bootstrap',
-	'datepicker',
 	'plugins',
 	'router',
 	'app/models/transporte',
 	'app/collections/transportes',
+	'app/models/transaccion',
+	'app/collections/transacciones',
 	'app/models/proveedor',
 	'app/collections/proveedores',
 	'app/models/material',
 	'app/collections/materiales',
 	'app/models/pais',
 	'app/collections/paises',
+	'app/models/provincia',
+	'app/collections/provincias',
 	'app/views/desktop/editMaterial',
-	'text!../../../../templates/desktop/editFactura.html'
+	'text!../../../../templates/desktop/editFactura.html',
+	'validation',
+	'jqueryui'
 ], function (
 		utilities,
 		bootstrap,
-		datepicker,
 		plugins,
 		router,
 		Transporte,
 		Transportes,
+		Transaccion,
+		Transacciones,
 		Proveedor,
 		Proveedores,
 		Material,
 		Materiales,
 		Pais,
 		Paises,
+		Provincia,
+		Provincias,
 		MaterialView,
 		htmlTemplate) {
+	
 		
 		var EditFacturaView = Backbone.View.extend({
 			tagName: "div",
@@ -42,12 +51,21 @@ define([
 				this.model.buttonCaption = "save";
 		        this.template = _.template(htmlTemplate);
 		        
+		        Backbone.Validation.bind(this);
+		        
 		        var x = this;
 		        
 		        require(['router'],function(item){
 			        x.router = item;			        	
 		        });
+		        	        
+		        this.provincias = new Provincias();
 		        
+		        this.provincias.on("reset", this.fillProvincias, this);
+		        this.provincias.fetch({
+		        	reset : true
+		        });
+
 		        this.proveedores = new Proveedores();
 		        
 		        this.proveedores.on("reset", this.fillProveedores, this);
@@ -62,6 +80,13 @@ define([
 		        	reset : true
 		        });
 		        	        
+		        this.transacciones = new Transacciones();
+
+		        this.transacciones.on("reset", this.fillTransacciones, this);
+		        this.transacciones.fetch({
+		        	reset : true
+		        });
+
 		        this.paises = new Paises();
 
 		        this.paises.on("reset", this.fillPaises, this);
@@ -69,11 +94,60 @@ define([
 		        	reset : true
 		        });
 		    },
+		    
 		    events: {
 		    	'click .save' : 'update',
 		    	'click .addMat' : 'addMat',
+		    	'change .flujo' : 'flujoChanged'
 		    },		    
 		    
+		    flujoChanged : function(e){
+		    	var flujo = $(e.target);
+		    	this.fillFlujo(flujo);
+		    },
+		    
+		    fillFlujo : function(flujo){
+		    	$("#regimen option[value!='-1']").remove();
+		    	var sel = this.$el.find("#regimen");
+		    	
+		    	if(flujo.val() == 'I'){
+			    	sel.append("<option value='1'>Llegadas de mercancías comunitarias con destino final en el Estado miembro de introducción</option>");
+	                sel.append("<option value='2'>Llegadas temporales de mercancías comunitarias para ser reexpedidas al Estado miembro de procedencia o a otro Estado miembro, en el mismo estado en que llegaron</option>");
+	                sel.append("<option value='3'>Llegadas temporales de mercancías comunitarias para ser reexpedidas al Estado miembro de procedencia o a otro Estado miembro, después de sufrir una operación de transformación</option>");
+	                sel.append("<option value='4'>Llegada de mercancías comunitarias, devueltas en el mismo estado en el que fueron previamente expedidas al Estado miembro de procedencia o a otros Estados miembros</option>");
+	                sel.append("<option value='5'>Llegada de mercancías comunitarias, devueltas después de haber sufrido una operación de reparación o transformación, previamente expedidos al Estado miembro de procedencia o a otro Estado miembro</option>");
+		    	}else{
+			    	sel.append("<option value='1'>Salida de mercancías comunitarias con destino final en el Estado miembro de destino</option>");
+	                sel.append("<option value='2'>Salida temporal de mercancías comunitarias para ser reintroducidas con posterioridad desde el Estado miembro de destino o desde otro Estado miembro en el mismo estado en que son expedidas</option>");
+	                sel.append("<option value='3'>Salida temporal de mercancías comunitarias para ser reintroducidas con posterioridad, desde el Estado miembro de destino o desde otro Estado miembro después de haber sufrido una operación de reparación o transformación</option>");
+	                sel.append("<option value='4'>Salida de mercancías comunitarias, que se devuelven en el mismo estado en el que previamente llegaron procedentes del Estado miembro de destino o procedentes de otro Estado miembro</option>");
+	                sel.append("<option value='5'>Salida de mercancías comunitarias, que se devuelven después de haber sufrido una operación de transformación, previamente recibidas del Estado miembro de destino o de otro Estado miembro</option>");
+		    	}
+		    	
+		    	var x = this.model.get("regimen");
+		    	if(x){
+		    		sel.find("option").filter(function(){
+		    			return this.value == x; 
+		    		}).prop('selected', true); 
+		    	}
+		    },
+		    
+		    fillProvincias : function(){
+		    	var p = this.model.get('provincia');
+		    	var i = '-1';
+		    	if(p != undefined) i = p.get('codigo');
+		    	
+				var opts = this.provincias.map(function(item) {
+					var opt = item.toJSON();
+					var eti = "<option value='"+opt.codigo+"'";
+					if(opt.codigo == i){
+						eti = eti + "selected = 'true'";
+					}
+					return eti + ">"+opt.name+"</option>";
+				});
+				this.$el.find("#provincia").append(opts);		
+		    },
+
 		    fillProveedores : function(){
 		    	var p = this.model.get('proveedor');
 		    	var i = '-1';
@@ -106,12 +180,29 @@ define([
 				this.$el.find("#transporte").append(opts);
 	        },
 	        
+	        fillTransacciones : function(){
+		    	var p = this.model.get('transaccion');
+		    	var i = '-1';
+		    	if(p != undefined) i = p;
+
+				var opts = this.transacciones.map(function(item) {
+					var opt = item.toJSON();
+					if(opt.grupo){
+						var eti = "<optgroup label='"+opt.codigo+" - "+opt.texto+"'/>";
+						
+					}else{
+						var eti = "<option value='"+opt.id+"'";
+						if(opt.id == i){
+							eti = eti + "selected = 'true'";
+						}			
+						eti += ">"+opt.codigo+" - "+opt.texto+"</option>";
+					}
+					return eti;
+				});
+				this.$el.find("#transaccion").append(opts);
+	        },
 	        
 	        fillPaises : function(){
-		    	var p = this.model.get('pais');
-		    	var i = '-1';
-		    	if(p != undefined) i = p.get('codigo');
-
 				var opts = this.paises.map(function(item) {
 					var opt = item.toJSON();
 					
@@ -119,27 +210,26 @@ define([
 					var x = $('<li>', {'data-codigo': opt.codigo});
 					x.append(img);
 					x.append('<span class="pais-name">'+opt.name+'</span>');
-
-					if(opt.codigo == i){
-						selectPais(x);
-					}
-
 					return x;//eti + ">"+opt.name+"</option>";
 				});
 				$(".dropdown-paises").append(opts);
 				$(".dropdown").dropDown();
 				
 				$(".dropdown").hide();
-
 				
 				$("li").click(function(){
 					selectPais(this);
-					$(".dropdown").trigger('hide');
+					$(this).parent().trigger('hide');
 				});
 				
 				$(".selectbox").click(function(){
-					$(".dropdown-paises").show();
+					$(this).next().show();
 				});
+				
+				var p = this.model.get('pais');
+				$("#pais").next('ul').find('li').filter(function(){
+					return $(this).data('codigo') == p.get('codigo');
+				}).trigger("click");
 
 	        },
 	        
@@ -156,16 +246,25 @@ define([
 		    update: function(){
 		    	var fecha = new Date($("#fecha").val());
 		    	this.model.set({
-		    		name:$("#name").val(),
+		    		flujo: $(".flujo:checked").val(),
 		    		codigo: $("#codigo").val(),
 		    		entrega: $("#entrega").val(),
 		    		fecha: fecha,
 		    		proveedor: {id: $("#proveedor").val()},
 		    		transporte: {codigo: $("#transporte").val()},
-		    		pais: {codigo: $('.selectbox').data('codigo')}
+		    		pais: {codigo: $('#pais').data('codigo')},
+		    		transaccion : $("#transaccion").val(),
+		    		regimen : $("#regimen").val()
 		    	});
 		    	
-		    	var items = new Materiales();
+		    	this.model.set({origen : null})
+		    	var po = $('#pais_origen').data('codigo');
+		    	if(po != undefined) this.model.set({origen : {codigo : po}});
+	    		
+		    	var prov = $('#provincia').val();
+		    	if(prov != -1) this.model.set({provincia : {codigo : prov}});
+
+	    		var items = new Materiales();
 		    	$(".materialItem").each(function(i, e){
 		    		items.add(Material.findOrCreate({
 						"id" : $(e).find("#id").val(),
@@ -183,18 +282,22 @@ define([
 		    	
 		    	var router = this.router;
 		    	
-		    	this.model.save(null,{
-		    			error: function(model, response){
-		    				console.log(response.responseText);
-		    				router.navigate('/', true);
-		    			},
-		    			success: function(model, response){
-		    				router.navigate('/facturas', true);
-		    			}
-		    	});
-		    	
-				this.remove();
-				this.unbind();
+		    	if(this.model.isValid(true)){
+			    	this.model.save(null,{
+			    			error: function(model, response){
+			    				console.log(response.responseText);
+			    				router.navigate('/', true);
+			    			},
+			    			success: function(model, response){
+			    				router.navigate('/partidas', true);
+			    			}
+			    	});
+			    	
+			    	Backbone.Validation.unbind(this);
+			    	
+					this.remove();
+					this.unbind();
+		    	}
 
 				return false;
 		    },
@@ -205,6 +308,16 @@ define([
 					model : this.model.toJSON(),
 				}));
 				
+		        var vflujo = this.model.get("flujo");
+		        var sel = this.$el.find(".flujo").filter(function(){
+		        	return this.value == vflujo;
+		        });
+		        if(sel){
+		        	sel.prop('checked', true);
+		        	this.fillFlujo(sel);
+		        }
+
+				
 				//this.el.innerHTML = this.template;
 				this.$el.find("#tb_materiales tbody tr").remove();
 				var body = this.$el.find("#tb_materiales tbody");
@@ -212,11 +325,10 @@ define([
 					body.append(new MaterialView({model: item}).render().el);
 				});    				 				
 
-				
-				this.$el.find('#fecha').datepicker({
-						format: 'mm-dd-yyyy'
-				});
-				
+//				this.$el.find('#fecha').datepicker( {
+//					dateFormat: "yy-mm-dd"
+//				});
+						
 				//this.$el.find("#pais").msDropDown();
 				
 				var entrega = this.model.get('entrega');
@@ -226,6 +338,26 @@ define([
 				
 				return this;
 		},
+		
+		calcularValorEstadistico : function(){
+			 var importe_mercancia = Ext.getCmp('formavanzadocalcularvalorestadistico-mercancia-numberfield').getValue();
+	            var importe_transporte = Ext.getCmp('formavanzadocalcularvalorestadistico-transporte-numberfield').getValue();
+	            var importe_pesototal = Ext.getCmp('formavanzadocalcularvalorestadistico-pesototal-numberfield').getValue();
+	            var importe_pesopartida = Ext.getCmp('formavanzadocalcularvalorestadistico-pesopartida-numberfield').getValue();
+	            var importe_kmtotales = Ext.getCmp('formavanzadocalcularvalorestadistico-kmtotales-numberfield').getValue();
+	            var importe_kmnacionales = Ext.getCmp('formavanzadocalcularvalorestadistico-kmnacionales-numberfield').getValue();
+	            var valorestadistico = Math.round(importe_mercancia + importe_transporte * (importe_kmnacionales / importe_kmtotales) * (importe_pesopartida / importe_pesototal));
+	            if (!(importe_pesototal > importe_pesopartida && importe_pesopartida > 0)) {
+	                Ext.getCmp('formavanzadocalcularvalorestadistico-pesopartida-numberfield').setValue(0);
+	                Ext.getCmp('formavanzadocalcularvalorestadistico-valorestadistico-numberfield').setValue(0);
+	            } else if (!(importe_kmtotales > importe_kmnacionales && importe_kmnacionales > 0)) {
+	                Ext.getCmp('formavanzadocalcularvalorestadistico-kmnacionales-numberfield').setValue(0);
+	                Ext.getCmp('formavanzadocalcularvalorestadistico-valorestadistico-numberfield').setValue(0);
+	            } else {
+	                Ext.getCmp('formavanzadocalcularvalorestadistico-valorestadistico-numberfield').setValue(valorestadistico);
+	            }
+
+		}
 	});
 	return EditFacturaView;
 });

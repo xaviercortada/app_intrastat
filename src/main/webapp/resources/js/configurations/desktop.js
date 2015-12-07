@@ -8,6 +8,7 @@ requirejs.config({
 	baseUrl: "resources/js",
 	paths: {
 		jquery:'libs/jquery-2.0.3',
+		jqueryui : 'libs/jquery-ui',
 		underscore:'libs/underscore',
 		text:'libs/text',
 		bootstrap: 'libs/bootstrap',
@@ -17,8 +18,7 @@ requirejs.config({
 		validation: 'libs/backbone-validation-min',
 		utilities: 'app/utilities',
 		plugins: 'app/plugins',
-		router:'app/router/desktop/router',
-		jqueryui : 'libs/jquery-ui'
+		router:'app/router/desktop/router'
 	},
 	
 	// We shim Backbone.js and Underscore.js since they don't declare AMD modules
@@ -72,6 +72,7 @@ require([
 	'router',
 	'validation'
 	], function(){
+			
 		_.templateSettings = {
 				interpolate: /\{\{(.+?)\}\}/g
 		};
@@ -94,6 +95,7 @@ require([
 		});
 	
 	});
+
 
 define("configuration", {
 	//baseUrl : "http://localhost:8080/appintrastat/"

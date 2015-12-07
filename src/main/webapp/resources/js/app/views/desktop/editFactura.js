@@ -339,24 +339,16 @@ define([
 				return this;
 		},
 		
-		calcularValorEstadistico : function(){
-			 var importe_mercancia = Ext.getCmp('formavanzadocalcularvalorestadistico-mercancia-numberfield').getValue();
-	            var importe_transporte = Ext.getCmp('formavanzadocalcularvalorestadistico-transporte-numberfield').getValue();
-	            var importe_pesototal = Ext.getCmp('formavanzadocalcularvalorestadistico-pesototal-numberfield').getValue();
-	            var importe_pesopartida = Ext.getCmp('formavanzadocalcularvalorestadistico-pesopartida-numberfield').getValue();
-	            var importe_kmtotales = Ext.getCmp('formavanzadocalcularvalorestadistico-kmtotales-numberfield').getValue();
-	            var importe_kmnacionales = Ext.getCmp('formavanzadocalcularvalorestadistico-kmnacionales-numberfield').getValue();
-	            var valorestadistico = Math.round(importe_mercancia + importe_transporte * (importe_kmnacionales / importe_kmtotales) * (importe_pesopartida / importe_pesototal));
+		calcularValorEstadistico : function(mercancia, transporte, pesototal, pesopartida, kmtotales, kmnacionales){
+	            var valorestadistico = Math.round(mercancia + transporte * (kmnacionales / kmtotales) * (pesopartida / pesototal));
+	            
 	            if (!(importe_pesototal > importe_pesopartida && importe_pesopartida > 0)) {
-	                Ext.getCmp('formavanzadocalcularvalorestadistico-pesopartida-numberfield').setValue(0);
-	                Ext.getCmp('formavanzadocalcularvalorestadistico-valorestadistico-numberfield').setValue(0);
-	            } else if (!(importe_kmtotales > importe_kmnacionales && importe_kmnacionales > 0)) {
-	                Ext.getCmp('formavanzadocalcularvalorestadistico-kmnacionales-numberfield').setValue(0);
-	                Ext.getCmp('formavanzadocalcularvalorestadistico-valorestadistico-numberfield').setValue(0);
-	            } else {
-	                Ext.getCmp('formavanzadocalcularvalorestadistico-valorestadistico-numberfield').setValue(valorestadistico);
-	            }
-
+	                return 0;
+	            } else if (!(kmtotales > kmnacionales && kmnacionales > 0)) {
+	            	return 0;
+	            } 
+	            return valorestadistico;
+	            
 		}
 	});
 	return EditFacturaView;

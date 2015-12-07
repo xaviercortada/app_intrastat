@@ -6,6 +6,7 @@ define([
 	'utilities',
 	'bootstrap',
 	'router',
+	'app/models/nomenclature',
 	'app/models/material',
 	'app/collections/materiales',
 	'app/models/favorito',
@@ -15,6 +16,7 @@ define([
 		utilities,
 		bootstrap,
 		router,
+		Nomenclature,
 		Material,
 		Materiales,
 		Nomenclator,
@@ -27,6 +29,8 @@ define([
 			
 			initialize: function() {
 		        this.template = _.template(htmlTemplate);
+		        
+				this.nomen = this.model.get("nomenclature");
 		        		        
 		        this.nomenclators = new Nomenclators();
 		        
@@ -37,7 +41,15 @@ define([
 		        	        
 		    },
 		    events: {
-		    	'click .delete' : 'destroy'
+		    	'click .delete' : 'destroy',
+		    	'change #nomenclature' : 'codigoChanged'
+		    },
+		    
+		    codigoChanged : function(e){
+		    	this.nomen = Nomenclature.findOrCreate({
+		    		code : $(e.target).val()
+		    	});
+		    	this.listenTo(this.nomen, 'change', this.nomenChanged());
 		    },
 		    
 		    fillNomenclators : function(){
@@ -47,7 +59,7 @@ define([
 		    	
 				var opts = this.nomenclators.map(function(item) {
 					var opt = item.toJSON();
-					return "<option value='"+opt.code+"'>"+opt.code+' - '+opt.description+"</option>";
+					return "<option class='ttip' value='"+opt.code+"' title='"+opt.description+"'>"+opt.code+' - '+opt.description+"</option>";
 				});
 				this.$el.find("#nomenclature").append(opts);		
 
@@ -72,14 +84,50 @@ define([
 		    },
 		    
 			render:function () {
+				var mat = this.model.toJSON();
+				
+				mat.sunit = this.nomen.get('sunit');
+				mat.sunitDesc = this.updateSunit(this.nomen.get('sunitDesc'));
+				
 
 				this.$el.html(this.template({
-					model : this.model.toJSON(),
+					model : mat,
 					index: this.index
 				}));
-								
+				
+				
+				this.$el.find(".ttip").tooltip();
+				
+				this.$el.find('.nomen').tooltip({
+					position: { my: "center bottom-10", at: "center top" },
+			        content: function(){
+			            return $(this).find("option:selected").text();
+			        }
+			    });
+				
 				return this;
 		},
+		
+		nomenChanged : function(){
+			var sunit = this.nomen.get('sunit');
+			var sunitDesc = this.updateSunit(this.nomen.get('sunitDesc'));
+			$('#sunit').val(sunit);
+			$('#sunitDesc').val(sunitDesc);
+		},
+		
+		updateSunit : function(sunitDesc){
+			if(sunitDesc != undefined && sunitDesc.length > 0){
+				var p = sunitDesc.indexOf('EN:');
+				if(p>0){
+					var t = sunitDesc.indexOf(';', p);
+					if(t > 0){
+						return sunitDesc.substr(p+4, t-p-4);
+					}
+				}
+			}
+			return "";
+			
+		}
 	});
 	return EditMaterialView;
 });

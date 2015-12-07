@@ -20,7 +20,13 @@ public class Nomenclature implements Serializable {
 	private String code;
 	private String section;
 	private String description;
-	private String descEnglish;
+	
+	private String sunit;
+	private String sunitDesc;
+
+	private String englishDesc;
+	private String frenchDesc;
+	private String germanDesc;
 	
 	
 	public Integer getLevel() {
@@ -53,20 +59,41 @@ public class Nomenclature implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public String getDescEnglish() {
-		return descEnglish;
+	public String getSunit() {
+		return sunit;
 	}
-	public void setDescEnglish(String descEnglish) {
-		this.descEnglish = descEnglish;
+	public void setSunit(String sunit) {
+		this.sunit = sunit;
 	}
-
+	public String getSunitDesc() {
+		return sunitDesc;
+	}
+	public void setSunitDesc(String sunitDesc) {
+		this.sunitDesc = sunitDesc;
+	}
+	public String getEnglishDesc() {
+		return englishDesc;
+	}
+	public void setEnglishDesc(String englishDesc) {
+		this.englishDesc = englishDesc;
+	}
+	public String getFrenchDesc() {
+		return frenchDesc;
+	}
+	public void setFrenchDesc(String frenchDesc) {
+		this.frenchDesc = frenchDesc;
+	}
+	public String getGermanDesc() {
+		return germanDesc;
+	}
+	public void setGermanDesc(String germanDesc) {
+		this.germanDesc = germanDesc;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((code == null) ? 0 : code.hashCode());
-		result = prime * result + ((level == null) ? 0 : level.hashCode());
-		result = prime * result + ((section == null) ? 0 : section.hashCode());
 		return result;
 	}
 	@Override
@@ -82,16 +109,6 @@ public class Nomenclature implements Serializable {
 			if (other.code != null)
 				return false;
 		} else if (!code.equals(other.code))
-			return false;
-		if (level == null) {
-			if (other.level != null)
-				return false;
-		} else if (!level.equals(other.level))
-			return false;
-		if (section == null) {
-			if (other.section != null)
-				return false;
-		} else if (!section.equals(other.section))
 			return false;
 		return true;
 	}

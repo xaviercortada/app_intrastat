@@ -124,15 +124,6 @@ INSERT INTO Pais(CODIGO, NAME, SIGLA) VALUES(91, 'ESLOVENIA', 'SI');
 INSERT INTO Pais(CODIGO, NAME, SIGLA) VALUES(92, 'CROACIA', 'HR');
 INSERT INTO Pais(CODIGO, NAME, SIGLA) VALUES(600, 'CHIPRE', 'CY');
 
-CREATE TABLE Transaccion (
-  id int(2) NOT NULL,
-  codigo varchar(5) DEFAULT NULL,
-  texto varchar(200) DEFAULT NULL,
-  grupo int(1) DEFAULT NULL,
-  PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
 INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(10,'1.','Transacciones que suponen un traslado de la propiedad legal de la mercancía',1);
 INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(11,'1.1','Compra/venta en firme',0);
 INSERT INTO Transaccion(id,codigo,texto,grupo) VALUES(12,'1.2','Suministro para la venta salvo aprobación o de prueba, para consignación o con la mediación de un agente comisionado',0);

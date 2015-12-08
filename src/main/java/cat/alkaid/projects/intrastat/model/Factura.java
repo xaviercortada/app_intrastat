@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -144,10 +145,21 @@ public class Factura implements Serializable {
 		List<String> output = new ArrayList<String>();
 		
 		for(Material mat : materiales){
-			String line = String.format("%2s%1c%2s%1c%3s%1c%2s%1c%2s%1c%1c%8s%1c%2s%1c%1d%1c%12d%1c%12d%1c%13.2f%1c%13.2f%c",
-					pais.getSigla(),delimeter,"08", delimeter, entrega, delimeter, "11", delimeter, transporte.getCodigo(), 
-					delimeter ,delimeter, mat.getNomenclature().getCodeCN8(), delimeter, "ES", delimeter, 1, delimeter, mat.getPeso(), 
-					delimeter, mat.getUnidades(), delimeter,	mat.getPrice(), delimeter, mat.getPrice(), endRecord );	
+			String line = String.format(Locale.FRANCE, "%2s%1c%2s%1c%3s%1c%2d%1c%d%1c%1c%8s%1c%2s%1c%1d%1c%d%1c%d%1c%.2f%1c%.2f%c",
+					pais.getSigla(),delimeter,
+					"08", delimeter,
+					entrega, delimeter,
+					getTransaccion(), delimeter, 
+					Integer.parseInt(transporte.getCodigo()), 
+					delimeter ,delimeter, 
+					mat.getNomenclature().getCodeCN8(), delimeter, 
+					"ES", delimeter, 
+					getRegimen(), delimeter, 
+					mat.getPeso(),delimeter,
+					mat.getUnidades(), delimeter,
+					mat.getPrice(), delimeter, 
+					mat.getVestadistico(), endRecord );
+			
 			
 			output.add(line);
 		}

@@ -30,6 +30,8 @@ public class MaterialDto implements Comparable {
 
     private String name;
     
+    private Float price;
+    
     private Float vestadistico;
 
     public MaterialDto(Factura factura, Material material){
@@ -37,6 +39,7 @@ public class MaterialDto implements Comparable {
         setCodFactura(factura.getCodigo());
         setEntrega(material.getEntrega());
         setImporte(material.getImporte());
+        setPrice(material.getPrice());
         setNameCategory(material.getNomenclature().getDescription());
         setPeso(material.getPeso());
         setUnidades(material.getUnidades());
@@ -111,14 +114,19 @@ public class MaterialDto implements Comparable {
         this.importe = importe;
     }
 
+    public void setPrice(Float price) {
+    	this.price = price;
+    }
+
     public Float getPrice() {
-    	try{
-    		String p = this.importe.replace(".", "");
-    		p = p.replace(",", ".");
-    		return Float.parseFloat(p);
-    	}catch(Exception e){
-    		return (float) 0;
-    	}
+    	return price;
+//    	try{
+//    		String p = this.importe.replace(".", "");
+//    		p = p.replace(",", ".");
+//    		return Float.parseFloat(p);
+//    	}catch(Exception e){
+//    		return (float) 0;
+//    	}
     }
 
     public Integer getUnidades() {

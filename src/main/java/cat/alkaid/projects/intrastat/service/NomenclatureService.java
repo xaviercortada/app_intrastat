@@ -11,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import cat.alkaid.projects.intrastat.model.Factura;
 import cat.alkaid.projects.intrastat.model.Nomenclature;
 
 @Stateless
@@ -129,6 +130,23 @@ public class NomenclatureService {
 			query.setParameter(0, '%' + codigo + '%');
 			query.setFirstResult(firstR);
 			query.setMaxResults(maxR);
+
+			return query.getResultList();
+
+		} catch (NoResultException nre) {
+			return null;
+		}
+	}
+
+	public List<Nomenclature> findDetailItemsByCodigo(String codigo) {
+		try {
+			Nomenclature nomen = em.find(Nomenclature.class, codigo);
+
+			TypedQuery<Nomenclature> query = em.createQuery(
+					"SELECT p FROM Nomenclature p WHERE p.level > ?0 and code like ?1", Nomenclature.class);
+			query.setParameter(0, nomen.getLevel());
+			query.setParameter(1, '%' + codigo + '%');
+			query.setMaxResults(20);
 
 			return query.getResultList();
 

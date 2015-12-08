@@ -1,5 +1,7 @@
 package cat.alkaid.projects.intrastat.model;
 
+import org.apache.poi.ss.formula.functions.Replace;
+
 /**
  * Created by xavier on 27/09/15.
  */
@@ -24,17 +26,17 @@ public class MaterialDto implements Comparable {
 
     private String importe;
 
-    private Float price;
-
     private Integer unidades;
 
     private String name;
+    
+    private Float vestadistico;
 
     public MaterialDto(Factura factura, Material material){
-        setCodCategory(material.getNomenclature().getCode());
+        setCodCategory(material.getNomenclature().getCodeCN8());
         setCodFactura(factura.getCodigo());
         setEntrega(material.getEntrega());
-        setPrice(material.getPrice());
+        setImporte(material.getImporte());
         setNameCategory(material.getNomenclature().getDescription());
         setPeso(material.getPeso());
         setUnidades(material.getUnidades());
@@ -105,15 +107,18 @@ public class MaterialDto implements Comparable {
     }
 
     public void setImporte(String importe) {
+    	
         this.importe = importe;
     }
 
     public Float getPrice() {
-        return price;
-    }
-
-    public void setPrice(Float price) {
-        this.price = price;
+    	try{
+    		String p = this.importe.replace(".", "");
+    		p = p.replace(",", ".");
+    		return Float.parseFloat(p);
+    	}catch(Exception e){
+    		return (float) 0;
+    	}
     }
 
     public Integer getUnidades() {
@@ -140,7 +145,15 @@ public class MaterialDto implements Comparable {
         this.codPais = codPais;
     }
 
-    public String getKey(){
+    public Float getVestadistico() {
+		return vestadistico;
+	}
+
+	public void setVestadistico(Float vestadistico) {
+		this.vestadistico = vestadistico;
+	}
+
+	public String getKey(){
         return String.format("%s%s%02d", getCodCategory(),
                 getEntrega(), getCodPais());
     }

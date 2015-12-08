@@ -312,6 +312,7 @@ define(
 									"importe" : $(e).find("#importe").val(),
 									"peso" : $(e).find("#peso").val(),
 									"unidades" : $(e).find("#unidades").val(),
+									"vestadistico" : $(e).find("#vestadistico").val(),
 									"nomenclature" : {
 										code : $(e).find("#nomenclature").val()
 									}
@@ -412,23 +413,8 @@ define(
 							delete this.el; // Delete the variable reference to
 											// this node
 
-						},
-
-						calcularValorEstadistico : function(mercancia,
-								transporte, pesototal, pesopartida, kmtotales,
-								kmnacionales) {
-							var valorestadistico = Math.round(mercancia
-									+ transporte * (kmnacionales / kmtotales)
-									* (pesopartida / pesototal));
-
-							if (!(importe_pesototal > importe_pesopartida && importe_pesopartida > 0)) {
-								return 0;
-							} else if (!(kmtotales > kmnacionales && kmnacionales > 0)) {
-								return 0;
-							}
-							return valorestadistico;
-
 						}
+
 					});
 			return EditFacturaView;
 		});

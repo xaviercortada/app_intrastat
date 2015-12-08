@@ -11,7 +11,8 @@ define([
 	'app/collections/materiales',
 	'app/models/favorito',
 	'app/collections/favoritos',
-	'text!../../../../templates/desktop/editMaterial.html'
+    'app/views/desktop/calculadora',
+	'text!templates/desktop/editMaterial.html'
 ], function (
 		utilities,
 		bootstrap,
@@ -21,6 +22,7 @@ define([
 		Materiales,
 		Nomenclator,
 		Nomenclators,
+		CalculadoraView,
 		htmlTemplate) {
 		
 		var EditMaterialView = Backbone.View.extend({
@@ -41,8 +43,29 @@ define([
 		        	        
 		    },
 		    events: {
+		    	'click .calculadora' : 'calculadora',
 		    	'click .delete' : 'destroy',
 		    	'change #nomenclature' : 'codigoChanged'
+		    },
+		    calculadora : function(e){
+				e.preventDefault();
+				
+				this.model.set('peso', $('#peso').val());
+				this.model.set('importe', $('#importe').val());
+				
+				var modal = new CalculadoraView({
+					model: this.model
+				});
+				
+				this.listenTo(modal, "done", this.calcVE);
+				
+				modal.render();//show();
+		    	
+		    },
+		    
+		    calcVE : function(){
+		    	$('#vestadistico').val(this.model.get('vestadistico'));
+		    	
 		    },
 		    
 		    codigoChanged : function(e){

@@ -12,7 +12,7 @@
 </td>
 <td>
     <div>
-    	<input id="importe" class="form-control"  value="{{model.importe}}" placeholder="Introducir importe"/>
+    	<input type="number" pattern="(\d{3})([\.])(\d{2})" id="importe" class="form-control"  value="{{model.importe}}" placeholder="Introducir importe"/>
     </div>
 <td>
     <div>
@@ -34,7 +34,18 @@
     	<input id="sunitDesc" class="form-control ttip" value="{{model.sunitDesc}}" title="{{model.sunitDesc}}" readonly="true"/>
     </div>
 </td>
-
+<td>
+    <div>
+    	<input type="number" pattern="(\d{3})([\.])(\d{2})" id="vestadistico" class="form-control ttip" value="{{model.vestadistico}}" title="{{model.vestadistico}}" />
+    </div>
+</td>
+<td>
+    <div>
+	    <button class="btn calculadora">
+	        <span class="glyphicon glyphicon-recycle"></span>&nbsp;&nbsp;V.Estad{{index}}
+	    </button>
+    </div>
+</td>
 <td>
     <div>
 	    <button class="btn delete">

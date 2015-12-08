@@ -68,7 +68,12 @@ define([
 			    	'click .favorito' : 'addFavorito',
 			    	'click .pageno' : 'goToPage',
 			    	'click .next' : 'nextPage',
-			    	'click .prev' : 'prevPage'
+			    	'click .prev' : 'prevPage',
+			    	'click .detail' : 'detail'
+			    },
+			    
+			    detail : function(e){
+			    	var mat = $(e.target);
 			    },
 			    
 			    sectionSelected : function(e){

@@ -1,6 +1,9 @@
 package cat.alkaid.projects.intrastat.model;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,6 +37,7 @@ public class Material implements Serializable{
     private Float price;
     private Integer unidades;
     private String name;
+    private Float vestadistico;
     
     @ManyToOne
     @NotNull
@@ -81,7 +85,7 @@ public class Material implements Serializable{
 	}
 	public void setPrice(Float price) {
 		this.price = price;
-	}
+    }
 	public Integer getUnidades() {
 		return unidades;
 	}
@@ -99,6 +103,12 @@ public class Material implements Serializable{
 	}
 	public void setFactura(Factura factura) {
 		this.factura = factura;
+	}
+	public Float getVestadistico() {
+		return vestadistico;
+	}
+	public void setVestadistico(Float vestadistico) {
+		this.vestadistico = vestadistico;
 	}
 
 

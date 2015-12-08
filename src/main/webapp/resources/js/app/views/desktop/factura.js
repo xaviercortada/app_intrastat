@@ -2,8 +2,10 @@
  * 
  */
 
-define([ 'utilities', 'bootstrap', 'app/views/desktop/confirmModal',
-		'text!templates/desktop/factura.html' ], function(
+define([ 'utilities', 
+         'bootstrap', 
+         'app/views/desktop/confirmModal',
+         'text!templates/desktop/factura.html' ], function(
 		utilities, bootstrap, ConfirmModalView, htmlTemplate) {
 
 	var FacturaView = Backbone.View.extend({

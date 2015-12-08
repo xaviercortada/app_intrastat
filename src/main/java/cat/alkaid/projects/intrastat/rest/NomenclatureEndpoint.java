@@ -105,4 +105,17 @@ public class NomenclatureEndpoint {
 		}			
 		return null;
 	}
+
+	@GET
+	@Path("/detail/{codigo:[0-9][0-9]*}")
+	public Response findDetailItemsByCodigo(@PathParam("codigo") final String codigo){
+		try{
+			final Long total = service.countItemsByCodigo(codigo);
+			final List<Nomenclature> nomenclatures = service.findDetailItemsByCodigo(codigo);
+			return Response.ok(nomenclatures).header("X-total", total).build();
+		}catch(Throwable e){
+			e.printStackTrace();
+		}			
+		return null;
+	}
 }

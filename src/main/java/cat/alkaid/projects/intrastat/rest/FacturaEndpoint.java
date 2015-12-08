@@ -81,4 +81,15 @@ public class FacturaEndpoint {
 		return Response.noContent().build();
 	}
 
+	@DELETE
+	@Path("/{idFactura:[0-9][0-9]*}/materiales/{idMaterial:[0-9][0-9]*}")
+	public Response deleteMaterialById(@PathParam("idFactura") final Long idFactura,
+			@PathParam("idMaterial") final Long idMaterial) {
+		try{
+			service.removeMaterial(idFactura, idMaterial);
+		}catch(Throwable e){
+			e.printStackTrace();
+		}
+		return Response.noContent().build();
+	}
 }

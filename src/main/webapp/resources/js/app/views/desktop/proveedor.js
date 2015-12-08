@@ -5,7 +5,7 @@
 define([
 	'utilities',
 	'bootstrap',
-	'text!../../../../templates/desktop/proveedor.html'
+	'text!templates/desktop/proveedor.html'
 ], function (
 		utilities,
 		bootstrap,

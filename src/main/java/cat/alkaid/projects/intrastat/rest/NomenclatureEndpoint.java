@@ -72,7 +72,7 @@ public class NomenclatureEndpoint {
 	}
 
 	@GET
-	@Path("/search")
+	@Path("/search/texto")
 	//public List<Nomenclature> findItemsByText(@QueryParam("texto") final String texto,
 	public Response findItemsByText(@QueryParam("texto") final String texto,
 			@QueryParam("current_page") final int currentPage,
@@ -82,6 +82,23 @@ public class NomenclatureEndpoint {
 		try{
 			final Long total = service.countItems(texto);
 			final List<Nomenclature> nomenclatures = service.findItems(texto, currentPage * pageSize, pageSize);
+			return Response.ok(nomenclatures).header("X-total", total).build();
+		}catch(Throwable e){
+			e.printStackTrace();
+		}			
+		return null;
+	}
+
+	@GET
+	@Path("/search/codigo")
+	public Response findItemsByCodigo(@QueryParam("codigo") final String codigo,
+			@QueryParam("current_page") final int currentPage,
+			@QueryParam("total_pages") final int totalPages,
+			@QueryParam("total_entries") final int totalEntries,
+			@QueryParam("page_size") final int pageSize) {
+		try{
+			final Long total = service.countItemsByCodigo(codigo);
+			final List<Nomenclature> nomenclatures = service.findItemsByCodigo(codigo, currentPage * pageSize, pageSize);
 			return Response.ok(nomenclatures).header("X-total", total).build();
 		}catch(Throwable e){
 			e.printStackTrace();

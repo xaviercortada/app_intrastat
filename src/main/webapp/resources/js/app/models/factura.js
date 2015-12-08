@@ -44,10 +44,14 @@ define([
 				type: Backbone.HasMany,
 				key: 'materiales',
 				relatedModel: Material,
-				collectionType: Materiales
+				collectionType: Materiales,
+				reverseRelation: {
+				      key: 'factura'
+				}
 			}],
 			urlRoot: config.baseUrl + 'rest/facturas',
 			idAttribute: "id",
+			autoFetch: true,
 			defaults:{
 				"id" : undefined,
 				"flujo":"",

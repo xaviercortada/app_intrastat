@@ -7,15 +7,17 @@ define([
     	'bootstrap',
     	'app/collections/nomenclatures',
     	'app/collections/nomenclatures_p',
+    	'app/collections/nomenclatures_code',
     	'app/collections/capitulos',
     	'app/models/favorito',
     	'app/views/desktop/nomenclature',
-    	'text!../../../../templates/desktop/nomenclatures.html'
+    	'text!templates/desktop/nomenclatures.html'
     ], function (
     		utilities,
     		bootstrap,
     		Nomenclatures,
     		NomenclaturesP,
+    		NomenclaturesC,
     		Capitulos,
     		Favorito,
     		NomenclatureView,
@@ -61,7 +63,8 @@ define([
 			    events: {
 			    	'change #seccion' : 'sectionSelected',
 			    	'change #capitulo' : 'capituloSelected',
-			    	'click .search' : 'search',			    	
+			    	'click .search' : 'searchTexto',			    	
+			    	'click .search_codigo' : 'searchCodigo',			    	
 			    	'click .favorito' : 'addFavorito',
 			    	'click .pageno' : 'goToPage',
 			    	'click .next' : 'nextPage',
@@ -86,14 +89,28 @@ define([
 			    	this.capitulo = e.target.value;
 			    },
 			    
-			    search : function(e){
-			    	$(".table tbody tr").remove();
-    				$(".pagination .pageno").remove();
-
+			    searchTexto : function(e){
     				this.items = new NomenclaturesP();
 			    	this.items.on("reset", this.fillItems, this);
 			    	
 			    	var q = $("#texto").val();
+			    	
+			    	this.search(e, q);
+			    },
+			    
+			    searchCodigo : function(e){
+    				this.items = new NomenclaturesC();
+			    	this.items.on("reset", this.fillItems, this);
+			    	
+			    	var q = $("#codigo").val();
+			    	
+			    	this.search(e, q);
+			    },
+
+			    search : function(e, q){
+			    	$(".table tbody tr").remove();
+    				$(".pagination .pageno").remove();
+
 			    	if(q.length < 5){
 			            $group = $(e.target).closest('.form-group');				        
 				        $group.addClass('has-error');
@@ -103,18 +120,16 @@ define([
 				        $group.removeClass('has-error');
 				        $group.find('.help-block').html('').addClass('hidden');
 
-				    	this.items.queryParams.texto = q;
+				    	this.items.queryParams.codigo = q;
 				    				    	
 				    	if(this.capitulo == -1){
-				    		//this.items.search($("#texto").val());
 				    		this.items.getFirstPage({reset : true});
 				    	}else{
-				    		//this.items.findByTexto(this.capitulo, $("#texto").val());
 				    		this.items.getFirstPage();
 				    	}
 			    	}
 			    },
-			    
+
 			    goToPage : function(e){
 			    	var pageEl = e.target;
 			    	var page = parseInt($(pageEl).attr('data-page'));

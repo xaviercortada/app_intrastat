@@ -5,7 +5,7 @@
 define([
 	'utilities',
 	'bootstrap',
-	'text!../../../../templates/desktop/nomenclature.html'
+	'text!templates/desktop/nomenclature.html'
 ], function (
 		utilities,
 		bootstrap,

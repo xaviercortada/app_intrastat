@@ -20,6 +20,9 @@ public class FacturaService {
     private EntityManager em;
 
     @EJB
+    MaterialService materialService;
+
+    @EJB
     AccountService accountService;
 
     @EJB
@@ -91,9 +94,12 @@ public class FacturaService {
         return false;
     }
 
-    public void removeMaterial(Factura factura, Material material) {
+    public void removeMaterial(Long idFactura, Long idMaterial) {
+    	Factura factura = findById(idFactura);
+    	Material material = materialService.findById(idMaterial);
         factura.getMateriales().remove(material);
         em.merge(factura);
+        em.remove(material);
     }
 
     public boolean create(String authId, Factura dto) {

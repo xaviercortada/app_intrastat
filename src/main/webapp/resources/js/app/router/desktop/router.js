@@ -81,25 +81,6 @@ var Router = Backbone.Router.extend({
 		
 	},
 	
-	categories: function(){
-		var categories = new Categories();
-		
-		var categoriesView = new CategoriesView({
-			collection : categories		
-		});
-
-		//categories.fetch();
-
-		$('#content').empty();
-	    
-		categories.on("reset",
-			function(){
-				$('#content').append( categoriesView.render().$el );
-		}).fetch({
-			reset : true
-		});
-	},
-	
 	nomenclatures: function(){
 		var nomenclatures = new Nomenclatures();
 		
@@ -119,49 +100,6 @@ var Router = Backbone.Router.extend({
 		$('#content').append( nomenclaturesView.render().$el );
 	},
 
-	category : function(id){
-
-		var category = Category.findOrCreate({id: id});
-		
-		var editCategoryView = new EditCategoryView({
-			model : category
-		});
-
-		$('#content').empty();
-		
-		category.fetch({
-		    success: function (bookResponse) {
-				$('#content').append( editCategoryView.render().$el );
-		        console.log("Found the book: " + bookResponse.get("codigo"));
-		    }
-		});
-
-		category.on("reset",
-			function(){
-				$('#content').append( editCategoryView.render().$el );
-		}).fetch({
-			reset: true,
-			error: function(){
-				utilities.displayAlert("Failed to retrive categories from the server");
-			}
-		});
-	
-	},
-	
-	addCategory : function(){
-		var category = new Category();			
-
-		var editCategoryView = new EditCategoryView({
-			model : category
-			//el:$("#content")
-		});
-		
-		$('#content').empty();
-
-		$('#content').append( editCategoryView.render().$el );
-		
-	},
-	
 	proveedores: function(){
 		
 		var proveedores = new Proveedores();
@@ -185,28 +123,16 @@ var Router = Backbone.Router.extend({
 	proveedor : function(id){
 		var proveedor = Proveedor.findOrCreate({id: id});
 		
+		//Backbone.Relational.store.unregister(proveedor);
+
+		
 		var editProveedorView = new EditProveedorView({
 			model : proveedor
 		});
 
 		$('#content').empty();
 		
-		proveedor.fetch({
-		    success: function (bookResponse) {
-				$('#content').append( editProveedorView.render().$el );
-		        console.log("Found the book: " + bookResponse.get("codigo"));
-		    }
-		});
-
-		proveedor.on("reset",
-			function(){
-				$('#content').append( editProveedorView.render().$el );
-		}).fetch({
-			reset: true,
-			error: function(){
-				utilities.displayAlert("Failed to retrive categories from the server");
-			}
-		});
+		$('#content').append( editProveedorView.render().$el );
 	
 	},
 	
@@ -242,7 +168,9 @@ var Router = Backbone.Router.extend({
 			reset : true
 		});
 	},	
+	
 	factura : function(id){
+		
 		var factura = Factura.findOrCreate({id: id});
 		
 		var editFacturaView = new EditFacturaView({
@@ -250,8 +178,19 @@ var Router = Backbone.Router.extend({
 		});
 
 		$('#content').empty();
+
+		factura.fetch({
+		    success: function(response){
+		    	console.log(response.toString());
+				//$('#content').append( editFacturaView.render().$el );
+		    	editFacturaView.helpers();
+				$('#content').append( editFacturaView.render().$el );
+		    }
+		});
 		
-		$('#content').append( editFacturaView.render().$el );
+		//Backbone.Relational.store.unregister(factura);
+		
+
 
 	},
 	

@@ -74,6 +74,7 @@ define([
 	        
 		    destroy: function(e){
 		    	e.preventDefault();
+		    	this.trigger('removeMat', this.model);
 		    	this.model.destroy();
 		    	this.remove();		    	
 		    } ,

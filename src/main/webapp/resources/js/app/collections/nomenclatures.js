@@ -33,12 +33,18 @@ define([
 		},
 
 		search : function(texto){
-			this.url =  config.baseUrl + "rest/nomenclatures/search/"+texto;
+			this.url =  config.baseUrl + "rest/nomenclatures/search/texto/"+texto;
 	        this.fetch({
 	        	reset : true
 	        });
 		},
 
+		search_codigo : function(codigo){
+			this.url =  config.baseUrl + "rest/nomenclatures/search/codigo/"+codigo;
+	        this.fetch({
+	        	reset : true
+	        });
+		},
 
 		comparator: function(model){
 			return model.codigo;

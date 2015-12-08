@@ -10,7 +10,7 @@ define([
 
 	var Nomenclatures_p = Backbone.PageableCollection.extend({
 		model: Nomenclature,
-		url : config.baseUrl + "rest/nomenclatures/search/texto/",
+		url : config.baseUrl + "rest/nomenclatures/search/codigo/",
 		
 		texto : "xxxxx",
 
@@ -25,7 +25,7 @@ define([
 
 		    currentPage: "current_page",
 		    pageSize: "page_size",
-		    texto: "texto"
+		    codigo: "codigo"
 		  },
 		  
 		  parseState: function (resp, queryParams, state, options) {

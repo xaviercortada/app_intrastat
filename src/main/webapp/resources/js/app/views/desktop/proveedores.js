@@ -8,7 +8,7 @@ define([
     	'router',
     	'app/collections/proveedores',
     	'app/views/desktop/proveedor',
-    	'text!../../../../templates/desktop/proveedores.html'
+    	'text!templates/desktop/proveedores.html'
     ], function (
     		utilities,
     		bootstrap,

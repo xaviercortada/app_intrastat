@@ -8,7 +8,7 @@ define([
     	'router',
     	'app/collections/facturas',
     	'app/views/desktop/factura',
-    	'text!../../../../templates/desktop/facturas.html'
+    	'text!templates/desktop/facturas.html'
     ], function (
     		utilities,
     		bootstrap,

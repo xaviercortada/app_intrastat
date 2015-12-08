@@ -6,7 +6,7 @@ define([
     	'utilities',
     	'bootstrap',
     	'app/collections/nomenclatures',
-    	'app/collections/nomenclatures_p',
+    	'app/collections/nomenclatures_texto',
     	'app/collections/nomenclatures_code',
     	'app/collections/capitulos',
     	'app/models/favorito',
@@ -95,6 +95,8 @@ define([
 			    	
 			    	var q = $("#texto").val();
 			    	
+			    	this.items.queryParams.texto = q;
+			    	
 			    	this.search(e, q);
 			    },
 			    
@@ -104,6 +106,8 @@ define([
 			    	
 			    	var q = $("#codigo").val();
 			    	
+			    	this.items.queryParams.codigo = q;
+			    	
 			    	this.search(e, q);
 			    },
 
@@ -111,7 +115,7 @@ define([
 			    	$(".table tbody tr").remove();
     				$(".pagination .pageno").remove();
 
-			    	if(q.length < 5){
+			    	if(q.length < 4){
 			            $group = $(e.target).closest('.form-group');				        
 				        $group.addClass('has-error');
 				        $group.find('.help-block').html('texto de busqueda minimo 5 caracteres').removeClass('hidden');
@@ -120,8 +124,6 @@ define([
 				        $group.removeClass('has-error');
 				        $group.find('.help-block').html('').addClass('hidden');
 
-				    	this.items.queryParams.codigo = q;
-				    				    	
 				    	if(this.capitulo == -1){
 				    		this.items.getFirstPage({reset : true});
 				    	}else{

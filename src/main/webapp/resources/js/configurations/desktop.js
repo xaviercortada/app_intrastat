@@ -18,7 +18,8 @@ requirejs.config({
 		validation: 'libs/backbone-validation-min',
 		utilities: 'app/utilities',
 		plugins: 'app/plugins',
-		router:'app/router/desktop/router'
+		router:'app/router/desktop/router',
+		templates: "../templates"
 	},
 	
 	// We shim Backbone.js and Underscore.js since they don't declare AMD modules

@@ -40,7 +40,7 @@ define([ 'jquery',
 		confirm : function() {		
 			this.trigger('confirm');
 			
-			this.$el.modal("close");
+			this.$el.dialog('close');
 			
 			Backbone.View.prototype.remove.bind(this)
 		},

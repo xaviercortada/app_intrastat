@@ -64,9 +64,10 @@ public class ReportService {
     @PersistenceContext
     private EntityManager em;
 
-    ArrayList<Cell[]> totalCells = new ArrayList<Cell[]>();
 
     public StreamingOutput Basic(String authId, Long idPeriodo){
+        List<Cell[]> totalCells = new ArrayList<Cell[]>();
+
         final HSSFWorkbook wb = new HSSFWorkbook();
 
         format = wb.createDataFormat();
@@ -102,7 +103,7 @@ public class ReportService {
 
             if (reportKey == null || (!reportKey.equals(tmpKey))) {
                 if (r0 > 0) {
-                    writeSubtotal(sheet, r0, i - 1);
+                	totalCells.add(writeSubtotal(sheet, r0, i - 1));
                     i++;
                 }
                 writeCategory(sheet, i++, material);
@@ -113,10 +114,11 @@ public class ReportService {
 
         }
 
-        writeSubtotal(sheet, r0, i-1);
+        totalCells.add(writeSubtotal(sheet, r0, i-1));
+
 
         i+=2;
-        writeTotal(sheet, i);
+        writeTotal(sheet, totalCells, i);
 
         StreamingOutput streamout = new StreamingOutput() {
             @Override
@@ -128,7 +130,7 @@ public class ReportService {
         return streamout;
     }
 
-    private void writeSubtotal(HSSFSheet sheet, int initRow, int finalRow) {
+    private Cell[] writeSubtotal(HSSFSheet sheet, int initRow, int finalRow) {
         Cell[] cells = new Cell[4];
 
         CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
@@ -168,10 +170,10 @@ public class ReportService {
         cell.setCellFormula(formula);
         cells[3] = cell;
 
-        totalCells.add(cells);
+        return cells;
     }
 
-    private void writeTotal(HSSFSheet sheet, int i) {
+    private void writeTotal(HSSFSheet sheet, List<Cell[]> totalCells, int i) {
         CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
         Font font = sheet.getWorkbook().createFont();
         font.setBoldweight(Font.BOLDWEIGHT_BOLD);

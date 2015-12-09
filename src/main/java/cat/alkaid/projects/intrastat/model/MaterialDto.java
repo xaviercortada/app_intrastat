@@ -1,5 +1,9 @@
 package cat.alkaid.projects.intrastat.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import org.apache.poi.ss.formula.functions.Replace;
 
 /**
@@ -30,6 +34,12 @@ public class MaterialDto implements Comparable {
 
     private String name;
     
+    private int codTransaccion;
+    
+    private String codTransporte;
+    
+    private int codRegimen;
+
     private Float price;
     
     private Float vestadistico;
@@ -47,6 +57,14 @@ public class MaterialDto implements Comparable {
         setCodPais(factura.getPais().getCodigo());
         setEntrega(factura.getEntrega());
         setProveedor(factura.getProveedor().getName());
+        
+        setCodRegimen(factura.getRegimen());
+        setCodTransaccion(factura.getTransaccion());
+        setCodTransporte(factura.getTransporte().getCodigo());
+        
+        setVestadistico(material.getVestadistico());
+        
+        
     }
 
     public String getCodFactura() {
@@ -165,10 +183,58 @@ public class MaterialDto implements Comparable {
         return String.format("%s%s%02d", getCodCategory(),
                 getEntrega(), getCodPais());
     }
+	
+	public String toCSV(char delimeter, char endRecord){
+		
+			String line = String.format(Locale.FRANCE, "%2s%1c%2s%1c%3s%1c%2d%1c%d%1c%1c%8s%1c%2s%1c%1d%1c%d%1c%d%1c%.2f%1c%.2f%c",
+					siglas,delimeter,
+					"08", delimeter,
+					entrega, delimeter,
+					codTransaccion, delimeter, 
+					Integer.parseInt(codTransporte), 
+					delimeter ,delimeter, 
+					codCategory, delimeter, 
+					"ES", delimeter, 
+					codRegimen, delimeter, 
+					getPeso(),delimeter,
+					unidades, delimeter,
+					price, delimeter, 
+					vestadistico, endRecord );
+			
+			
+		
+		return line;
+	}
+
 
     @Override
     public int compareTo(Object o) {
         MaterialDto dto = (MaterialDto)o;
         return this.getKey().compareTo(dto.getKey());
     }
+
+	public String getCodTransporte() {
+		return codTransporte;
+	}
+
+	public void setCodTransporte(String codTransporte) {
+		this.codTransporte = codTransporte;
+	}
+
+	public int getCodTransaccion() {
+		return codTransaccion;
+	}
+
+	public void setCodTransaccion(int codTransaccion) {
+		this.codTransaccion = codTransaccion;
+	}
+
+	public int getCodRegimen() {
+		return codRegimen;
+	}
+
+	public void setCodRegimen(int codRegimen) {
+		this.codRegimen = codRegimen;
+	}
+
 }

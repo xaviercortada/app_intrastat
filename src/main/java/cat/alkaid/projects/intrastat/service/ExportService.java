@@ -6,6 +6,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -19,6 +22,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormat;
 
 import cat.alkaid.projects.intrastat.model.Factura;
+import cat.alkaid.projects.intrastat.model.Material;
+import cat.alkaid.projects.intrastat.model.MaterialDto;
 
 /**
  * Created by xavier on 21/07/15.
@@ -63,17 +68,49 @@ public class ExportService {
     @PersistenceContext
     private EntityManager em;
 
-    ArrayList<Cell[]> totalCells = new ArrayList<Cell[]>();
-
     public StreamingOutput to_csv(String authId, Long idPeriodo){
 
-    	//List<Factura> facturas = facturaService.findByPeriodo(authId, idPeriodo);
+    	final List<String> items = new  ArrayList<String>();
         List<Factura> facturas = facturaService.findAll();
 
-        final List<String> items = new ArrayList<String>();
+        List<MaterialDto> materials = new ArrayList<MaterialDto>();
+        HashMap<String, MaterialDto> partidas = new HashMap<String, MaterialDto>();
 
-        for (Factura fact : facturas) {
-            items.addAll(fact.toCSV(';','\n'));
+        for(Factura fact : facturas){
+            for(Material mat : fact.getMateriales()) {
+                MaterialDto dto = new MaterialDto(fact, mat);
+                materials.add(dto);
+            }
+        }
+
+        Collections.sort(materials);
+        
+        String key = null;
+
+        for (MaterialDto material : materials) {
+            key = material.getKey();
+
+            if (partidas.containsKey(key) ) {
+            	MaterialDto dto = partidas.get(key);
+            	int peso = dto.getPeso() + material.getPeso();
+            	float price = dto.getPrice() + material.getPrice();
+            	float vestadistico = dto.getVestadistico() + material.getVestadistico();
+            	
+            	dto.setPeso(peso);
+            	dto.setPrice(price);
+            	dto.setVestadistico(vestadistico);
+            	
+            	partidas.put(key, dto);
+            }else{
+            	partidas.put(key, material);
+            	
+            }
+
+        }
+
+
+        for (MaterialDto dto : partidas.values()) {
+            items.add(dto.toCSV(';','\n'));
         }
 
         StreamingOutput streamout = new StreamingOutput() {

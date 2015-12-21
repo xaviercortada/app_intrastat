@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.junit.Ignore;
 
 @SuppressWarnings("serial")
 @Entity

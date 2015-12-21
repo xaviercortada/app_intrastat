@@ -63,6 +63,7 @@ define([
 				"pais":{},
 				"materiales": []
 			},
+			
 			validation : {
 				codigo : {
 					required : true,

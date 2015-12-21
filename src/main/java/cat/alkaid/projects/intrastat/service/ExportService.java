@@ -24,6 +24,7 @@ import org.apache.poi.ss.usermodel.DataFormat;
 import cat.alkaid.projects.intrastat.model.Factura;
 import cat.alkaid.projects.intrastat.model.Material;
 import cat.alkaid.projects.intrastat.model.MaterialDto;
+import cat.alkaid.projects.intrastat.model.Periodo;
 
 /**
  * Created by xavier on 21/07/15.
@@ -65,13 +66,16 @@ public class ExportService {
     @EJB
     FacturaService facturaService;
 
-    @PersistenceContext
-    private EntityManager em;
+    @EJB
+    PeriodoService periodoService;
+
 
     public StreamingOutput to_csv(String authId, Long idPeriodo){
+    	
+    	Periodo periodo = periodoService.findById(idPeriodo);
 
     	final List<String> items = new  ArrayList<String>();
-        List<Factura> facturas = facturaService.findAll();
+        List<Factura> facturas = facturaService.findPendientes();
 
         List<MaterialDto> materials = new ArrayList<MaterialDto>();
         HashMap<String, MaterialDto> partidas = new HashMap<String, MaterialDto>();

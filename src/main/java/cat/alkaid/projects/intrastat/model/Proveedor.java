@@ -9,32 +9,33 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.junit.Ignore;
+
 @SuppressWarnings("serial")
 @Entity
 @XmlRootElement
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Proveedor implements Serializable{
 	
     @Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
-    private String documento;
+    
     private String codigo;
     private String name;
     
     @Embedded
     private Address address;
     
+    @Embedded
+    private Person person;
+
     public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
-	}
-	public String getDocumento() {
-		return documento;
-	}
-	public void setDocumento(String documento) {
-		this.documento = documento;
 	}
 	public String getCodigo() {
 		return codigo;
@@ -48,5 +49,7 @@ public class Proveedor implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
+
+
 
 }

@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import cat.alkaid.projects.intrastat.model.Account;
+import cat.alkaid.projects.intrastat.model.User;
 
 @Stateless
 public class AccountService {
@@ -35,19 +36,20 @@ public class AccountService {
         }
     }
 
-    public boolean create(Account item){
-        em.persist(item);
-        return true;
+    public boolean create(Account account){
+    	try{
+    		User user = account.getUser();
+    		user.setAccount(account);
+    		em.persist(user);
+	        em.persist(account);
+    	}catch(Throwable e){
+			e.printStackTrace();    		
+    	}
+    	return false;
     }
 
     public boolean update(Account item){
-        Account target = findById(item.getId());
-        if(target != null) {
-            target.setName(item.getName());
-
-            em.merge(target);
-            return true;
-        }
+        em.merge(item);
         return false;
     }
 

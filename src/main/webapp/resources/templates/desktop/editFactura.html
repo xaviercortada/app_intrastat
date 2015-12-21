@@ -1,15 +1,15 @@
-<div style="background-color: #d3d7cf; padding: 10px; padding-bottom: 40px;">
-<div class="page-header">
-	<h3>Mantenimiento de partida</h3>
-</div>
-<div>
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">
+  	<h3 class="panel-title">Partida</h3>
+  </div>
+  <div class="panel-body">
     <form class="form-horizontal" role="form">
     	<div class="row">
     		<div class="col-md-3">
             	<fieldset>
             	<legend style="margin: 0px; padding-top: 10px">Flujo</legend>
             	<div class="form-group" style="margin: 0px">
-            	<label class="control-label" >Flujo</label>
 				<div class="radio">
 				  <label><input type="radio" class="flujo" value="I" name="flujo">Introducción</label>
 				</div>
@@ -24,7 +24,6 @@
             	<fieldset>
             	<legend style="margin: 0px; padding-top: 10px">Código</legend>
             	<div class="form-group" style="margin: 0px">
-            	<label class="control-label" >Código</label>
             	<input type="text" name="codigo" id="codigo" class="form-control" value="{{model.codigo}}" placeholder="Introducir código"/>
                 <span class="help-block hidden"></span>
                 </div>
@@ -36,7 +35,6 @@
             	<fieldset>
             	<legend style="margin: 0px; padding-top: 10px">Régimen estadístico</legend>
 	            	<div class="form-group" style="margin: 0px">
-	            	<label class="control-label" >Régimen estadístico</label>
 	                <select type="text" class="form-control" value="{{model.regimen}}" id="regimen" name="regimen">
 	                   	<option selected="true" value="-1">-- Seleccionar régimen --</option>
 	                </select>
@@ -88,7 +86,7 @@
 	                <span class="help-block hidden"></span>
 	                </div>
 	            	<div class="form-group" style="margin: 0px">
-		         	<label class="control-label" >Pais origen</label>
+		         	<label class="control-label" >Pais origen mercancia</label>
 	 			  	<div id="pais_origen" class="form-control selectbox"><span class="pais-default">-- Seleccionar pais  --</span><span class="caret pull-right"></span></div>
 				  	<ul class="dropdown-paises dropdown" name="pais_origen">
 				  	</ul>
@@ -102,7 +100,6 @@
             	<fieldset>
             	<legend style="margin: 0px; padding-top: 10px">Entrega</legend>
             	<div class="form-group" style="margin: 0px">
-            	<label class="control-label" for="entrega">Entrega:</label>
                 <select type="text" class="form-control" value="{{model.entrega}}" id="entrega" name="entrega">
                 	<option selected="true" value="-1">-- Seleccionar entrega --</option>
                     <option value="EXW">EXW - En Fábrica</option>
@@ -128,7 +125,6 @@
             	<fieldset>
             	<legend style="margin: 0px; padding-top: 10px">Naturaleza transacción</legend>
             	<div class="form-group" style="margin: 0px">
-            	<label class="control-label">Transaccion</label>
                 <select type="text" class="form-control" value="{{model.transaccion}}" id="transaccion" name="transaccion">
                 	<option selected="true" value="-1">-- Seleccionar transaccion --</option>
                 </select>
@@ -149,8 +145,7 @@
     <table id="tb_materiales" class="table">
         <thead>
         <tr>
-            <th class="col-md-1">id</th>
-            <th class="col-md-2">categoria</th>
+            <th class="col-md-3">categoria</th>
             <th class="col-md-1">importe</th>
             <th class="col-md-1">peso</th>
             <th class="col-md-1">unidades</th>
@@ -171,4 +166,5 @@
     </div>
 </div>
 </div>
+
 

@@ -16,10 +16,16 @@ define("router", [
 	'app/views/desktop/editProveedor',
 	'app/views/desktop/proveedores',
 	'app/models/factura',
+	'app/models/account',
+	'app/collections/accounts',
+	'app/views/desktop/accounts',
+	'app/views/desktop/editAccount',
 	'app/collections/facturas',
 	'app/views/desktop/editFactura',
 	'app/views/desktop/facturas',
 	'app/views/desktop/home',
+	'app/views/desktop/register',
+	'app/views/desktop/signin',
 	'text!../templates/desktop/main.html'],function ($,
 			_,
 			config,
@@ -32,10 +38,16 @@ define("router", [
 			EditProveedorView,
 			ProveedoresView,
 			Factura,
+			Account,
+			Accounts,
+			AccountsView,
+			EditAccountView,
 			Facturas,
 			EditFacturaView,
 			FacturasView,
 			HomeView,
+			RegisterView,
+			SigninView,
 			MainTemplate) {
 				$(document).ready(new function() {
 					utilities.applyTemplate($('body'), MainTemplate)
@@ -63,13 +75,17 @@ var Router = Backbone.Router.extend({
 		"about":"home",
 		"proveedores":"proveedores",
 		"proveedor/:id":"proveedor",
+		"account/:id":"account",
 		"addProveedor" : "addProveedor",
 		"partidas":"partidas",
 		"factura/:id":"factura",
 		"addFactura" : "addFactura",
 		"report" : "report",
 		"export" : "export",
-		"nomenclatures" : "nomenclatures"
+		"nomenclatures" : "nomenclatures",
+		"register" : "register",
+		"signin" : "signin",
+		"admin" : "accounts"
 	},
 	home : function(){
 		//utilities.viewManager.showView(new HomeView({el:$("#content")}));
@@ -120,11 +136,28 @@ var Router = Backbone.Router.extend({
 		});
 	},
 	
+	accounts: function(){
+		
+		var accounts = new Accounts();
+		
+		var accountsView = new AccountsView({
+			collection : accounts		
+		});
+
+		//proveedores.fetch();
+
+		$('#content').empty();
+	    
+		accounts.on("reset",
+			function(){
+				$('#content').append( accountsView.render().$el );
+		}).fetch({
+			reset : true
+		});
+	},
+
 	proveedor : function(id){
 		var proveedor = Proveedor.findOrCreate({id: id});
-		
-		//Backbone.Relational.store.unregister(proveedor);
-
 		
 		var editProveedorView = new EditProveedorView({
 			model : proveedor
@@ -136,6 +169,20 @@ var Router = Backbone.Router.extend({
 	
 	},
 	
+	account : function(id){
+		var account = Account.findOrCreate({id: id});
+		
+	
+		var editAccountView = new EditAccountView({
+			model : account
+		});
+
+		$('#content').empty();
+		
+		$('#content').append( editAccountView.render().$el );
+	
+	},
+
 	addProveedor : function(){
 		var proveedor = new Proveedor();			
 
@@ -151,22 +198,14 @@ var Router = Backbone.Router.extend({
 	},
 	partidas: function(){
 		
-		var facturas = new Facturas();
 		
 		var facturasView = new FacturasView({
-			collection : facturas		
+			collection : []		
 		});
-
-		//facturas.fetch();
 
 		$('#content').empty();
 	    
-		facturas.on("reset",
-			function(){
-				$('#content').append( facturasView.render().$el );
-		}).fetch({
-			reset : true
-		});
+		$('#content').append( facturasView.render().$el );
 	},	
 	
 	factura : function(id){
@@ -204,10 +243,34 @@ var Router = Backbone.Router.extend({
 		
 		$('#content').empty();
 
-		$('#content').append( editFacturaView.render().$el );
+    	editFacturaView.helpers();
+
+    	$('#content').append( editFacturaView.render().$el );
+		
+	},
+	
+	register: function(){
+		var account = new Account();
+		
+		var modal = new RegisterView({
+			model: account
+		});
+		
+		modal.render();
 		
 	},
 		
+	signin: function(){
+		var account = new Account();
+		
+		var modal = new SigninView({
+			model: account
+		});
+		
+		modal.render();
+		
+	},
+
 	report: function(){
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', 'rest/report/excel/1', true);

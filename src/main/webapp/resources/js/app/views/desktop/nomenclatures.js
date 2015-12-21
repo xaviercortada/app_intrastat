@@ -9,7 +9,6 @@ define([
     	'app/collections/nomenclatures_texto',
     	'app/collections/nomenclatures_code',
     	'app/collections/capitulos',
-    	'app/models/favorito',
     	'app/views/desktop/nomenclature',
     	'text!templates/desktop/nomenclatures.html'
     ], function (
@@ -19,7 +18,6 @@ define([
     		NomenclaturesP,
     		NomenclaturesC,
     		Capitulos,
-    		Favorito,
     		NomenclatureView,
     		template) {
     		
@@ -65,15 +63,9 @@ define([
 			    	'change #capitulo' : 'capituloSelected',
 			    	'click .search' : 'searchTexto',			    	
 			    	'click .search_codigo' : 'searchCodigo',			    	
-			    	'click .favorito' : 'addFavorito',
 			    	'click .pageno' : 'goToPage',
 			    	'click .next' : 'nextPage',
-			    	'click .prev' : 'prevPage',
-			    	'click .detail' : 'detail'
-			    },
-			    
-			    detail : function(e){
-			    	var mat = $(e.target);
+			    	'click .prev' : 'prevPage'
 			    },
 			    
 			    sectionSelected : function(e){
@@ -157,20 +149,12 @@ define([
 			    	}
 			    },
 
-			    addFavorito : function(e){
-			    	e.preventDefault();
-			    	var code = $(e.target).data('codigo');
-			    	var found = this.items.find(function(item){
-			            return (item.get('code')) == code;
-			    	});
-			    	var favorito = Favorito.findOrCreate(found.toJSON());
-
-			    	favorito.save();
-			    },
 
 			    fillItems : function(){
-			    	$("table tbody tr").remove();
-			    	var ul = this.$el.find("table");
+			    	
+			    	
+			    	$("ul li.tree").remove();
+			    	var ul = this.$el.find("ul.tree");
     				this.items.forEach( function(item) {
     					ul.append(new NomenclatureView({model: item}).render().el);
     				});  
@@ -180,7 +164,7 @@ define([
     				var totalPages = Math.ceil(this.items.state.totalRecords / this.items.state.pageSize);
     				var pages = Math.min(10, totalPages) - 1;
     				for(var i=iniPage; i <= (iniPage+pages); i++){
-    					var li = $("<li/>",{class: "pageno"}).append($("<a/>").attr("data-page",i).text(i));
+    					var li = $("<li/>",{class: "page pageno"}).append($("<a/>").attr("data-page",i).text(i));
     					if(i == this.items.state.currentPage){
     						li.addClass("active");
     					}

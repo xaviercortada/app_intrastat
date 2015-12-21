@@ -5,6 +5,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
@@ -26,13 +29,15 @@ public class Account implements Serializable {
 	@Column(name = "version")
 	private int version;
 
-	@Column
-	@NotNull
-	@Size(min = 5, max = 250, message = "El account name debe tener entre 5 y 250 caracteres")
-	private String name;
+	@OneToOne(mappedBy = "account")
+	private
+	User user;
 	
+	private String userName;
     private String password;
     private String token;
+
+    @Temporal(TemporalType.DATE)
     private Date activated;
 
 
@@ -77,26 +82,10 @@ public class Account implements Serializable {
 		return result;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 	
     public void changePassword(String password) {
         this.setPassword(password);
     }
-
-
-	@Override
-	public String toString() {
-		String result = getClass().getSimpleName() + " ";
-		if (name != null && !name.trim().isEmpty())
-			result += "name: " + name;
-		return result;
-	}
 
 	public String getPassword() {
 		return password;
@@ -120,5 +109,31 @@ public class Account implements Serializable {
 
 	public void setActivated(Date activated) {
 		this.activated = activated;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	@Override
+	public String toString() {
+		return "Account [id=" + id + ", user=" + user + "]";
+	}
+
+	public boolean validate(String password2) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

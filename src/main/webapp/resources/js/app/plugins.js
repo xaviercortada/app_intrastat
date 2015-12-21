@@ -33,5 +33,20 @@ selectPais = function(selected){
 	sel.append($(selected).find('.pais-name').clone());	        	
 };
 
-
+$.fn.treeView = function(){
+	$(this).click(function(event){
+		event.preventDefault();
+		$(event.target).parents('li:first').find('>ul').toggle("hidden");
+		$(event.target).parents('li:first').toggleClass("collapse");
+		$(event.target).parents('li:first').toggleClass("expand");
+		$(event.target).parents('li:first').show();
+	})
+	
+	if($(this).html().length == 0){
+		$(this).parents('li:first').toggleClass("collapse");		
+	}else{
+		$(this).parents('li:first').toggleClass("expand");				
+	}
+	$(this).parents('li:first').show();
+}
 

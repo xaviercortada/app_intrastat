@@ -1,15 +1,26 @@
-<form>
-	<fieldset>
-		<label for="name">Username</label> <input type="text" name="username"
-			id="username" value="phamtranquocviet"
-			class="text ui-widget-content ui-corner-all">
-		<div class='clear-both vertical-spacer' />
-		<label for="password">Password</label> <input type="password"
-			name="password" id="password" value="xxxxxxx"
-			class="text ui-widget-content ui-corner-all">
-	</fieldset>
-	<div class="pull-right">
-		<a class="btn btn-success confirm" role="button">Confirmar</a>
-	</div>
-
-</form>
+<div class="modal-body">
+        <form id="loginForm" novalidate="novalidate">
+            <div class="form-group">
+                <label for="username" class="control-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" value="" required="" title="Please enter you username" placeholder="example@gmail.com">
+                <span class="help-block hidden "></span>
+            </div>
+            <div class="form-group">
+                <label for="password" class="control-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" value="" required="" title="Please enter your password">
+                <span class="help-block hidden"></span>
+            </div>
+            <div id="loginErrorMsg" class="alert alert-error hide">Wrong username or password</div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="remember" id="remember"> Remember login
+                </label>
+                <p class="help-block">(if this is a private computer)</p>
+            </div>
+            <button class="btn btn-success btn-block register">Login</button>
+            <a href="/forgot/" class="btn btn-default btn-block">Help to login</a>
+        </form>
+    </div>
+<div class="modal-footer">
+    <button class="btn close" >Close</button>
+</div>

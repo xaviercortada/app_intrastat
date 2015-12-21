@@ -16,8 +16,11 @@
  */
 package cat.alkaid.projects.intrastat.rest;
 
+
+
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
+
 
 /**
  * A class extending {@link Application} and annotated with @ApplicationPath is the Java EE 6 "no XML" approach to activating
@@ -29,5 +32,4 @@ import javax.ws.rs.core.Application;
  */
 @ApplicationPath("/rest")
 public class JaxRsActivator extends Application {
-    /* class body intentionally left blank */
 }

@@ -1,5 +1,6 @@
 package cat.alkaid.projects.intrastat.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -57,6 +58,18 @@ public class FacturaService {
         return query.getResultList();
     }
 
+    public List<Factura> findByIntervalo(String authId, Date fechaIni, Date fechaFin){
+        TypedQuery<Factura> query = em.createQuery("SELECT p FROM Factura p WHERE fecha >= ?0 and fecha < ?1",Factura.class);
+        query.setParameter(0, fechaIni);
+        query.setParameter(1, fechaFin);
+        return query.getResultList();
+    }
+
+    public List<Factura> findByProveedor(String authId, Boolean presentado, Long idProveedor){
+        TypedQuery<Factura> query = em.createQuery("SELECT p FROM Factura p WHERE p.proveedor.id = ?0",Factura.class);
+        query.setParameter(0, idProveedor);
+        return query.getResultList();
+    }
 
     public boolean create(Factura factura){
 		try{
@@ -112,5 +125,16 @@ public class FacturaService {
         }
         return false;
     }
+
+	public List<Factura> findPendientes() {
+        TypedQuery<Factura> query = em.createQuery("SELECT p FROM Factura p WHERE p.presentado IS NULL", Factura.class);
+        return query.getResultList();
+	}
+
+	public List<Factura> findByCodigo(String codigo) {
+        TypedQuery<Factura> query = em.createQuery("SELECT p FROM Factura p WHERE p.codigo = ?0", Factura.class);
+        query.setParameter(0, codigo);
+        return query.getResultList();
+	}
 
 }

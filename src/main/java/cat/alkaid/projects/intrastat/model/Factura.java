@@ -20,10 +20,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 
 @SuppressWarnings("serial")
 @Entity
 @XmlRootElement
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Factura implements Serializable {
 	
     @Id
@@ -39,6 +42,9 @@ public class Factura implements Serializable {
     private int regimen;
     
     private String flujo;
+    
+    @Temporal(TemporalType.DATE)
+    private Date presentado;
 
     @Temporal(TemporalType.DATE)
     private Date fecha;
@@ -61,6 +67,9 @@ public class Factura implements Serializable {
     @ManyToOne
 	private Account account;
     
+    @ManyToOne
+	private Periodo periodo;
+
     @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="factura")
 	private Set<Material> materiales = new HashSet<Material>();
     
@@ -195,6 +204,18 @@ public class Factura implements Serializable {
 	}
 	public void setOrigen(Pais origen) {
 		this.origen = origen;
+	}
+	public Date getPresentado() {
+		return presentado;
+	}
+	public void setPresentado(Date presentado) {
+		this.presentado = presentado;
+	}
+	public Periodo getPeriodo() {
+		return periodo;
+	}
+	public void setPeriodo(Periodo periodo) {
+		this.periodo = periodo;
 	}
 	
 

@@ -18,6 +18,8 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+
+
 @SuppressWarnings("serial")
 @Entity
 @XmlRootElement

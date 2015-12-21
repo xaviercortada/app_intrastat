@@ -8,7 +8,7 @@
 	padding-left: 10px;
 }
 
-.dropdown li{
+li.dropdown-pais{
 	color: #555555;
     vertical-align: middle;
     background-color: #ffffff;
@@ -16,9 +16,7 @@
     border: 1px solid #cccccc;
     border-radius: 4px;	
 	list-style:none;
-}
 
-li{
 	height:35px;
 	cursor:pointer;
 	position:relative;
@@ -26,11 +24,12 @@ li{
 	width: 200px;
 }
 
-li span{
-	left:30px;
+li span.pais-name{
+	left:20px;
 	position:absolute;
 	top:12px;
 }
+
  li img{
 	left:9px;
 	position:absolute;

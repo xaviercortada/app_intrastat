@@ -3,20 +3,44 @@
  */
 
 define(
-		[ 'utilities', 'bootstrap', 'plugins', 'router',
-				'app/models/transporte', 'app/collections/transportes',
-				'app/models/transaccion', 'app/collections/transacciones',
-				'app/models/proveedor', 'app/collections/proveedores',
-				'app/models/material', 'app/collections/materiales',
-				'app/models/pais', 'app/collections/paises',
-				'app/models/provincia', 'app/collections/provincias',
-				'app/views/desktop/editMaterial',
-				'text!../../../../templates/desktop/editFactura.html',
-				'validation', 'jqueryui' ],
-		function(utilities, bootstrap, plugins, router, Transporte,
-				Transportes, Transaccion, Transacciones, Proveedor,
-				Proveedores, Material, Materiales, Pais, Paises, Provincia,
-				Provincias, MaterialView, htmlTemplate) {
+		[ 'utilities', 
+		  'bootstrap', 
+		  'plugins', 
+		  'router',
+		  'app/models/transporte', 
+		  'app/collections/transportes',
+		  'app/models/transaccion', 
+		  'app/collections/transacciones',
+		  'app/models/proveedor', 
+		  'app/collections/proveedores',
+		  'app/models/material', 
+		  'app/collections/materiales',
+		  'app/models/pais', 
+		  'app/collections/paises',
+		  'app/models/provincia', 
+		  'app/collections/provincias',
+		  'app/views/desktop/editMaterial',
+		  'text!../../../../templates/desktop/editFactura.html',
+		  'validation', 
+		  'jqueryui' ],
+		function(utilities, 
+				bootstrap, 
+				plugins, 
+				router, 
+				Transporte,
+				Transportes, 
+				Transaccion, 
+				Transacciones, 
+				Proveedor,
+				Proveedores, 
+				Material, 
+				Materiales, 
+				Pais, 
+				Paises, 
+				Provincia,
+				Provincias, 
+				MaterialView, 
+				htmlTemplate) {
 
 			var EditFacturaView = Backbone.View
 					.extend({
@@ -179,7 +203,7 @@ define(
 								if (opt.codigo == i) {
 									eti = eti + "selected = 'true'";
 								}
-								return eti + ">" + opt.name + "</option>";
+								return eti + ">" + opt.codigo + " - " + opt.name + "</option>";
 							});
 							this.$el.find("#transporte").append(opts);
 						},
@@ -218,6 +242,7 @@ define(
 											+ '.png'
 								});
 								var x = $('<li>', {
+									'class' : "dropdown-pais",
 									'data-codigo' : opt.codigo
 								});
 								x.append(img);

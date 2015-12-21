@@ -1,12 +1,75 @@
 <div class="panel panel-default">
   <!-- Default panel contents -->
   <div class="panel-heading">
-  	<div class="pull-left">Facturas</div>
-  	<div class="pull-right">
-		<a class="btn btn-success" href="#addFactura" role="button">Nuevo</a>
-  	</div>
+  	<h3 class="panel-title">Partidas</h3>
   </div>
+  <div class="panel-heading">
+  	<form class="form-horizontal" role="form">
+    	<div class="row">
+    		<div class="col-md-3">
+            	<fieldset>
+            	<div class="form-group" style="margin: 0px">
+            	<label class="control-label" >Estado</label>
+				<div class="radio">
+				  <label><input type="radio" class="flujo" value="I" name="flujo">Pendientes</label>
+				</div>
+				<div class="radio">
+				  <label><input type="radio" class="flujo" value="E" name="flujo">Procesadas</label>
+				</div>
+                <span class="help-block hidden"></span>
+                </div>
+				</fieldset>
+    		</div>
+    		<div class="col-md-3">
+            	<fieldset>
+            	<div class="form-group" style="margin: 0px">
+	            	<div class="form-group" style="margin: 0px">
+		            <label class="control-label" >Fecha inicial</label>
+	                <input type="date" class="datepicker form-control" value="" id="fechaIni" name="fechaIni" placeholder="Introducir fecha inicial"/>
+	                <span class="help-block hidden"></span>
+	                </div>
+	            	<div class="form-group" style="margin: 0px">
+		            <label class="control-label" >Fecha final</label>
+	                <input type="date" class="datepicker form-control" value="" id="fechaFin" name="fechaFin" placeholder="Introducir fecha final"/>
+	                <span class="help-block hidden"></span>
+	                </div>
+				</fieldset>
+    		</div>
+    		<div class="col-md-4">
+            	<fieldset>
+            	   	<div class="form-group" style="margin: 0px">
+            	   	<label class="control-label" >Código</label>
+	            	<input type="text" name="codigo" id="codigo" class="form-control" value="" placeholder="Introducir código"/>
+	                </div>
+	            	<div class="form-group" style="margin: 0px">
+		            <label class="control-label" >Proveedor</label>
+	                <select id="proveedor" name="proveedor" class="form-control">
+	                	<option selected="true" value="-1">-- Seleccionar proveedor --</option>
+	                </select>
+	                </div>
+				</fieldset>
+		  	</div>
+    		<div class="col-md-2">
+            	<fieldset>
+	            	<div class="form-group" style="margin: 0px">
+		            <label class="control-label" ></label>
+					<a class="btn btn-success filter" href="#" role="button">Filtrar</a>
+	                </div>
+            	</fieldset>
+            </div>
+		</form>
+	</div>
+  </div>
+  <div class="panel-body">  
     <table class="table">
-    	<tr><th>#</th><th>codigo</th><th>proveedor</th><th>entrega</th><th>fecha</th></tr>
+    	<thead>
+    	<th>#</th>
+    	<th>codigo</th>
+    	<th>proveedor</th>
+    	<th>entrega</th>
+    	<th>fecha</th>
+    	</thead>
+    	<tbody></tbody>
     </table>
+  </div>
 </div>

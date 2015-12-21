@@ -20,8 +20,10 @@ public class MaterialDto implements Comparable {
 
     private String siglas;
 
-    private int codPais;
+    private String codPais;
 
+    private String codPaisOrigen;
+    
     private String proveedor;
 
     private String entrega;
@@ -54,7 +56,6 @@ public class MaterialDto implements Comparable {
         setPeso(material.getPeso());
         setUnidades(material.getUnidades());
         setSiglas(factura.getPais().getSigla());
-        setCodPais(factura.getPais().getCodigo());
         setEntrega(factura.getEntrega());
         setProveedor(factura.getProveedor().getName());
         
@@ -64,7 +65,22 @@ public class MaterialDto implements Comparable {
         
         setVestadistico(material.getVestadistico());
         
+        //Pais Origen
+        setCodPaisOrigen("");
+        if(factura.getOrigen() != null){
+            setCodPaisOrigen(String.format("%02d", factura.getOrigen().getCodigo()));        	
+        }
         
+        //Pais procedencia
+        setCodPais("");
+        if(factura.getPais() != null){
+            setCodPais(String.format("%02d", factura.getPais().getCodigo()));        	
+        }
+
+        setCodPaisOrigen("");
+        if(factura.getOrigen() != null){
+            setCodPaisOrigen(String.format("%02d", factura.getOrigen().getCodigo()));        	
+        }
     }
 
     public String getCodFactura() {
@@ -163,11 +179,11 @@ public class MaterialDto implements Comparable {
         this.name = name;
     }
 
-    public int getCodPais() {
+    public String getCodPais() {
         return codPais;
     }
 
-    public void setCodPais(int codPais) {
+    public void setCodPais(String codPais) {
         this.codPais = codPais;
     }
 
@@ -180,13 +196,13 @@ public class MaterialDto implements Comparable {
 	}
 
 	public String getKey(){
-        return String.format("%s%s%02d", getCodCategory(),
+        return String.format("%s%s%s", getCodCategory(),
                 getEntrega(), getCodPais());
     }
 	
 	public String toCSV(char delimeter, char endRecord){
 		
-			String line = String.format(Locale.FRANCE, "%2s%1c%2s%1c%3s%1c%2d%1c%d%1c%1c%8s%1c%2s%1c%1d%1c%d%1c%d%1c%.2f%1c%.2f%c",
+			String line = String.format(Locale.FRANCE, "%2s%1c%2s%1c%3s%1c%2d%1c%d%1c%1c%8s%1c%s%1c%1d%1c%d%1c%d%1c%.2f%1c%.2f%c",
 					siglas,delimeter,
 					"08", delimeter,
 					entrega, delimeter,
@@ -194,7 +210,7 @@ public class MaterialDto implements Comparable {
 					Integer.parseInt(codTransporte), 
 					delimeter ,delimeter, 
 					codCategory, delimeter, 
-					"ES", delimeter, 
+					codPaisOrigen, delimeter, 
 					codRegimen, delimeter, 
 					getPeso(),delimeter,
 					unidades, delimeter,
@@ -235,6 +251,14 @@ public class MaterialDto implements Comparable {
 
 	public void setCodRegimen(int codRegimen) {
 		this.codRegimen = codRegimen;
+	}
+
+	public String getCodPaisOrigen() {
+		return codPaisOrigen;
+	}
+
+	public void setCodPaisOrigen(String codPaisOrigen) {
+		this.codPaisOrigen = codPaisOrigen;
 	}
 
 }

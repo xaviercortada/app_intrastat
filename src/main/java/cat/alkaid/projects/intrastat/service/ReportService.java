@@ -24,6 +24,7 @@ import org.apache.poi.ss.usermodel.Row;
 import cat.alkaid.projects.intrastat.model.Factura;
 import cat.alkaid.projects.intrastat.model.Material;
 import cat.alkaid.projects.intrastat.model.MaterialDto;
+import cat.alkaid.projects.intrastat.model.Periodo;
 
 /**
  * Created by xavier on 21/07/15.
@@ -60,10 +61,7 @@ public class ReportService {
 
     @EJB
     FacturaService facturaService;
-
-    @PersistenceContext
-    private EntityManager em;
-
+    
 
     public StreamingOutput Basic(String authId, Long idPeriodo){
         List<Cell[]> totalCells = new ArrayList<Cell[]>();
@@ -80,7 +78,7 @@ public class ReportService {
         fillHeaders(sheet);
 
         //List<Factura> facturas = facturaService.findByPeriodo(authId, idPeriodo);
-        List<Factura> facturas = facturaService.findAll();
+        List<Factura> facturas = facturaService.findPendientes();
         List<MaterialDto> materials = new ArrayList<MaterialDto>();
 
         for(Factura fact : facturas){

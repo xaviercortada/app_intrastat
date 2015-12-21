@@ -12,7 +12,7 @@ define([
 		id: "code",
 		
 		search : function(codigo){
-			this.url =  config.baseUrl + "rest/nomenclatures/detailo/"+codigo;
+			this.url =  config.baseUrl + "rest/nomenclatures/detail/"+codigo;
 	        this.fetch({
 	        	reset : true
 	        });

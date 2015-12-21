@@ -141,12 +141,15 @@ public class NomenclatureService {
 	public List<Nomenclature> findDetailItemsByCodigo(String codigo) {
 		try {
 			Nomenclature nomen = em.find(Nomenclature.class, codigo);
+			
+			String section = nomen.getSection().replace(" ", "");
 
 			TypedQuery<Nomenclature> query = em.createQuery(
-					"SELECT p FROM Nomenclature p WHERE p.level > ?0 and code like ?1", Nomenclature.class);
-			query.setParameter(0, nomen.getLevel());
-			query.setParameter(1, '%' + codigo + '%');
-			query.setMaxResults(20);
+					"SELECT p FROM Nomenclature p WHERE p.level = ?0 and (section like ?1 or code like ?2)", Nomenclature.class);
+			query.setParameter(0, nomen.getLevel()+1);
+			query.setParameter(1, nomen.getSection() + '%');
+			query.setParameter(2, section + '%');
+			query.setMaxResults(30);
 
 			return query.getResultList();
 

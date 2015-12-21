@@ -20,7 +20,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import cat.alkaid.projects.intrastat.model.Factura;
-import cat.alkaid.projects.intrastat.rest.Secured;
 import cat.alkaid.projects.intrastat.service.FacturaService;
 
 @RequestScoped
@@ -61,7 +60,6 @@ public class FacturaEndpoint {
 	}
 
 	@GET
-	@Secured
 	public List<Factura> listAll(@QueryParam("start") final Integer startPosition,
 			@QueryParam("max") final Integer maxResult) {
 		//TODO: retrieve the facturas 
@@ -71,7 +69,6 @@ public class FacturaEndpoint {
 
 	@GET
 	@Path("/proveedor/{id:[0-9][0-9]*}")
-	@Secured
 	public List<Factura> listByProveedor(@PathParam("id") final Long id,
 			@QueryParam("start") final Integer startPosition,
 			@QueryParam("max") final Integer maxResult) {

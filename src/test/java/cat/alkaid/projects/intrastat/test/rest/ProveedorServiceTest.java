@@ -39,7 +39,6 @@ public class ProveedorServiceTest {
 	public void addItem(){
 		Proveedor Proveedor = new Proveedor();
 		Proveedor.setCodigo("test");
-		Proveedor.setDocumento("90000000A");
 		Proveedor.setName("test");
 		
 		service.addProveedor(Proveedor);

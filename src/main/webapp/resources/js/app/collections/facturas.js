@@ -12,22 +12,22 @@ define([
 		model: Factura,
 		id: "id",
 		
-		findByProveedor : function(idProveedor){
-			this.url =  config.baseUrl + "rest/facturas/proveedor/"+idProveedor;
+		findByProveedor : function(flujo, present, idProveedor){
+			this.url =  config.baseUrl + "rest/facturas/proveedor/"+idProveedor+"?flujo="+flujo+"&present="+present;
 
 	        this.fetch({
 	        	reset : true
 	        });
 		},
 
-		findByFecha : function(fechaIni, fechaFin){
-			this.url =  config.baseUrl + 'rest/facturas/interval?fechaIni='+fechaIni+'&fechaFin='+fechaFin+'&start=0&max=0';
+		findByFecha : function(flujo, present, fechaIni, fechaFin){
+			this.url =  config.baseUrl + 'rest/facturas/interval?fechaIni='+fechaIni+'&fechaFin='+fechaFin+'&flujo='+flujo+"&present="+present+'&start=0&max=0';
 	        this.fetch({
 	        	reset : true
 	        });
 		},
 		
-		findByCodigo : function(codigo){
+		findByCodigo : function(flujo, present, codigo){
 			this.url = config.baseUrl + 'rest/facturas/codigo/'+codigo;
 	        this.fetch({
 	        	reset : true

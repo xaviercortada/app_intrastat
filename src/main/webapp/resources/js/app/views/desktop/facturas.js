@@ -62,18 +62,20 @@ define([
 			    	this.collection = new Facturas();
 					this.collection.on("reset", this.fillTable,this);
 
+					var flujo = $(".flujo:checked").val();
+					var present = $(".present:checked").val();
 			    	var codigo = $("#codigo").val();
 			    	var fechaIni = $("#fechaIni").val();
 			    	var fechaFin = $("#fechaFin").val();
 			    	if(codigo){
 		    		
-			    		this.collection.findByCodigo(codigo);
+			    		this.collection.findByCodigo(flujo, present, codigo);
 
 			    	}else if(fechaIni && fechaFin){
-				    	this.collection.findByFecha(fechaIni, fechaFin);
+				    	this.collection.findByFecha(flujo, present, fechaIni, fechaFin);
 			    	}else{
 				    	var idProveedor = $("#proveedor").val();
-				    	this.collection.findByProveedor(idProveedor);
+				    	this.collection.findByProveedor(flujo, present, idProveedor);
 			    	}
 
 			    },

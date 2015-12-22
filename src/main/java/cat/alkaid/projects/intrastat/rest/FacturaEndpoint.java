@@ -2,6 +2,7 @@ package cat.alkaid.projects.intrastat.rest;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -70,10 +71,17 @@ public class FacturaEndpoint {
 	@GET
 	@Path("/proveedor/{id:[0-9][0-9]*}")
 	public List<Factura> listByProveedor(@PathParam("id") final Long id,
+			@QueryParam("flujo") final String flujo,
+			@QueryParam("present") final String present,
 			@QueryParam("start") final Integer startPosition,
 			@QueryParam("max") final Integer maxResult) {
-		//TODO: retrieve the facturas 
-		final List<Factura> facturas = service.findByProveedor("", true, id);
+
+		List<Factura> facturas;
+		if(flujo.equalsIgnoreCase("X")){
+			facturas = service.findByProveedor("", present, id);
+		}else{
+			facturas = service.findByFlujoProveedor("", flujo, present, id);
+		}
 		return facturas;
 	}
 
@@ -81,20 +89,26 @@ public class FacturaEndpoint {
 	@Path("/interval")
 	public List<Factura> listByInterval(@QueryParam("fechaIni") final String fechaIni,
 			@QueryParam("fechaFin") final String fechaFin,
+			@QueryParam("flujo") final String flujo,
+			@QueryParam("present") final String present,
 			@QueryParam("start") final Integer startPosition,
 			@QueryParam("max") final Integer maxResult) {
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		List<Factura> facturas = new ArrayList<Factura>();
 		try {
 			Date date1 = formatter.parse(fechaIni);
 			Date date2 = formatter.parse(fechaFin);
-			final List<Factura> facturas = service.findByIntervalo("", date1, date2);
-			return facturas;
+			if(flujo.equalsIgnoreCase("X")){
+				facturas = service.findByIntervalo("", present, date1, date2);
+			}else{
+				facturas = service.findByFlujoIntervalo("", flujo, present, date1, date2);
+			}
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		return facturas;
 	}
 
 	@PUT

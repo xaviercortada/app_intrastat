@@ -58,15 +58,56 @@ public class FacturaService {
         return query.getResultList();
     }
 
-    public List<Factura> findByIntervalo(String authId, Date fechaIni, Date fechaFin){
-        TypedQuery<Factura> query = em.createQuery("SELECT p FROM Factura p WHERE fecha >= ?0 and fecha < ?1",Factura.class);
+    public List<Factura> findByIntervalo(String authId, String present, Date fechaIni, Date fechaFin){
+    	String s = "";
+    	if(present.equalsIgnoreCase("S")){
+    		s = " and presentado IS NOT NULL";
+    	}else if (present.equalsIgnoreCase("N")) {
+    		s = " and presentado IS NULL";			
+		}
+        TypedQuery<Factura> query = em.createQuery("SELECT p FROM Factura p WHERE fecha >= ?0 and fecha < ?1"+s,Factura.class);
         query.setParameter(0, fechaIni);
         query.setParameter(1, fechaFin);
         return query.getResultList();
     }
 
-    public List<Factura> findByProveedor(String authId, Boolean presentado, Long idProveedor){
-        TypedQuery<Factura> query = em.createQuery("SELECT p FROM Factura p WHERE p.proveedor.id = ?0",Factura.class);
+    public List<Factura> findByFlujoIntervalo(String authId, String flujo, String present, Date fechaIni, Date fechaFin){
+    	String s = "";
+    	if(present.equalsIgnoreCase("S")){
+    		s = " and presentado IS NOT NULL";
+    	}else if (present.equalsIgnoreCase("N")) {
+    		s = " and presentado IS NULL";			
+		}
+        TypedQuery<Factura> query = em.createQuery("SELECT p FROM Factura p WHERE fecha >= ?0 and fecha < ?1 and p.flujo = ?2"+s,Factura.class);
+        query.setParameter(0, fechaIni);
+        query.setParameter(1, fechaFin);
+        query.setParameter(2, flujo);
+        return query.getResultList();
+    }
+
+    public List<Factura> findByFlujoProveedor(String authId, String flujo, String present, Long idProveedor){
+    	String s = "";
+    	if(present.equalsIgnoreCase("S")){
+    		s = " and presentado IS NOT NULL";
+    	}else if (present.equalsIgnoreCase("N")) {
+    		s = " and presentado IS NULL";			
+		}
+
+        TypedQuery<Factura> query = em.createQuery("SELECT p FROM Factura p WHERE p.proveedor.id = ?0 and p.flujo = ?1"+s,Factura.class);
+        query.setParameter(0, idProveedor);
+        query.setParameter(1, flujo);
+        return query.getResultList();
+    }
+
+    public List<Factura> findByProveedor(String authId, String present, Long idProveedor){
+    	String s = "";
+    	if(present.equalsIgnoreCase("S")){
+    		s = " and presentado IS NOT NULL";
+    	}else if (present.equalsIgnoreCase("N")) {
+    		s = " and presentado IS NULL";			
+		}
+
+        TypedQuery<Factura> query = em.createQuery("SELECT p FROM Factura p WHERE p.proveedor.id = ?0"+s,Factura.class);
         query.setParameter(0, idProveedor);
         return query.getResultList();
     }

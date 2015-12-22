@@ -6,21 +6,41 @@
   <div class="panel-heading">
   	<form class="form-horizontal" role="form">
     	<div class="row">
-    		<div class="col-md-3">
+    		<div class="col-md-2">
             	<fieldset>
             	<div class="form-group" style="margin: 0px">
-            	<label class="control-label" >Estado</label>
+            	<label class="control-label" >Flujo</label>
 				<div class="radio">
-				  <label><input type="radio" class="flujo" value="I" name="flujo">Pendientes</label>
+				  <label><input type="radio" class="flujo" value="I" name="flujo">Introduccion</label>
 				</div>
 				<div class="radio">
-				  <label><input type="radio" class="flujo" value="E" name="flujo">Procesadas</label>
+				  <label><input type="radio" class="flujo" value="E" name="flujo">Expedicion</label>
+				</div>
+				<div class="radio">
+				  <label><input type="radio" checked="true" class="flujo" value="X" name="flujo">Todos</label>
 				</div>
                 <span class="help-block hidden"></span>
                 </div>
 				</fieldset>
     		</div>
-    		<div class="col-md-3">
+    		<div class="col-md-2">
+            	<fieldset>
+            	<div class="form-group" style="margin: 0px">
+            	<label class="control-label" >Presentado</label>
+				<div class="radio">
+				  <label><input type="radio" class="present" value="S" name="present">Si</label>
+				</div>
+				<div class="radio">
+				  <label><input type="radio" class="present" value="N" name="present">No</label>
+				</div>
+				<div class="radio">
+				  <label><input type="radio" checked="true" class="present" value="X" name="present">Todos</label>
+				</div>
+                <span class="help-block hidden"></span>
+                </div>
+				</fieldset>
+    		</div>
+    		<div class="col-md-2">
             	<fieldset>
             	<div class="form-group" style="margin: 0px">
 	            	<div class="form-group" style="margin: 0px">

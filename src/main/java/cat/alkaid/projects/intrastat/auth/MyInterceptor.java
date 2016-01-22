@@ -18,6 +18,8 @@ import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.ext.Provider;
 
@@ -121,5 +123,11 @@ public class MyInterceptor implements PreProcessInterceptor  {
         }
         return isAllowed;
     }
+
+	@Override
+	public void filter(ContainerRequestContext arg0) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -3,8 +3,6 @@ package cat.alkaid.projects.intrastat.services;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,15 +23,7 @@ public class AccountService {
     }
 
     public Account findByUsername(String username) {
-        TypedQuery<Account> query = em.createQuery("SELECT p FROM Account p WHERE p.username = ?0 ", Account.class);
-        query.setParameter(0, username);
-        List<Account> list = query.getResultList();
-        if (list.size() > 0) {
-            return list.get(0);
-        } else {
-            return null;
-        }
-        return em.findByUserName(userName);
+        return em.findByUserName(username);
     }
 
     public Account create(Account account) {

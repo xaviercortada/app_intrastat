@@ -2,8 +2,6 @@ package cat.alkaid.projects.intrastat.controllers;
 
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -16,15 +14,20 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import cat.alkaid.projects.intrastat.model.Proveedor;
-import cat.alkaid.projects.intrastat.service.ProveedorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@RequestScoped
+import cat.alkaid.projects.intrastat.models.Proveedor;
+import cat.alkaid.projects.intrastat.services.ProveedorService;
+
+@Component
 @Path("/proveedores")
 @Produces({ "application/xml", "application/json" })
 @Consumes({ "application/xml", "application/json" })
 public class ProveedorEndpoint {
-	@Inject
+	@Autowired
     private ProveedorService service;
 	
 

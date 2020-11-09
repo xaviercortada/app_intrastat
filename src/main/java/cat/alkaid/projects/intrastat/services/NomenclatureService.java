@@ -1,20 +1,16 @@
-package cat.alkaid.projects.intrastat.service;
+package cat.alkaid.projects.intrastat.services;
 
-import java.util.Calendar;
-import java.util.Date;
+
 import java.util.List;
 
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import cat.alkaid.projects.intrastat.model.Factura;
-import cat.alkaid.projects.intrastat.model.Nomenclature;
+import cat.alkaid.projects.intrastat.models.Nomenclature;
 
-@Stateless
 public class NomenclatureService {
 
 	@PersistenceContext

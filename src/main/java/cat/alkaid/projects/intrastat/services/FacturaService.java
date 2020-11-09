@@ -8,23 +8,24 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import cat.alkaid.projects.intrastat.models.Account;
 import cat.alkaid.projects.intrastat.models.Factura;
 import cat.alkaid.projects.intrastat.models.Material;
 import cat.alkaid.projects.intrastat.models.Periodo;
 
-@Stateless
 public class FacturaService {
     @PersistenceContext
     private EntityManager em;
 
-    @EJB
+    @Autowired
     MaterialService materialService;
 
-    @EJB
+    @Autowired
     AccountService accountService;
 
-    @EJB
+    @Autowired
     PeriodoService periodoService;
 
     public Factura findById(Long id){

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.poi.ss.formula.functions.Replace;
 
 /**
  * Created by xavier on 27/09/15.
@@ -47,7 +46,7 @@ public class MaterialDto implements Comparable {
     private Float vestadistico;
 
     public MaterialDto(Factura factura, Material material){
-        setCodCategory(material.getNomenclature().getCodeCN8());
+        setCodCategory(material.getNomenclature().getCodeCN8().toString());
         setCodFactura(factura.getCodigo());
         setEntrega(material.getEntrega());
         setImporte(material.getImporte());

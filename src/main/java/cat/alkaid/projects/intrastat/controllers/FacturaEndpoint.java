@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -20,15 +18,16 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import cat.alkaid.projects.intrastat.model.Factura;
-import cat.alkaid.projects.intrastat.service.FacturaService;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@RequestScoped
+import cat.alkaid.projects.intrastat.models.Factura;
+import cat.alkaid.projects.intrastat.services.FacturaService;
+
 @Path("/facturas")
 @Produces({ "application/xml", "application/json" })
 @Consumes({ "application/xml", "application/json" })
 public class FacturaEndpoint {
-	@Inject
+	@Autowired
     private FacturaService service;
 	
 	@POST

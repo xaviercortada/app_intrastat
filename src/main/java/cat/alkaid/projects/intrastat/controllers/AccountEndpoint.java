@@ -2,18 +2,27 @@ package cat.alkaid.projects.intrastat.controllers;
 
 import java.util.List;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
 
 import cat.alkaid.projects.intrastat.models.Account;
 import cat.alkaid.projects.intrastat.services.AccountService;
 
-@RestController
-@RequestMapping("/accounts")
+@Path("/accounts")
+@Produces({ "application/json" })
+@Consumes({ "application/json" })
 public class AccountEndpoint {
 	
 	@Autowired
@@ -29,8 +38,9 @@ public class AccountEndpoint {
 		return Response.ok(account).build();
 	}
 
-	@GetMapping("/{id:[0-9][0-9]*}")
-	public ResponseEntity<Account> findById(@PathVariable("id") final Long id) {
+	@GET
+	@Path("/{id:[0-9][0-9]*}")
+	public Response findById(@PathParam("id") final Long id) {
 		Account account = service.findById(id);
 		if (account == null) {
 			return Response.status(Status.NOT_FOUND).build();

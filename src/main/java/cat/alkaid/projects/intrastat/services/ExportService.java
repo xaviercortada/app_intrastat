@@ -1,4 +1,5 @@
-package cat.alkaid.projects.intrastat.service;
+package cat.alkaid.projects.intrastat.services;
+
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -11,8 +12,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.WebApplicationException;
@@ -20,17 +19,17 @@ import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormat;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import cat.alkaid.projects.intrastat.model.Factura;
-import cat.alkaid.projects.intrastat.model.Material;
-import cat.alkaid.projects.intrastat.model.MaterialDto;
-import cat.alkaid.projects.intrastat.model.Periodo;
+import cat.alkaid.projects.intrastat.models.Factura;
+import cat.alkaid.projects.intrastat.models.Material;
+import cat.alkaid.projects.intrastat.models.MaterialDto;
+import cat.alkaid.projects.intrastat.models.Periodo;
 
 /**
  * Created by xavier on 21/07/15.
  */
 
-@Stateless
 public class ExportService {
 
     final String TITLE = "TECNOPLUS";
@@ -63,10 +62,10 @@ public class ExportService {
 
     DataFormat format;
 
-    @EJB
+    @Autowired
     FacturaService facturaService;
 
-    @EJB
+    @Autowired
     PeriodoService periodoService;
 
 

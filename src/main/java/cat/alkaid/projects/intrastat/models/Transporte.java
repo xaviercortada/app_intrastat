@@ -4,25 +4,11 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.xml.bind.annotation.XmlRootElement;
+import lombok.Data;
 
-@SuppressWarnings("serial")
+@Data
 @Entity
-@XmlRootElement
-public class Transporte implements Serializable{
-	
-    public String getCodigo() {
-		return codigo;
-	}
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
+public class Transporte {
 	
 	@Id
 	private String codigo;

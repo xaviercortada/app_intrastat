@@ -2,8 +2,6 @@ package cat.alkaid.projects.intrastat.controllers;
 
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
@@ -18,21 +16,22 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import cat.alkaid.projects.intrastat.model.Pais;
-import cat.alkaid.projects.intrastat.model.Provincia;
-import cat.alkaid.projects.intrastat.model.Transaccion;
-import cat.alkaid.projects.intrastat.model.Transporte;
-import cat.alkaid.projects.intrastat.service.ProvinciaService;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@RequestScoped
+import cat.alkaid.projects.intrastat.models.Pais;
+import cat.alkaid.projects.intrastat.models.Provincia;
+import cat.alkaid.projects.intrastat.models.Transaccion;
+import cat.alkaid.projects.intrastat.models.Transporte;
+import cat.alkaid.projects.intrastat.services.ProvinciaService;
+
 @Path("/resources")
 @Produces({ "application/xml", "application/json" })
 @Consumes({ "application/xml", "application/json" })
 public class ResourceEndpoint {
-	@Inject
+	@Autowired
     private ProvinciaService provinciaService;
 	
-	@Inject
+	@Autowired
 	private EntityManager em;
 
 	@GET

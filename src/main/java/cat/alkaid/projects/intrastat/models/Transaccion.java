@@ -4,15 +4,16 @@ import java.io.Serializable;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import lombok.Data;
+
 /**
  * Entity implementation class for Entity: Transaccion
  *
  */
 
-@SuppressWarnings("serial")
+@Data
 @Entity
-@XmlRootElement
-public class Transaccion implements Serializable {
+public class Transaccion {
 
 	@Id
 	private int id;
@@ -20,40 +21,4 @@ public class Transaccion implements Serializable {
     private String texto;
     private int grupo;
 
-	public Transaccion() {
-		super();
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getCodigo() {
-		return codigo;
-	}
-
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
-
-	public String getTexto() {
-		return texto;
-	}
-
-	public void setTexto(String texto) {
-		this.texto = texto;
-	}
-
-	public int getGrupo() {
-		return grupo;
-	}
-
-	public void setGrupo(int grupo) {
-		this.grupo = grupo;
-	}   
-   
 }

@@ -8,10 +8,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@SuppressWarnings("serial")
+import lombok.Data;
+
+@Data
 @Entity
-@XmlRootElement
-public class Periodo implements Serializable{
+public class Periodo {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -19,24 +20,4 @@ public class Periodo implements Serializable{
     private int month;
     private int year;
     
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public int getMonth() {
-		return month;
-	}
-	public void setMonth(int month) {
-		this.month = month;
-	}
-	public int getYear() {
-		return year;
-	}
-	public void setYear(int year) {
-		this.year = year;
-	}
-
-
 }

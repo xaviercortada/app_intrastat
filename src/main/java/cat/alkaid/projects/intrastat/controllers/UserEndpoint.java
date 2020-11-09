@@ -3,8 +3,6 @@ package cat.alkaid.projects.intrastat.controllers;
 import java.io.IOException;
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -16,18 +14,20 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.ws.rs.core.UriBuilder;
 
-import cat.alkaid.projects.intrastat.model.User;
-import cat.alkaid.projects.intrastat.service.UserService;
+import cat.alkaid.projects.intrastat.models.User;
+import cat.alkaid.projects.intrastat.services.UserService;
 
-@RequestScoped
 @Path("/users")
 @Produces({ "application/xml", "application/json" })
 @Consumes({ "application/xml", "application/json" })
 public class UserEndpoint {
 	
-	@Inject
+	@Autowired
 	UserService service;
 
 	@POST

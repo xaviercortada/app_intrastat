@@ -2,8 +2,7 @@ package cat.alkaid.projects.intrastat.controllers;
 
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -13,15 +12,17 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import cat.alkaid.projects.intrastat.model.Nomenclature;
-import cat.alkaid.projects.intrastat.service.NomenclatureService;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@RequestScoped
+import cat.alkaid.projects.intrastat.models.Nomenclature;
+import cat.alkaid.projects.intrastat.services.NomenclatureService;
+
+
 @Path("/nomenclatures")
 @Produces({ "application/xml", "application/json" })
 @Consumes({ "application/xml", "application/json" })
 public class NomenclatureEndpoint {
-	@Inject
+	@Autowired
 	NomenclatureService service;
 
 	@GET

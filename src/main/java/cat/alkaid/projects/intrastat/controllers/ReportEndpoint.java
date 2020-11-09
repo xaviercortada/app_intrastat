@@ -1,23 +1,22 @@
 package cat.alkaid.projects.intrastat.controllers;
 
-import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
-import cat.alkaid.projects.intrastat.service.ExportService;
-import cat.alkaid.projects.intrastat.service.ReportService;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@RequestScoped
+import cat.alkaid.projects.intrastat.services.ExportService;
+import cat.alkaid.projects.intrastat.services.ReportService;
+
 @Path("report")
 public class ReportEndpoint {
-    @EJB
+    @Autowired
     private ReportService reportService;
 
-    @EJB
+    @Autowired
     private ExportService exportService;
 
     @GET

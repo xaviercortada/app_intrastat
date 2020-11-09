@@ -38,4 +38,7 @@ public class Account {
     @Temporal(TemporalType.DATE)
     private Date activated;
 
+	public void changePassword(String password2) {
+	}
+
 }

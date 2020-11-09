@@ -1,16 +1,14 @@
-package cat.alkaid.projects.intrastat.service;
+package cat.alkaid.projects.intrastat.services;
 
 import java.util.List;
 
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import cat.alkaid.projects.intrastat.model.Provincia;
+import cat.alkaid.projects.intrastat.models.Provincia;
 
-@Stateless
 public class ProvinciaService {
 	
     @PersistenceContext

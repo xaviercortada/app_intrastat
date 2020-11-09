@@ -7,15 +7,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.Table;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@SuppressWarnings("serial")
+import lombok.Data;
+
+@Data
 @Entity
-@XmlRootElement
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Proveedor implements Serializable{
+@Table(name = "proveedor")
+public class Proveedor {
 	
     @Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -29,26 +30,5 @@ public class Proveedor implements Serializable{
     
     @Embedded
     private Person person;
-
-    public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public String getCodigo() {
-		return codigo;
-	}
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
 
 }

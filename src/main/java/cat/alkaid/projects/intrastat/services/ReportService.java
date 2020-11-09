@@ -1,4 +1,4 @@
-package cat.alkaid.projects.intrastat.service;
+package cat.alkaid.projects.intrastat.services;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -6,31 +6,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.StreamingOutput;
 
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import cat.alkaid.projects.intrastat.model.Factura;
-import cat.alkaid.projects.intrastat.model.Material;
-import cat.alkaid.projects.intrastat.model.MaterialDto;
-import cat.alkaid.projects.intrastat.model.Periodo;
+import cat.alkaid.projects.intrastat.models.Factura;
+import cat.alkaid.projects.intrastat.models.Material;
+import cat.alkaid.projects.intrastat.models.MaterialDto;
 
 /**
  * Created by xavier on 21/07/15.
  */
 
-@Stateless
 public class ReportService {
     final String NUMBER_FORMAT = "#,##0.00_);[Red](#,##0.00)";
 
@@ -57,9 +53,9 @@ public class ReportService {
             2500,2500,2500,2500,2500,3000};
 
 
-    DataFormat format;
+    HSSFDataFormat format;
 
-    @EJB
+    @Autowired
     FacturaService facturaService;
     
 
@@ -133,7 +129,8 @@ public class ReportService {
 
         CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
         Font font = sheet.getWorkbook().createFont();
-        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+
+        font.setBold(true);
         font.setFontHeightInPoints((short) 10);
         cellStyle.setFont(font);
         cellStyle.setDataFormat(format.getFormat(NUMBER_FORMAT));
@@ -174,10 +171,11 @@ public class ReportService {
     private void writeTotal(HSSFSheet sheet, List<Cell[]> totalCells, int i) {
         CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
         Font font = sheet.getWorkbook().createFont();
-        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        font.setBold(true);
         font.setFontHeightInPoints((short) 10);
-        cellStyle.setBorderTop((short) 1);
-        cellStyle.setBorderBottom((short) 2);
+        BorderStyle thin = BorderStyle.THIN;
+        cellStyle.setBorderTop(thin);
+        cellStyle.setBorderBottom(thin);
         cellStyle.setFont(font);
         cellStyle.setDataFormat(format.getFormat(NUMBER_FORMAT));
 
@@ -290,7 +288,7 @@ public class ReportService {
 
         CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
         Font font = sheet.getWorkbook().createFont();
-        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        font.setBold(true);
         font.setFontHeightInPoints((short) 10);
         cellStyle.setFont(font);
 
@@ -310,7 +308,7 @@ public class ReportService {
 
         CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
         Font font = sheet.getWorkbook().createFont();
-        font.setBoldweight(Font.BOLDWEIGHT_NORMAL);
+        font.setBold(true);
         font.setFontHeightInPoints((short) 10);
         cellStyle.setFont(font);
 
@@ -321,7 +319,7 @@ public class ReportService {
 
         CellStyle headerStyle = sheet.getWorkbook().createCellStyle();
         Font headerFont = sheet.getWorkbook().createFont();
-        headerFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        headerFont.setBold(true);
         headerFont.setFontHeightInPoints((short) 10);
         headerStyle.setFont(headerFont);
 

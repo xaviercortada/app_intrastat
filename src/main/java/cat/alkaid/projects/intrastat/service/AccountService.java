@@ -1,99 +1,109 @@
 package cat.alkaid.projects.intrastat.service;
 
 import java.util.Date;
-import java.util.List;
-
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import cat.alkaid.projects.intrastat.auth.AuthPasswordElement;
+import java.util.Iterator;
+import java.util.Set;
+import cat.alkaid.projects.intrastat.model.Company;
 import javax.persistence.TypedQuery;
-
+import java.util.List;
 import cat.alkaid.projects.intrastat.model.Account;
-import cat.alkaid.projects.intrastat.model.User;
+import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManager;
+import javax.ejb.Stateless;
 
 @Stateless
-public class AccountService {
+public class AccountService
+{
     @PersistenceContext
     private EntityManager em;
-
-    public Account findById(Long id){
-        return em.find(Account.class, id);
+    
+    public Account findById(final Long id) {
+        return (Account)this.em.find((Class)Account.class, (Object)id);
     }
-
-    public List<Account> findAll(){
-        TypedQuery<Account>query = em.createQuery("SELECT p FROM Account p",Account.class);
-        return query.getResultList();
+    
+    public List<Account> findAll() {
+        final TypedQuery<Account> query = (TypedQuery<Account>)this.em.createQuery("SELECT p FROM Account p", (Class)Account.class);
+        return (List<Account>)query.getResultList();
     }
-
-    public Account findByUsername(String username){
-        TypedQuery<Account>query = em.createQuery("SELECT p FROM Account p WHERE p.username = ?0 ",Account.class);
-        query.setParameter(0, username);
-        List<Account> list = query.getResultList();
-        if(list.size() > 0){
-            return list.get(0);
-        }else{
-            return null;
+    
+    public List<Account> findByUsername(final String username) {
+        final TypedQuery<Account> query = (TypedQuery<Account>)this.em.createQuery("SELECT p FROM Account p WHERE p.userName = ?0 ", (Class)Account.class);
+        query.setParameter(0, (Object)username);
+        return (List<Account>)query.getResultList();
+    }
+    
+    public boolean create(final Account account) {
+        try {
+            this.em.persist((Object)account);
         }
-    }
-
-    public boolean create(Account account){
-    	try{
-    		User user = account.getUser();
-    		user.setAccount(account);
-    		em.persist(user);
-	        em.persist(account);
-    	}catch(Throwable e){
-			e.printStackTrace();    		
-    	}
-    	return false;
-    }
-
-    public boolean update(Account item){
-        em.merge(item);
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
         return false;
     }
-
-    public boolean delete(Long id){
-        Account target = findById(id);
-        if(target != null) {
-            em.remove(target);
-            return true;
+    
+    public boolean update(final Account account) {
+        final Set<Company> companies = account.getCompanies();
+        for (final Company item : companies) {
+            item.setAccount(account);
         }
-
+        this.em.merge((Object)account);
         return false;
     }
-
-    public boolean changePassword(Long id, String password){
-        Account target = findById(id);
-        if(target != null) {
-            target.changePassword(password);
-
-            em.merge(target);
+    
+    public boolean delete(final Long id) {
+        final Account target = this.findById(id);
+        if (target != null) {
+            this.em.remove((Object)target);
             return true;
         }
         return false;
-
     }
-
-
-    public Object findByLoginName(String email) {
+    
+    public boolean changePassword(final Long id, final AuthPasswordElement passwordElement) {
+        final Account target = this.findById(id);
+        if (target != null) {
+            target.changePassword(passwordElement.getNew_password());
+            this.em.merge((Object)target);
+            return true;
+        }
+        return false;
+    }
+    
+    public Object findByLoginName(final String email) {
         return null;
     }
-
-    public Account activateAccount(String activationCode) {
-        TypedQuery<Account>query = em.createQuery("SELECT p FROM Account p WHERE p.activationCode = ?0 ",Account.class);
-        query.setParameter(0, activationCode);
-        List<Account> list = query.getResultList();
-        if(list.size() > 0){
-            Account account = list.get(0);
-            Date date = new Date();
+    
+    public Account activateAccount(final String activationCode) {
+        final TypedQuery<Account> query = (TypedQuery<Account>)this.em.createQuery("SELECT p FROM Account p WHERE p.activationCode = ?0 ", (Class)Account.class);
+        query.setParameter(0, (Object)activationCode);
+        final List<Account> list = (List<Account>)query.getResultList();
+        if (list.size() > 0) {
+            final Account account = list.get(0);
+            final Date date = new Date();
             account.setActivated(date);
-            em.merge(account);
+            this.em.merge((Object)account);
             return account;
-        }else{
-            return null;
+        }
+        return null;
+    }
+    
+    public void removeCompany(final Long id, final Long idCompany) {
+        final Account account = this.findById(id);
+        Company selected = null;
+        for (final Company item : account.getCompanies()) {
+            final long itemId = item.getId();
+            if (itemId == idCompany) {
+                selected = item;
+                break;
+            }
+        }
+        if (selected != null) {
+            account.getCompanies().remove(selected);
+            this.em.merge((Object)account);
+            this.em.remove((Object)selected);
         }
     }
-
-
 }
+

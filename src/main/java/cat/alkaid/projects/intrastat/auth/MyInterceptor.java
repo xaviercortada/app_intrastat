@@ -1,133 +1,98 @@
+
 package cat.alkaid.projects.intrastat.auth;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.annotation.security.DenyAll;
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-import javax.ws.rs.GET;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.ext.Provider;
-
-import org.jboss.resteasy.annotations.interception.ServerInterceptor;
-import org.jboss.resteasy.core.Headers;
-import org.jboss.resteasy.core.ResourceMethod;
-import org.jboss.resteasy.core.ServerResponse;
 import org.jboss.resteasy.spi.Failure;
+import java.util.List;
+import javax.ws.rs.core.HttpHeaders;
+import java.lang.reflect.Method;
+import org.jose4j.jwt.consumer.InvalidJwtException;
+import org.jose4j.lang.JoseException;
+import java.util.Set;
+import java.util.HashSet;
+import javax.annotation.security.DenyAll;
+import java.lang.annotation.Annotation;
+import javax.annotation.security.PermitAll;
+import org.jboss.resteasy.core.ResourceMethodInvoker;
 import org.jboss.resteasy.spi.HttpRequest;
-import org.jboss.resteasy.spi.interception.AcceptedByMethod;
+import org.jboss.resteasy.core.Headers;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
+import cat.alkaid.projects.intrastat.service.AuthService;
+import org.jboss.resteasy.core.ServerResponse;
+import java.util.logging.Logger;
+import org.jboss.resteasy.annotations.interception.ServerInterceptor;
+import javax.ws.rs.ext.Provider;
 import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
 
 @Provider
 @ServerInterceptor
-public class MyInterceptor implements PreProcessInterceptor  {
-	private final static Logger LOGGER = Logger.getLogger(MyInterceptor.class.getName());
-	
-	private static final String AUTHORIZATION_PROPERTY = "Authorization";
-	private static final String AUTHENTICATION_SCHEME = "Basic";
-	private static final ServerResponse ACCESS_DENIED = new ServerResponse("Access denied for this resource", 401, new Headers<Object>());;
-	private static final ServerResponse ACCESS_FORBIDDEN = new ServerResponse("Nobody can access this resource", 403, new Headers<Object>());;
-	private static final ServerResponse SERVER_ERROR = new ServerResponse("INTERNAL SERVER ERROR", 500, new Headers<Object>());;
-	     
-	 
-    @Override
-    public ServerResponse preProcess(HttpRequest request, ResourceMethod methodInvoked) throws Failure, WebApplicationException
-    {
-        Method method = methodInvoked.getMethod();
-         
-        //Access allowed for all
-        if(method.isAnnotationPresent(PermitAll.class))
-        {
+public class MyInterceptor implements PreProcessInterceptor
+{
+    private static final Logger LOGGER;
+    private static final String AUTHORIZATION_PROPERTY = "Authorization";
+    private static final String AUTHENTICATION_SCHEME = "Basic";
+    private static final ServerResponse ACCESS_DENIED;
+    private static final ServerResponse ACCESS_FORBIDDEN;
+    private static final ServerResponse SERVER_ERROR;
+    @Inject
+    AuthService authService;
+    @Inject
+    @AuthenticatedUser
+    Event<AuthenticatedEvent> userAuthenticatedEvent;
+    
+    static {
+        LOGGER = Logger.getLogger(MyInterceptor.class.getName());
+        ACCESS_DENIED = new ServerResponse((Object)"Access denied for this resource", 401, new Headers());
+        ACCESS_FORBIDDEN = new ServerResponse((Object)"Nobody can access this resource", 403, new Headers());
+        SERVER_ERROR = new ServerResponse((Object)"INTERNAL SERVER ERROR", 500, new Headers());
+    }
+    
+    public ServerResponse preProcess(final HttpRequest request, final ResourceMethodInvoker resourceMethod) throws Failure, WebApplicationException {
+        final Method method = resourceMethod.getMethod();
+        if (method.isAnnotationPresent((Class<? extends Annotation>)PermitAll.class)) {
             return null;
         }
-        //Access denied for all
-        if(method.isAnnotationPresent(DenyAll.class))
-        {
-            return ACCESS_FORBIDDEN;
+        if (method.isAnnotationPresent((Class<? extends Annotation>)DenyAll.class)) {
+            return MyInterceptor.ACCESS_FORBIDDEN;
         }
-         
-        //Get request headers
         final HttpHeaders headers = request.getHttpHeaders();
-         
-        //Fetch authorization header
-        final List<String> authorization = headers.getRequestHeader(AUTHORIZATION_PROPERTY);
-         
-        //If no authorization information present; block access
-        if(authorization == null || authorization.isEmpty())
-        {
-            return ACCESS_DENIED;
-        }
-         
-        //Get encoded username and password
-        final String encodedUserPassword = authorization.get(0).replaceFirst(AUTHENTICATION_SCHEME + " ", "");
-         
-        //Decode username and password
-        String usernameAndPassword;
-        
-        usernameAndPassword = new String(Base64.getDecoder().decode(encodedUserPassword));
- 
-        //Split username and password tokens
-        final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
-        final String username = tokenizer.nextToken();
-        final String password = tokenizer.nextToken();
-         
-        //Verifying Username and password
-        System.out.println(username);
-        System.out.println(password);
-         
-        //Verify user access
-        if(method.isAnnotationPresent(RolesAllowed.class))
-        {
-            RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
-            Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
-             
-            //Is user valid?
-            if( ! isUserAllowed(username, password, rolesSet))
-            {
-                return ACCESS_DENIED;
+        final List<String> authorization = (List<String>)headers.getRequestHeader("Authorization");
+        final List<String> identification = (List<String>)headers.getRequestHeader("auth-id");
+        final List<String> company = (List<String>)headers.getRequestHeader("company-id");
+        if (authorization != null && authorization.size() > 0) {
+            try {
+                final String authToken = authorization.get(0).substring("Bearer".length()).trim();
+                final String authId = identification.get(0);
+                final HashSet roles = new HashSet();
+                if (method.isAnnotationPresent((Class<? extends Annotation>)AdminRole.class)) {
+                    roles.add("Admin");
+                }
+                this.authService.isAuthorized(authId, authToken, (Set)roles);
+                Long companyId = null;
+                try {
+                    final String s = company.get(0);
+                    companyId = Long.parseLong(s);
+                }
+                catch (Exception ex) {}
+                this.userAuthenticatedEvent.fire((Object)new AuthenticatedEvent(authId, companyId));
+            }
+            catch (JoseException e) {
+                e.printStackTrace();
+                return MyInterceptor.ACCESS_DENIED;
+            }
+            catch (InvalidJwtException e2) {
+                e2.printStackTrace();
+                return MyInterceptor.ACCESS_DENIED;
+            }
+            catch (Exception e3) {
+                return MyInterceptor.ACCESS_DENIED;
             }
         }
-         
-        //Return null to continue request processing
+        if (authorization == null || authorization.isEmpty()) {
+            return MyInterceptor.ACCESS_DENIED;
+        }
         return null;
     }
- 
-    private boolean isUserAllowed(final String username, final String password, final Set<String> rolesSet)
-    {
-        boolean isAllowed = false;
-         
-        //Step 1. Fetch password from database and match with password in argument
-        //If both match then get the defined role for user from database and continue; else return isAllowed [false]
-        //Access the database and do this part yourself
-        //String userRole = userMgr.getUserRole(username);
-        String userRole = "ADMIN";
-         
-        //Step 2. Verify user role
-        if(rolesSet.contains(userRole))
-        {
-            isAllowed = true;
-        }
-        return isAllowed;
-    }
-
-	@Override
-	public void filter(ContainerRequestContext arg0) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
+

@@ -1,4 +1,4 @@
-package cat.alkaid.projects.intrastat.controllers;
+package cat.alkaid.projects.intrastat.auth;
 
 import java.io.Serializable;
 

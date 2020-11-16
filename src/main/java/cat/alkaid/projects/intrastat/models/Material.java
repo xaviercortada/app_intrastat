@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -26,8 +27,10 @@ public class Material {
 	private Long id;
     private String codigo;
     private String entrega;
+    
     @ManyToOne
 	private Nomenclature nomenclature;
+    
     private Integer peso;
     private String importe;
     private Float price;
@@ -35,8 +38,10 @@ public class Material {
     private String name;
     private Float vestadistico;
     
-    @ManyToOne
-    @XmlTransient
-    private Factura factura;
+    
+/*     @ManyToOne
+    @JoinColumn(name = "factura_id")
+    private Factura factura; */
+    
     
 }

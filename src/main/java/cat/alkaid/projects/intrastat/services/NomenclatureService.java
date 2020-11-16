@@ -1,6 +1,5 @@
 package cat.alkaid.projects.intrastat.services;
 
-
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -9,8 +8,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.springframework.stereotype.Service;
+
 import cat.alkaid.projects.intrastat.models.Nomenclature;
 
+@Service
 public class NomenclatureService {
 
 	@PersistenceContext

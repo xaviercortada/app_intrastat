@@ -22,7 +22,7 @@ import cat.alkaid.projects.intrastat.services.FavoritoService;
 @Path("/favoritos")
 @Produces({ "application/xml", "application/json" })
 @Consumes({ "application/xml", "application/json" })
-public class FavoritoEndpoint {
+public class FavoritoEndPoint {
 	
 	@Autowired
 	FavoritoService service;

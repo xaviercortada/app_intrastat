@@ -2,23 +2,66 @@ package cat.alkaid.projects.intrastat.services;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.stereotype.Service;
+
 import cat.alkaid.projects.intrastat.models.Proveedor;
 
-public interface ProveedorService {
+@Service
+public class ProveedorService {
 	
-    Proveedor findById(Long id);
+    @PersistenceContext
+    private EntityManager em;
 
-    List<Proveedor> findAll();
+    public Proveedor findById(Long id){
+        return em.find(Proveedor.class, id);
+    }
 
-    Proveedor findByCodigo(String codigo);
+    public List<Proveedor> findAll(){
+        TypedQuery<Proveedor>query = em.createQuery("SELECT p FROM Proveedor p",Proveedor.class);
+        return query.getResultList();
+    }
 
-    boolean create(Proveedor item);
+    public Proveedor findByCodigo(String codigo){
+        TypedQuery<Proveedor>query = em.createQuery("SELECT p FROM Proveedor p WHERE p.codigo = ?0",Proveedor.class);
+        query.setParameter(0, codigo);
+        try{
+        	return query.getSingleResult();
+        }catch(NoResultException nre){
+        	return null;
+        }
+    }
 
-    boolean update(Proveedor item);
+    public boolean create(Proveedor item){
+        em.persist(item);
+        return true;
+    }
 
-    boolean delete(Long id);
+    public boolean update(Proveedor item){
+        em.merge(item);
+        return true;
+    }
 
-    void addProveedor(Proveedor item);
+    public boolean delete(Long id){
+        Proveedor target = findById(id);
+        if(target != null) {
+            em.remove(target);
+            return true;
+        }
 
+        return false;
+    }
+
+    public void addProveedor(Proveedor item) {
+        em.persist(item);
+    }
+
+
+	
 
 }

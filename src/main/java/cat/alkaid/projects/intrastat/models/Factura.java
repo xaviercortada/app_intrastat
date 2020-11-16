@@ -14,6 +14,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -66,10 +67,14 @@ public class Factura {
 	private Account account;
     
     @ManyToOne
+	private Company company;
+
+	@ManyToOne
 	private Periodo periodo;
 
-    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="factura")
-	private Set<Material> materiales = new HashSet<Material>();
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@JoinColumn(name = "factura_id")
+	private Set<Material> materiales = new HashSet<>();
     
 	
 	//Estado miembro de procedencia/destino(A2)
@@ -88,6 +93,10 @@ public class Factura {
 	//Ex: FR;31;FOB;11;3;;85182190;CN;1;115;162;15,37;15,37
 		//IT; 8;EXW;11;2;;38130000;ES;1;000;000;00000;00000
 
+	public List<String> toCSV(char delimeter, char endRecord){
+		return null;
+	}
+			/*
 	public List<String> toCSV(char delimeter, char endRecord){
 		List<String> output = new ArrayList<String>();
 		
@@ -112,6 +121,6 @@ public class Factura {
 		}
 		
 		return output;
-	}
+	}*/
 
 }

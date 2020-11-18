@@ -20,12 +20,11 @@ public class AuthenticatedUserProducer
     
     @Produces
     @RequestScoped
-    @AuthenticatedUser
     public Account getAuthenticatedAccount() {
         return this.authenticatedAccount;
     }
     
-    public void handleAuthenticationEvent(@AuthenticatedUser final AuthenticatedEvent authEvent) {
+    public void handleAuthenticationEvent(final AuthenticatedEvent authEvent) {
         final List<Account> accounts = (List<Account>)this.service.findByUsername(authEvent.getAuthId());
         this.authenticatedAccount = accounts.get(0);
         if (authEvent.getCompanyId() != null) {

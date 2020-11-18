@@ -66,11 +66,11 @@ public class FacturaService
     public List<Factura> findByIntervalo(final Account account, final String flujo, final String present, final Date fechaIni, final Date fechaFin) {
         String s = this.checkPresent(present);
         s = String.valueOf(s) + this.checkFlujo(flujo);
-        final TypedQuery<Factura> query = (TypedQuery<Factura>)this.em.createQuery("SELECT p FROM Factura p WHERE fecha >= ?0 and fecha < ?1 and p.account.id = ?2 and p.company.id = ?3" + s, (Class)Factura.class);
+        final TypedQuery<Factura> query = (TypedQuery<Factura>)this.em.createQuery("SELECT p FROM Factura p WHERE fecha >= ?0 and fecha < ?1 and p.account.id = ?2" + s, (Class)Factura.class);
         query.setParameter(0, (Object)fechaIni);
         query.setParameter(1, (Object)fechaFin);
         query.setParameter(2, (Object)account.getId());
-        query.setParameter(3, (Object)account.getActiveCompany());
+        //query.setParameter(3, (Object)account.getActiveCompany());
         return (List<Factura>)query.getResultList();
     }
     

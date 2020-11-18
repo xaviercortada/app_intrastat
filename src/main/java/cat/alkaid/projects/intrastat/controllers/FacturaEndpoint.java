@@ -99,6 +99,8 @@ public class FacturaEndPoint
         @RequestParam("flujo") final String flujo, @RequestParam("present") final String present, @RequestParam("start") final Integer startPosition, 
         @RequestParam("max") final Integer maxResult) {
 
+        this.authenticatedAccount = authenticationFacade.getAuthentication();
+
         final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         List<Factura> facturas = new ArrayList<Factura>();
         try {

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -96,8 +97,8 @@ public class ExportService {
             if (partidas.containsKey(key) ) {
             	MaterialDto dto = partidas.get(key);
             	int peso = dto.getPeso() + material.getPeso();
-            	float price = dto.getPrice() + material.getPrice();
-            	float vestadistico = dto.getVestadistico() + material.getVestadistico();
+            	BigDecimal price = dto.getPrice().add(material.getPrice());
+            	BigDecimal vestadistico = dto.getVestadistico().add(material.getVestadistico());
             	
             	dto.setPeso(peso);
             	dto.setPrice(price);

@@ -89,7 +89,7 @@ public class FacturaService
         try {
             final Set<Material> materiales = (Set<Material>)factura.getMateriales();
             for (final Material mat : materiales) {
-                // mat.setFactura(factura);
+                mat.setFactura(factura);
             }
             final Account myAccount = (Account)this.em.find((Class)Account.class, (Object)account.getId());
             if (myAccount != null) {
@@ -110,7 +110,7 @@ public class FacturaService
     public boolean update(final Factura factura) {
         final Set<Material> materiales = (Set<Material>)factura.getMateriales();
         for (final Material mat : materiales) {
-            // mat.setFactura(factura);
+            mat.setFactura(factura);
         }
         this.em.merge((Object)factura);
         return false;

@@ -1,263 +1,232 @@
 package cat.alkaid.projects.intrastat.models;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Locale;
+import java.math.BigDecimal;
 
-
-/**
- * Created by xavier on 27/09/15.
- */
-
-public class MaterialDto implements Comparable {
-
+public class MaterialDto implements Comparable<MaterialDto>
+{
+    final String NUMBER_FORMAT = "#0,00";
+    private String flujo;
     private String codFactura;
-
     private String codCategory;
-
     private String nameCategory;
-
     private String siglas;
-
+    private int codProvincia;
     private String codPais;
-
     private String codPaisOrigen;
-    
     private String proveedor;
-
     private String entrega;
-
     private Integer peso;
-
     private String importe;
-
     private Integer unidades;
-
     private String name;
-    
     private int codTransaccion;
-    
     private String codTransporte;
-    
     private int codRegimen;
-
-    private Float price;
+    private BigDecimal price;
+    private BigDecimal vestadistico;
     
-    private Float vestadistico;
-
-    public MaterialDto(Factura factura, Material material){
-        setCodCategory(material.getNomenclature().getCodeCN8().toString());
-        setCodFactura(factura.getCodigo());
-        setEntrega(material.getEntrega());
-        setImporte(material.getImporte());
-        setPrice(material.getPrice());
-        setNameCategory(material.getNomenclature().getDescription());
-        setPeso(material.getPeso());
-        setUnidades(material.getUnidades());
-        setSiglas(factura.getPais().getSigla());
-        setEntrega(factura.getEntrega());
-        setProveedor(factura.getProveedor().getName());
-        
-        setCodRegimen(factura.getRegimen());
-        setCodTransaccion(factura.getTransaccion());
-        setCodTransporte(factura.getTransporte().getCodigo());
-        
-        setVestadistico(material.getVestadistico());
-        
-        //Pais Origen
-        setCodPaisOrigen("");
-        if(factura.getOrigen() != null){
-            setCodPaisOrigen(String.format("%02d", factura.getOrigen().getCodigo()));        	
+    public MaterialDto(final Factura factura, final Material material) {
+        this.setCodCategory((String) material.getNomenclature().getCodeCN8());
+        this.setCodFactura(factura.getCodigo());
+        this.setEntrega(material.getEntrega());
+        this.setImporte(material.getImporte());
+        this.setPrice(material.getPrice());
+        this.setNameCategory(material.getNomenclature().getDescription());
+        this.setPeso(material.getPeso());
+        this.setUnidades(material.getUnidades());
+        this.setSiglas(factura.getPais().getSigla());
+        this.setEntrega(factura.getEntrega());
+        this.setProveedor(factura.getProveedor().getName());
+        this.setCodProvincia(factura.getProvincia().getCodigo());
+        this.setCodRegimen(factura.getRegimen());
+        this.setCodTransaccion(factura.getTransaccion());
+        this.setCodTransporte(factura.getTransporte().getCodigo());
+        this.setVestadistico(material.getVestadistico());
+        this.setCodPaisOrigen("");
+        if (factura.getOrigen() != null) {
+            this.setCodPaisOrigen(String.format("%02d", factura.getOrigen().getCodigo()));
         }
-        
-        //Pais procedencia
-        setCodPais("");
-        if(factura.getPais() != null){
-            setCodPais(String.format("%02d", factura.getPais().getCodigo()));        	
+        this.setCodPais("");
+        if (factura.getPais() != null) {
+            this.setCodPais(String.format("%02d", factura.getPais().getCodigo()));
         }
-
-        setCodPaisOrigen("");
-        if(factura.getOrigen() != null){
-            setCodPaisOrigen(String.format("%02d", factura.getOrigen().getCodigo()));        	
+        this.setCodPaisOrigen("");
+        if (factura.getOrigen() != null) {
+            this.setCodPaisOrigen(String.format("%02d", factura.getOrigen().getCodigo()));
         }
     }
-
+    
     public String getCodFactura() {
-        return codFactura;
+        return this.codFactura;
     }
-
-    public void setCodFactura(String codFactura) {
+    
+    public void setCodFactura(final String codFactura) {
         this.codFactura = codFactura;
     }
-
+    
     public String getCodCategory() {
-        return codCategory;
+        return this.codCategory;
     }
-
-    public void setCodCategory(String codCategory) {
+    
+    public void setCodCategory(final String codCategory) {
         this.codCategory = codCategory;
     }
-
+    
     public String getNameCategory() {
-        return nameCategory;
+        return this.nameCategory;
     }
-
-    public void setNameCategory(String nameCategory) {
+    
+    public void setNameCategory(final String nameCategory) {
         this.nameCategory = nameCategory;
     }
-
+    
     public String getSiglas() {
-        return siglas;
+        return this.siglas;
     }
-
-    public void setSiglas(String siglas) {
+    
+    public void setSiglas(final String siglas) {
         this.siglas = siglas;
     }
-
+    
     public String getProveedor() {
-        return proveedor;
+        return this.proveedor;
     }
-
-    public void setProveedor(String proveedor) {
+    
+    public void setProveedor(final String proveedor) {
         this.proveedor = proveedor;
     }
-
+    
     public String getEntrega() {
-        return entrega;
+        return this.entrega;
     }
-
-    public void setEntrega(String entrega) {
+    
+    public void setEntrega(final String entrega) {
         this.entrega = entrega;
     }
-
+    
     public Integer getPeso() {
-        return peso;
+        return this.peso;
     }
-
-    public void setPeso(Integer peso) {
+    
+    public void setPeso(final Integer peso) {
         this.peso = peso;
     }
-
+    
     public String getImporte() {
-        return importe;
+        return this.importe;
     }
-
-    public void setImporte(String importe) {
-    	
+    
+    public void setImporte(final String importe) {
         this.importe = importe;
     }
-
-    public void setPrice(Float price) {
-    	this.price = price;
+    
+    public void setPrice(final BigDecimal price2) {
+        this.price = price2;
     }
-
-    public Float getPrice() {
-    	return price;
-//    	try{
-//    		String p = this.importe.replace(".", "");
-//    		p = p.replace(",", ".");
-//    		return Float.parseFloat(p);
-//    	}catch(Exception e){
-//    		return (float) 0;
-//    	}
+    
+    public BigDecimal getPrice() {
+        return this.price;
     }
-
+    
     public Integer getUnidades() {
-        return unidades;
+        return this.unidades;
     }
-
-    public void setUnidades(Integer unidades) {
+    
+    public void setUnidades(final Integer unidades) {
         this.unidades = unidades;
     }
-
+    
     public String getName() {
-        return name;
+        return this.name;
     }
-
-    public void setName(String name) {
+    
+    public void setName(final String name) {
         this.name = name;
     }
-
+    
     public String getCodPais() {
-        return codPais;
+        return this.codPais;
     }
-
-    public void setCodPais(String codPais) {
+    
+    public void setCodPais(final String codPais) {
         this.codPais = codPais;
     }
-
-    public Float getVestadistico() {
-		return vestadistico;
-	}
-
-	public void setVestadistico(Float vestadistico) {
-		this.vestadistico = vestadistico;
-	}
-
-	public String getKey(){
-        return String.format("%s%s%s", getCodCategory(),
-                getEntrega(), getCodPais());
+    
+    public BigDecimal getVestadistico() {
+        return this.vestadistico;
     }
-	
-	public String toCSV(char delimeter, char endRecord){
-		
-			String line = String.format(Locale.FRANCE, "%2s%1c%2s%1c%3s%1c%2d%1c%d%1c%1c%8s%1c%s%1c%1d%1c%d%1c%d%1c%.2f%1c%.2f%c",
-					siglas,delimeter,
-					"08", delimeter,
-					entrega, delimeter,
-					codTransaccion, delimeter, 
-					Integer.parseInt(codTransporte), 
-					delimeter ,delimeter, 
-					codCategory, delimeter, 
-					codPaisOrigen, delimeter, 
-					codRegimen, delimeter, 
-					getPeso(),delimeter,
-					unidades, delimeter,
-					price, delimeter, 
-					vestadistico, endRecord );
-			
-			
-		
-		return line;
-	}
-
+    
+    public void setVestadistico(final BigDecimal vestadistico2) {
+        this.vestadistico = vestadistico2;
+    }
+    
+    public String getKey() {
+        return String.format("%s%s%s", this.getCodCategory(), this.getEntrega(), this.getCodPais());
+    }
+    
+    public String toCSV(final char delimeter, final char endRecord) {
+        final NumberFormat nf = NumberFormat.getNumberInstance(Locale.FRANCE);
+        final DecimalFormat decFormat = (DecimalFormat)nf;
+        decFormat.setGroupingUsed(false);
+        decFormat.setMinimumFractionDigits(2);
+        final String line = String.format(Locale.FRANCE, "%2s%1c%02d%1c%3s%1c%2d%1c%d%1c%1c%8s%1c%s%1c%1d%1c%d%1c%d%1c%s%1c%s%c", this.siglas, delimeter, this.codProvincia, delimeter, this.entrega, delimeter, this.codTransaccion, delimeter, Integer.parseInt(this.codTransporte), delimeter, delimeter, this.codCategory, delimeter, this.codPaisOrigen, delimeter, this.codRegimen, delimeter, this.getPeso(), delimeter, this.unidades, delimeter, decFormat.format(this.price), delimeter, decFormat.format(this.vestadistico), endRecord);
+        return line;
+    }
+    
+   
+    public String getCodTransporte() {
+        return this.codTransporte;
+    }
+    
+    public void setCodTransporte(final String codTransporte) {
+        this.codTransporte = codTransporte;
+    }
+    
+    public int getCodTransaccion() {
+        return this.codTransaccion;
+    }
+    
+    public void setCodTransaccion(final int codTransaccion) {
+        this.codTransaccion = codTransaccion;
+    }
+    
+    public int getCodRegimen() {
+        return this.codRegimen;
+    }
+    
+    public void setCodRegimen(final int codRegimen) {
+        this.codRegimen = codRegimen;
+    }
+    
+    public String getCodPaisOrigen() {
+        return this.codPaisOrigen;
+    }
+    
+    public void setCodPaisOrigen(final String codPaisOrigen) {
+        this.codPaisOrigen = codPaisOrigen;
+    }
+    
+    public String getFlujo() {
+        return this.flujo;
+    }
+    
+    public void setFlujo(final String flujo) {
+        this.flujo = flujo;
+    }
+    
+    public int getCodProvincia() {
+        return this.codProvincia;
+    }
+    
+    public void setCodProvincia(final int codProvincia) {
+        this.codProvincia = codProvincia;
+    }
 
     @Override
-    public int compareTo(Object o) {
-        MaterialDto dto = (MaterialDto)o;
-        return this.getKey().compareTo(dto.getKey());
-    }
-
-	public String getCodTransporte() {
-		return codTransporte;
-	}
-
-	public void setCodTransporte(String codTransporte) {
-		this.codTransporte = codTransporte;
-	}
-
-	public int getCodTransaccion() {
-		return codTransaccion;
-	}
-
-	public void setCodTransaccion(int codTransaccion) {
-		this.codTransaccion = codTransaccion;
-	}
-
-	public int getCodRegimen() {
-		return codRegimen;
-	}
-
-	public void setCodRegimen(int codRegimen) {
-		this.codRegimen = codRegimen;
-	}
-
-	public String getCodPaisOrigen() {
-		return codPaisOrigen;
-	}
-
-	public void setCodPaisOrigen(String codPaisOrigen) {
-		this.codPaisOrigen = codPaisOrigen;
-	}
-
+    public int compareTo(MaterialDto o) {
+        return this.getKey().compareTo(o.getKey());
+   }
 }

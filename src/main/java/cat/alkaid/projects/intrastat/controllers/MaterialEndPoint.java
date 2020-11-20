@@ -1,29 +1,25 @@
 package cat.alkaid.projects.intrastat.controllers;
 
-import javax.ws.rs.DELETE;
-import javax.annotation.security.DenyAll;
-import javax.ws.rs.PUT;
-import javax.ws.rs.GET;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.core.Response;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import cat.alkaid.projects.intrastat.models.Material;
-import cat.alkaid.projects.intrastat.auth.AuthenticatedUser;
-import cat.alkaid.projects.intrastat.models.Account;
-import javax.inject.Inject;
 import cat.alkaid.projects.intrastat.services.MaterialService;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
-import javax.ws.rs.Path;
 
-@Component
-@Path("/materiales")
-@Produces({ "application/xml", "application/json" })
-@Consumes({ "application/xml", "application/json" })
+@CrossOrigin(origins = "http://localhost:8081")
+@RestController
+@RequestMapping("materiales")
 public class MaterialEndPoint
 {
     @Autowired
@@ -33,50 +29,46 @@ public class MaterialEndPoint
     @AuthenticatedUser
     private Account authenticatedAccount;
  */    
-    @POST
-    public Response create(final Material material) {
+    @PostMapping("")
+    public Material create(@RequestBody Material material) {
         try {
             this.service.create(material);
         }
         catch (Throwable e) {
             e.printStackTrace();
         }
-        return Response.ok((Object)material).build();
+        return material;
     }
     
-    @GET
-    @Path("/{id:[0-9][0-9]*}")
-    public Response findById(@PathParam("id") final Long id) {
+    @GetMapping("/{id:[0-9][0-9]*}")
+    public Material findById(@PathVariable("id") Long id) {
         final Material Material = this.service.findById(id);
         if (Material == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return Response.ok((Object)Material).build();
+        return Material;
     }
     
-    @PUT
-    @Path("/{id:[0-9][0-9]*}")
-    public Response update(@PathParam("id") final Long id, final Material Material) {
+    @PutMapping("/{id:[0-9][0-9]*}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@PathVariable("id") Long id, @RequestBody Material Material) {
         try {
             this.service.update(Material);
         }
         catch (Throwable e) {
             e.printStackTrace();
         }
-        return Response.noContent().build();
     }
     
-    @DenyAll
-    @DELETE
-    @Path("/{id:[0-9][0-9]*}")
-    public Response deleteById(@PathParam("id") final Long id) {
+    @DeleteMapping("/{id:[0-9][0-9]*}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteById(@PathVariable("id") Long id) {
         try {
             this.service.delete(id);
         }
         catch (Throwable e) {
             e.printStackTrace();
         }
-        return Response.noContent().build();
     }
 }
 

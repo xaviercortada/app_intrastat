@@ -9,8 +9,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import cat.alkaid.projects.intrastat.auth.AuthenticatedUser;
 import cat.alkaid.projects.intrastat.auth.IAuthenticationFacade;
 import cat.alkaid.projects.intrastat.models.Account;
 import cat.alkaid.projects.intrastat.models.Factura;
@@ -41,12 +38,15 @@ public class FacturaEndPoint
     @Autowired
     private IAuthenticationFacade authenticationFacade;
 
-    private Account authenticatedAccount;
+    private Account authenticatedAccount()
+    {
+        return authenticationFacade.getAuthentication();
+    };
     
     @PostMapping("")
     public Factura create(@RequestBody Factura factura) {
         try {
-            this.service.create(this.authenticatedAccount, factura);
+            this.service.create(this.authenticatedAccount(), factura);
         }
         catch (Throwable e) {
             e.printStackTrace();
@@ -65,13 +65,13 @@ public class FacturaEndPoint
     
     @GetMapping("/codigo/{codigo:[0-9][0-9]*}")
     public List<Factura> findByCodigo(@PathVariable("codigo") final String codigo) {
-        final List<Factura> facturas = (List<Factura>)this.service.findByCodigo(this.authenticatedAccount, codigo);
+        final List<Factura> facturas = (List<Factura>)this.service.findByCodigo(this.authenticatedAccount(), codigo);
         return facturas;
     }
     
     @GetMapping("")
     public List<Factura> listAll(@RequestParam("start") Integer startPosition, @RequestParam(value = "max", required = false) Integer maxResult) {
-        final List<Factura> facturas = (List<Factura>)this.service.findAll(this.authenticatedAccount);
+        final List<Factura> facturas = (List<Factura>)this.service.findAll(this.authenticatedAccount());
         return facturas;
     }
     
@@ -79,7 +79,7 @@ public class FacturaEndPoint
     public List<Factura> listByState(@RequestParam("flujo") String flujo, @RequestParam("present") String present, 
         @RequestParam(value = "start", required = false) Integer startPosition, @RequestParam(value = "max", required = false) Integer maxResult) {
 
-        final List<Factura> facturas = (List<Factura>)this.service.findByState(this.authenticatedAccount, flujo, present);
+        final List<Factura> facturas = (List<Factura>)this.service.findByState(this.authenticatedAccount(), flujo, present);
         return facturas;
     }
     
@@ -90,7 +90,7 @@ public class FacturaEndPoint
         
         this.authenticatedAccount = authenticationFacade.getAuthentication();
 
-        final List<Factura> facturas = (List<Factura>)this.service.findByProveedor(this.authenticatedAccount, flujo, present, id);
+        final List<Factura> facturas = (List<Factura>)this.service.findByProveedor(this.authenticatedAccount(), flujo, present, id);
         return facturas;
     }
     
@@ -99,14 +99,12 @@ public class FacturaEndPoint
         @RequestParam("flujo") final String flujo, @RequestParam("present") final String present, @RequestParam("start") final Integer startPosition, 
         @RequestParam("max") final Integer maxResult) {
 
-        this.authenticatedAccount = authenticationFacade.getAuthentication();
-
         final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         List<Factura> facturas = new ArrayList<Factura>();
         try {
             final Date date1 = formatter.parse(fechaIni);
             final Date date2 = formatter.parse(fechaFin);
-            facturas = (List<Factura>)this.service.findByIntervalo(this.authenticatedAccount, flujo, present, date1, date2);
+            facturas = (List<Factura>)this.service.findByIntervalo(this.authenticatedAccount(), flujo, present, date1, date2);
         }
         catch (ParseException e) {
             e.printStackTrace();

@@ -18,6 +18,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cat.alkaid.projects.intrastat.models.Factura;
 import cat.alkaid.projects.intrastat.models.Material;
@@ -26,7 +27,7 @@ import cat.alkaid.projects.intrastat.models.MaterialDto;
 /**
  * Created by xavier on 21/07/15.
  */
-
+@Service
 public class ReportService {
     final String NUMBER_FORMAT = "#,##0.00_);[Red](#,##0.00)";
 

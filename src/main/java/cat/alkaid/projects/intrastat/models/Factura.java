@@ -86,8 +86,8 @@ public class Factura {
 	 * HashSet<>();
 	 */
 
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, mappedBy = "factura")
-	private Set<Material> materiales = new HashSet<Material>();
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "factura")
+	private Set<Material> materiales; // = new HashSet<Material>();
 
 	// Estado miembro de procedencia/destino(A2)
 	// Provincia de destino/origen(N2)

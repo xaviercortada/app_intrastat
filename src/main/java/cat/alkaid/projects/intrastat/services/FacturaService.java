@@ -6,10 +6,14 @@ import java.util.Iterator;
 import java.util.Set;
 import cat.alkaid.projects.intrastat.models.Material;
 import java.util.Date;
+import java.util.HashSet;
+
 import cat.alkaid.projects.intrastat.models.Periodo;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +22,8 @@ import cat.alkaid.projects.intrastat.models.Factura;
 import javax.persistence.PersistenceContext;
 import javax.persistence.EntityManager;
 
-@Service
+@Repository
+@Transactional
 public class FacturaService
 {
     @PersistenceContext
@@ -87,19 +92,16 @@ public class FacturaService
     
     public boolean create(final Account account, final Factura factura) {
         try {
+            
+
             final Set<Material> materiales = (Set<Material>)factura.getMateriales();
             for (final Material mat : materiales) {
                 mat.setFactura(factura);
             }
-            final Account myAccount = (Account)this.em.find((Class)Account.class, (Object)account.getId());
-            if (myAccount != null) {
-                factura.setAccount(myAccount);
-            }
-            if (account.getActiveCompany() != null) {
-                final Company company = this.companyService.findById(account.getActiveCompany());
-                factura.setCompany(company);
-            }
-            this.em.persist((Object)factura);
+
+            factura.setAccount(account);
+            this.em.persist(factura);
+
         }
         catch (Throwable e) {
             e.printStackTrace();

@@ -1,7 +1,6 @@
 package cat.alkaid.projects.intrastat.models;
 
 import javax.xml.bind.DatatypeConverter;
-import java.security.Key;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.PostLoad;

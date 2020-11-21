@@ -1,7 +1,6 @@
 package cat.alkaid.projects.intrastat.models;
 
 import javax.persistence.Embeddable;
-import javax.persistence.Entity;
 
 import lombok.Data;
 

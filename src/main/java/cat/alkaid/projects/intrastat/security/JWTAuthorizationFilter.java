@@ -9,19 +9,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.annotation.RequestScope;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import cat.alkaid.projects.intrastat.auth.AuthenticatedUser;
-import cat.alkaid.projects.intrastat.models.Account;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -41,7 +33,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     private void setUpSpringAuthentication(Claims claims) {
         @SuppressWarnings("unchecked")
-        List<String> authorities = (List) claims.get("authorities");
+        List<String> authorities = (List<String>) claims.get("authorities");
 
         //this.authenticatedUser.setName(claims.getSubject());
 

@@ -21,16 +21,16 @@ public class AccountService
     private EntityManager em;
     
     public Account findById(final Long id) {
-        return (Account)this.em.find((Class)Account.class, (Object)id);
+        return (Account)this.em.find(Account.class, (Object)id);
     }
     
     public List<Account> findAll() {
-        final TypedQuery<Account> query = (TypedQuery<Account>)this.em.createQuery("SELECT p FROM Account p", (Class)Account.class);
+        final TypedQuery<Account> query = (TypedQuery<Account>)this.em.createQuery("SELECT p FROM Account p", Account.class);
         return (List<Account>)query.getResultList();
     }
     
     public List<Account> findByUsername(final String username) {
-        final TypedQuery<Account> query = (TypedQuery<Account>)this.em.createQuery("SELECT p FROM Account p WHERE p.userName = ?0 ", (Class)Account.class);
+        final TypedQuery<Account> query = (TypedQuery<Account>)this.em.createQuery("SELECT p FROM Account p WHERE p.userName = ?0 ", Account.class);
         query.setParameter(0, (Object)username);
         return (List<Account>)query.getResultList();
     }
@@ -79,7 +79,7 @@ public class AccountService
     }
     
     public Account activateAccount(final String activationCode) {
-        final TypedQuery<Account> query = (TypedQuery<Account>)this.em.createQuery("SELECT p FROM Account p WHERE p.activationCode = ?0 ", (Class)Account.class);
+        final TypedQuery<Account> query = (TypedQuery<Account>)this.em.createQuery("SELECT p FROM Account p WHERE p.activationCode = ?0 ", Account.class);
         query.setParameter(0, (Object)activationCode);
         final List<Account> list = (List<Account>)query.getResultList();
         if (list.size() > 0) {

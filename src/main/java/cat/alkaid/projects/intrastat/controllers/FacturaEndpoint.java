@@ -88,8 +88,6 @@ public class FacturaEndPoint
         @RequestParam(value = "present", required = false) String present, @RequestParam(value = "start", required = false) Integer startPosition, 
         @RequestParam(value = "max", required = false) Integer maxResult) {
         
-        this.authenticatedAccount = authenticationFacade.getAuthentication();
-
         final List<Factura> facturas = (List<Factura>)this.service.findByProveedor(this.authenticatedAccount(), flujo, present, id);
         return facturas;
     }
@@ -133,7 +131,7 @@ public class FacturaEndPoint
                 selected.add(Long.parseLong(x));
             }
             final Boolean bPresentado = presentado.equals("S");
-            this.service.updateState((List)selected, bPresentado);
+            this.service.updateState((List<Long>)selected, bPresentado);
         }
         catch (Throwable e) {
             e.printStackTrace();

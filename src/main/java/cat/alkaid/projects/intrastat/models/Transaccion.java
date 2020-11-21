@@ -1,8 +1,6 @@
 package cat.alkaid.projects.intrastat.models;
 
-import java.io.Serializable;
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import lombok.Data;
 

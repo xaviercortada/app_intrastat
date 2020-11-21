@@ -1,6 +1,7 @@
 package cat.alkaid.projects.intrastat.services;
 
 import java.util.List;
+import java.lang.Long;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;

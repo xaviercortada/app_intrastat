@@ -1,6 +1,5 @@
 package cat.alkaid.projects.intrastat.services;
 
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,15 +9,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.StreamingOutput;
 
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +21,6 @@ import org.springframework.stereotype.Service;
 import cat.alkaid.projects.intrastat.models.Factura;
 import cat.alkaid.projects.intrastat.models.Material;
 import cat.alkaid.projects.intrastat.models.MaterialDto;
-import cat.alkaid.projects.intrastat.models.Periodo;
 
 /**
  * Created by xavier on 21/07/15.
@@ -73,7 +67,7 @@ public class ExportService {
 
     public StreamingOutput to_csv(String authId, Long idPeriodo){
     	
-    	Periodo periodo = periodoService.findById(idPeriodo);
+    	// Periodo periodo = periodoService.findById(idPeriodo);
 
     	final List<String> items = new  ArrayList<String>();
         List<Factura> facturas = facturaService.findPendientes();

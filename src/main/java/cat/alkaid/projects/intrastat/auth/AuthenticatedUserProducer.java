@@ -1,9 +1,6 @@
 package cat.alkaid.projects.intrastat.auth;
 
 import java.util.List;
-import javax.ws.rs.Produces;
-
-import org.glassfish.jersey.process.internal.RequestScoped;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +13,9 @@ public class AuthenticatedUserProducer
 {
     @Autowired
     private AccountService service;
+
     private Account authenticatedAccount;
     
-    @Produces
-    @RequestScoped
     public Account getAuthenticatedAccount() {
         return this.authenticatedAccount;
     }

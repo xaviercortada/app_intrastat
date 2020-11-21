@@ -27,7 +27,6 @@ import cat.alkaid.projects.intrastat.auth.AuthLoginElement;
 import cat.alkaid.projects.intrastat.auth.AuthPasswordElement;
 import cat.alkaid.projects.intrastat.models.Account;
 import cat.alkaid.projects.intrastat.services.AccountService;
-import cat.alkaid.projects.intrastat.services.AuthService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -42,10 +41,7 @@ public class AccountEndpoint
     @Autowired
 	AccountService service;
 	
-    @Autowired
-	AuthService authService;
-	
-   
+  
 	@PostMapping("/")
 	public Account create(final Account account) {
         try {

@@ -1,11 +1,7 @@
 package cat.alkaid.projects.intrastat.models;
 
-import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

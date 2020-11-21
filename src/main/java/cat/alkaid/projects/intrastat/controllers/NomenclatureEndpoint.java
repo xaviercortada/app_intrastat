@@ -73,7 +73,7 @@ public class NomenclatureEndpoint {
 			@RequestParam("total_entries") final int totalEntries,
 			@RequestParam("page_size") final int pageSize) {
 		try{
-			final Long total = service.countItems(texto);
+			// final Long total = service.countItems(texto);
 			final List<Nomenclature> nomenclatures = service.findItems(texto, currentPage * pageSize, pageSize);
 			return nomenclatures;
 		}catch(Throwable e){
@@ -89,7 +89,7 @@ public class NomenclatureEndpoint {
 			@RequestParam("total_entries") final int totalEntries,
 			@RequestParam("page_size") final int pageSize) {
 		try{
-			final Long total = service.countItemsByCodigo(codigo);
+			// final Long total = service.countItemsByCodigo(codigo);
 			final List<Nomenclature> nomenclatures = service.findItemsByCodigo(codigo, currentPage * pageSize, pageSize);
 			return nomenclatures;
 		}catch(Throwable e){
@@ -101,7 +101,7 @@ public class NomenclatureEndpoint {
 	@GetMapping("/detail/{codigo:[0-9][0-9]*}")
 	public List<Nomenclature> findDetailItemsByCodigo(@PathVariable("codigo") String codigo){
 		try{
-			final Long total = service.countItemsByCodigo(codigo);
+			// final Long total = service.countItemsByCodigo(codigo);
 			final List<Nomenclature> nomenclatures = service.findDetailItemsByCodigo(codigo);
 			return nomenclatures;
 		}catch(Throwable e){

@@ -1,7 +1,5 @@
 package cat.alkaid.projects.intrastat.models;
 
-import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 

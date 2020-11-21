@@ -9,7 +9,6 @@ import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import cat.alkaid.projects.intrastat.models.Material;
 

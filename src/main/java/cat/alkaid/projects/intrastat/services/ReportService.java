@@ -60,7 +60,7 @@ public class ReportService {
     FacturaService facturaService;
     
 
-    public StreamingOutput Basic(String authId, Long idPeriodo){
+    public StreamingOutput Basic(String authId, Long idPeriodo) throws IOException {
         List<Cell[]> totalCells = new ArrayList<Cell[]>();
 
         final HSSFWorkbook wb = new HSSFWorkbook();
@@ -92,7 +92,7 @@ public class ReportService {
         int r0 = 0;
         String reportKey = null;
         String tmpKey = null;
-        Row row = null;
+        // Row row = null;
         for (MaterialDto material : materials) {
             tmpKey = material.getKey();
 
@@ -122,6 +122,8 @@ public class ReportService {
             }
         };
 
+        wb.close();
+        
         return streamout;
     }
 

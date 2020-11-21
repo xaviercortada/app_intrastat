@@ -18,22 +18,22 @@ public class CompanyService
     private EntityManager em;
     
     public Company findById(final Long id) {
-        return (Company)this.em.find((Class)Company.class, (Object)id);
+        return (Company)this.em.find(Company.class, (Object)id);
     }
     
     public List<Company> findAll(final Account account) {
-        final TypedQuery<Company> query = (TypedQuery<Company>)this.em.createQuery("SELECT p FROM Company p  WHERE p.account.id = ?0 ORDER BY p.name", (Class)Company.class);
+        final TypedQuery<Company> query = (TypedQuery<Company>)this.em.createQuery("SELECT p FROM Company p  WHERE p.account.id = ?0 ORDER BY p.name", Company.class);
         query.setParameter(0, (Object)account.getId());
         return (List<Company>)query.getResultList();
     }
     
     public List<Company> findAll() {
-        final TypedQuery<Company> query = (TypedQuery<Company>)this.em.createQuery("SELECT p FROM Company p ORDER BY p.name", (Class)Company.class);
+        final TypedQuery<Company> query = (TypedQuery<Company>)this.em.createQuery("SELECT p FROM Company p ORDER BY p.name", Company.class);
         return (List<Company>)query.getResultList();
     }
     
     public Company findByCodigo(final String codigo) {
-        final TypedQuery<Company> query = (TypedQuery<Company>)this.em.createQuery("SELECT p FROM Company p WHERE p.codigo = ?0 ORDER BY p.codigo", (Class)Company.class);
+        final TypedQuery<Company> query = (TypedQuery<Company>)this.em.createQuery("SELECT p FROM Company p WHERE p.codigo = ?0 ORDER BY p.codigo", Company.class);
         query.setParameter(0, (Object)codigo);
         try {
             return (Company)query.getSingleResult();
@@ -44,7 +44,7 @@ public class CompanyService
     }
     
     public boolean create(final Account account, final Company item) {
-        final Account myAccount = (Account)this.em.find((Class)Account.class, (Object)account.getId());
+        final Account myAccount = (Account)this.em.find(Account.class, (Object)account.getId());
         item.setAccount(myAccount);
         this.em.persist((Object)item);
         return true;

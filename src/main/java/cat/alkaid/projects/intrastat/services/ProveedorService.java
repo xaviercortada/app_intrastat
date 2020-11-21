@@ -7,7 +7,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.stereotype.Service;
 
 import cat.alkaid.projects.intrastat.models.Proveedor;

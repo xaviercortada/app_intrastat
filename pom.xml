@@ -15,7 +15,7 @@
 	<description>intrastat</description>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>14</java.version>
 	</properties>
 
 	<dependencies>
@@ -92,11 +92,6 @@
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.bitbucket.b_c</groupId>
-			<artifactId>jose4j</artifactId>
-			<version>0.7.2</version>
-		</dependency>
-		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>0.9.1</version>
@@ -105,10 +100,12 @@
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<plugins>
+			<!--
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+		-->
 		</plugins>
 	</build>
 

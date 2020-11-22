@@ -2,6 +2,7 @@ package cat.alkaid.projects.intrastat.services;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,17 +10,18 @@ import java.util.List;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.StreamingOutput;
 
-import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cat.alkaid.projects.intrastat.models.Account;
 import cat.alkaid.projects.intrastat.models.Factura;
 import cat.alkaid.projects.intrastat.models.Material;
 import cat.alkaid.projects.intrastat.models.MaterialDto;
@@ -30,10 +32,7 @@ import cat.alkaid.projects.intrastat.models.MaterialDto;
 @Service
 public class ReportService {
     final String NUMBER_FORMAT = "#,##0.00_);[Red](#,##0.00)";
-
     final String TITLE = "TECNOPLUS";
-    final String INTRASTAT_TYPE = "EXPORT";
-
     final int COLUMN_CODIGO = 0;
     final int COLUMN_FACTURA = 1;
     final int COLUMN_DESC = 2;
@@ -46,74 +45,70 @@ public class ReportService {
     final int COLUMN_UNIDADES = 9;
     final int COLUMN_TOT_UNIDADES = 10;
     final int COLUMN_VALOR_EST = 11;
-
-    final String columns[] = {"CODIGO","FACTURA","DESCRIPCIÓN","PAIS","PROVEEDOR","PESO","T.PESO","IMPORTE",
-            "T.IMP","UNID","T.UNID","VALOR EST."};
-
-    final int widths[] = {2500,2500,5500,1500,4500,2500,
-            2500,2500,2500,2500,2500,3000};
-
-
-    HSSFDataFormat format;
+    final int COLUMN_TOT_VALOR_EST = 12;
+    final String[] columns;
+    final int[] widths;
+    DataFormat format;
 
     @Autowired
     FacturaService facturaService;
     
-
-    public StreamingOutput Basic(String authId, Long idPeriodo) throws IOException {
-        List<Cell[]> totalCells = new ArrayList<Cell[]>();
-
+    public ReportService() {
+        this.columns = new String[] { "CODIGO", "FACTURA", "DESCRIPCI\u00d3N", "PAIS", "PROVEEDOR", "PESO", "T.PESO", "IMPORTE", "T.IMP", "UNID", "T.UNID", "VALOR EST.", "T.V.EST" };
+        this.widths = new int[] { 2500, 2500, 5500, 1500, 4500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 3000 };
+    }
+    
+    public StreamingOutput Basic(final List<Long> selected, final String flujo) {
+        final List<Factura> facturas = new ArrayList<Factura>();
+        for (final Long id : selected) {
+            facturas.add(this.facturaService.findById(id));
+        }
+        return this.process(flujo, facturas);
+    }
+    
+    public StreamingOutput Basic(final Account account, final Long idPeriodo, final String flujo) {
+        final List<Factura> facturas = (List<Factura>)this.facturaService.findByState(account, flujo, "N");
+        return this.process(flujo, facturas);
+    }
+    
+    private StreamingOutput process(final String flujo, final List<Factura> facturas) {
+        final List<Cell[]> totalCells = new ArrayList<Cell[]>();
         final HSSFWorkbook wb = new HSSFWorkbook();
-
-        format = wb.createDataFormat();
-
-        HSSFSheet sheet = wb.createSheet("Tecnoplus");
-        sheet.setDefaultRowHeight((short) 265);
-
-        fillTitle(sheet);
-
-        fillHeaders(sheet);
-
-        //List<Factura> facturas = facturaService.findByPeriodo(authId, idPeriodo);
-        List<Factura> facturas = facturaService.findPendientes();
-        List<MaterialDto> materials = new ArrayList<MaterialDto>();
-
-        for(Factura fact : facturas){
-            for(Material mat : fact.getMateriales()) {
-                MaterialDto dto = new MaterialDto(fact, mat);
+        this.format = (DataFormat)wb.createDataFormat();
+        final HSSFSheet sheet = wb.createSheet("Tecnoplus");
+        sheet.setDefaultRowHeight((short)265);
+        this.fillTitle(sheet, flujo);
+        this.fillHeaders(sheet);
+        final List<MaterialDto> materials = new ArrayList<MaterialDto>();
+        for (final Factura fact : facturas) {
+            for (final Material mat : fact.getMateriales()) {
+                final MaterialDto dto = new MaterialDto(fact, mat);
                 materials.add(dto);
             }
         }
-
         Collections.sort(materials);
-
-
         int i = 7;
         int r0 = 0;
         String reportKey = null;
         String tmpKey = null;
-        // Row row = null;
-        for (MaterialDto material : materials) {
+        for (final MaterialDto material : materials) {
             tmpKey = material.getKey();
-
-            if (reportKey == null || (!reportKey.equals(tmpKey))) {
+            if (reportKey == null || !reportKey.equals(tmpKey)) {
                 if (r0 > 0) {
-                	totalCells.add(writeSubtotal(sheet, r0, i - 1));
-                    i++;
+                    totalCells.add(this.writeSubtotal(sheet, r0, i - 1));
+                    ++i;
                 }
-                writeCategory(sheet, i++, material);
+                this.writeCategory(sheet, i++, material);
                 reportKey = tmpKey;
                 r0 = i;
             }
-            writeItem(sheet, i++, material);
-
+            this.writeItem(sheet, i++, material);
         }
+        totalCells.add(this.writeSubtotal(sheet, r0, i - 1));
+        i += 2;
+        this.writeTotal(sheet, totalCells, i);
 
-        totalCells.add(writeSubtotal(sheet, r0, i-1));
-
-
-        i+=2;
-        writeTotal(sheet, totalCells, i);
+        // final StreamingOutput streamout = (StreamingOutput)new StreamingOutput(this, wb);
 
         StreamingOutput streamout = new StreamingOutput() {
             @Override
@@ -122,215 +117,181 @@ public class ReportService {
             }
         };
 
-        wb.close();
-        
         return streamout;
     }
-
-    private Cell[] writeSubtotal(HSSFSheet sheet, int initRow, int finalRow) {
-        Cell[] cells = new Cell[4];
-
-        CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
-        Font font = sheet.getWorkbook().createFont();
-
+    
+    private Cell[] writeSubtotal(final HSSFSheet sheet, final int initRow, final int finalRow) {
+        final Cell[] cells = new Cell[4];
+        final CellStyle cellStyle = (CellStyle)sheet.getWorkbook().createCellStyle();
+        final Font font = (Font)sheet.getWorkbook().createFont();
         font.setBold(true);
-        font.setFontHeightInPoints((short) 10);
+        font.setFontHeightInPoints((short)10);
         cellStyle.setFont(font);
-        cellStyle.setDataFormat(format.getFormat(NUMBER_FORMAT));
-
-        Row row = sheet.createRow(finalRow+1);
-
-        char c = (char)(Character.valueOf('A')+COLUMN_PESO);
-        Cell cell = row.createCell(COLUMN_TOT_PESO);
+        cellStyle.setDataFormat(this.format.getFormat("#,##0.00_);[Red](#,##0.00)"));
+        final Row row = (Row)sheet.createRow(finalRow + 1);
+        char c = (char)((char)'A' + '\u0005');
+        Cell cell = row.createCell(6);
         cell.setCellStyle(cellStyle);
-        String formula = String.format("SUM(%c%02d:%c%02d)", c, initRow+1, c, finalRow+1);
+        String formula = String.format("SUM(%c%02d:%c%02d)", c, initRow + 1, c, finalRow + 1);
         cell.setCellFormula(formula);
         cells[0] = cell;
-
-        c = (char)(Character.valueOf('A')+COLUMN_IMP);
-        cell = row.createCell(COLUMN_TOT_IMP);
+        c = (char)((char)'A' + '\u0007');
+        cell = row.createCell(8);
         cell.setCellStyle(cellStyle);
-        formula = String.format("SUM(%c%02d:%c%02d)", c, initRow+1, c, finalRow+1);
+        formula = String.format("SUM(%c%02d:%c%02d)", c, initRow + 1, c, finalRow + 1);
         cell.setCellFormula(formula);
         cells[1] = cell;
-
-        c = (char)(Character.valueOf('A')+COLUMN_UNIDADES);
-        cell = row.createCell(COLUMN_TOT_UNIDADES);
+        c = (char)((char)'A' + '\t');
+        cell = row.createCell(10);
         cell.setCellStyle(cellStyle);
-        formula = String.format("SUM(%c%02d:%c%02d)", c, initRow+1, c, finalRow+1);
+        formula = String.format("SUM(%c%02d:%c%02d)", c, initRow + 1, c, finalRow + 1);
         cell.setCellFormula(formula);
         cells[2] = cell;
-
-        c = (char)(Character.valueOf('A')+COLUMN_TOT_IMP);
-        cell = row.createCell(COLUMN_VALOR_EST);
+        c = (char)((char)'A' + '\u000b');
+        cell = row.createCell(12);
         cell.setCellStyle(cellStyle);
-        formula = String.format("%c%02d-%c%02d*3/100", c, row.getRowNum()+1, c, row.getRowNum()+1);
+        formula = String.format("SUM(%c%02d:%c%02d)", c, initRow + 1, c, finalRow + 1);
         cell.setCellFormula(formula);
         cells[3] = cell;
-
         return cells;
     }
-
-    private void writeTotal(HSSFSheet sheet, List<Cell[]> totalCells, int i) {
-        CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
-        Font font = sheet.getWorkbook().createFont();
+    
+    private void writeTotal(final HSSFSheet sheet, final List<Cell[]> totalCells, final int i) {
+        final CellStyle cellStyle = (CellStyle)sheet.getWorkbook().createCellStyle();
+        final Font font = (Font)sheet.getWorkbook().createFont();
         font.setBold(true);
-        font.setFontHeightInPoints((short) 10);
+        font.setFontHeightInPoints((short)10);
         BorderStyle thin = BorderStyle.THIN;
         cellStyle.setBorderTop(thin);
         cellStyle.setBorderBottom(thin);
         cellStyle.setFont(font);
-        cellStyle.setDataFormat(format.getFormat(NUMBER_FORMAT));
-
-        Row row = sheet.createRow(i);
-
-        Cell resum[] = new Cell[4];
-        char columns[] = new char[4];
-
-        columns[0] = (char)(Character.valueOf('A')+COLUMN_PESO);
-        resum[0] = row.createCell(COLUMN_TOT_PESO);
-        resum[0].setCellStyle(cellStyle);
-
-        columns[1] = (char)(Character.valueOf('A')+COLUMN_IMP);
-        resum[1] = row.createCell(COLUMN_TOT_IMP);
-        resum[1].setCellStyle(cellStyle);
-
-        columns[2] = (char)(Character.valueOf('A')+COLUMN_UNIDADES);
-        resum[2] = row.createCell(COLUMN_TOT_UNIDADES);
-        resum[2].setCellStyle(cellStyle);
-
-        columns[3] = (char)(Character.valueOf('A')+COLUMN_TOT_IMP);
-        resum[3] = row.createCell(COLUMN_VALOR_EST);
-        resum[3].setCellStyle(cellStyle);
-
-
-        StringBuilder[] s = new StringBuilder[4];
-        s[0] = new StringBuilder();
-        s[1] = new StringBuilder();
-        s[2] = new StringBuilder();
-        s[3] = new StringBuilder();
-
-        for(Cell[] cells : totalCells){
-            char c = (char)(Character.valueOf('A')+cells[0].getColumnIndex());
-            s[0].append(String.format("%c%02d,", c,  cells[0].getRowIndex()+1));
-
-            c = (char)(Character.valueOf('A')+cells[1].getColumnIndex());
-            s[1].append(String.format("%c%02d,", c,  cells[1].getRowIndex()+1));
-
-            c = (char)(Character.valueOf('A')+cells[2].getColumnIndex());
-            s[2].append(String.format("%c%02d,", c,  cells[2].getRowIndex()+1));
-
-            c = (char)(Character.valueOf('A')+cells[3].getColumnIndex());
+        cellStyle.setDataFormat(this.format.getFormat("#,##0.00_);[Red](#,##0.00)"));
+        final Row row = (Row)sheet.createRow(i);
+        final Cell[] resum = new Cell[4];
+        final char[] columns = new char[4];
+        columns[0] = (char)((char)'A' + '\u0005');
+        (resum[0] = row.createCell(6)).setCellStyle(cellStyle);
+        columns[1] = (char)((char)'A' + '\u0007');
+        (resum[1] = row.createCell(8)).setCellStyle(cellStyle);
+        columns[2] = (char)((char)'A' + '\t');
+        (resum[2] = row.createCell(10)).setCellStyle(cellStyle);
+        columns[3] = (char)((char)'A' + '\u000b');
+        (resum[3] = row.createCell(12)).setCellStyle(cellStyle);
+        final StringBuilder[] s = { new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder() };
+        for (final Cell[] cells : totalCells) {
+            char c = (char)('A' + cells[0].getColumnIndex());
+            s[0].append(String.format("%c%02d,", c, cells[0].getRowIndex() + 1));
+            c = (char)('A' + cells[1].getColumnIndex());
+            s[1].append(String.format("%c%02d,", c, cells[1].getRowIndex() + 1));
+            c = (char)('A' + cells[2].getColumnIndex());
+            s[2].append(String.format("%c%02d,", c, cells[2].getRowIndex() + 1));
+            c = (char)('A' + cells[3].getColumnIndex());
             s[3].append(String.format("%c%02d,", c, cells[3].getRowIndex() + 1));
         }
-
-        for(int col=0; col<resum.length; col++) {
-            String formula = String.format("SUM(%s)", s[col].toString());
+        for (int col = 0; col < resum.length; ++col) {
+            final String formula = String.format("SUM(%s)", s[col].toString());
             resum[col].setCellFormula(formula);
         }
     }
-
-    private void writeItem(HSSFSheet sheet, int i, MaterialDto material){
-        Row row = sheet.createRow(i);
-
-        Cell cell = row.createCell(COLUMN_FACTURA);
-        fillCellWithValue(cell, material.getCodFactura());
-
-        cell = row.createCell(COLUMN_DESC);
-        fillCellWithValue(cell, material.getEntrega());
-
-        cell = row.createCell(COLUMN_PROVEEDOR);
-        fillCellWithValue(cell, material.getProveedor());
-
-        cell = row.createCell(COLUMN_PAIS);
-        fillCellWithValue(cell, material.getSiglas());
-
-        cell = row.createCell(COLUMN_PESO);
-        fillCellWithValue(cell, material.getPeso());
-
-        cell = row.createCell(COLUMN_IMP);
-        fillCellWithValue(cell, material.getPrice());
-
-        cell = row.createCell(COLUMN_UNIDADES);
-        fillCellWithValue(cell, material.getUnidades());
+    
+    private void writeItem(final HSSFSheet sheet, final int i, final MaterialDto material) {
+        final Row row = (Row)sheet.createRow(i);
+        Cell cell = row.createCell(1);
+        this.fillCellWithValue(cell, material.getCodFactura());
+        cell = row.createCell(2);
+        this.fillCellWithValue(cell, material.getEntrega());
+        cell = row.createCell(4);
+        this.fillCellWithValue(cell, material.getProveedor());
+        cell = row.createCell(3);
+        this.fillCellWithValue(cell, material.getSiglas());
+        cell = row.createCell(5);
+        this.fillCellWithValue(cell, material.getPeso());
+        cell = row.createCell(7);
+        this.fillCellWithValue(cell, material.getPrice());
+        cell = row.createCell(9);
+        this.fillCellWithValue(cell, material.getUnidades());
+        cell = row.createCell(11);
+        this.fillCellWithValue(cell, material.getVestadistico());
     }
-
-    private void writeCategory(HSSFSheet sheet, int i, MaterialDto mat){
-        Row row = sheet.createRow(i);
-
-        Cell cell = row.createCell(COLUMN_CODIGO);
-        fillCellWithValue(cell, mat.getCodCategory());
-
-        cell = row.createCell(COLUMN_DESC);
-        fillCellWithValue(cell, mat.getNameCategory());
+    
+    private void writeCategory(final HSSFSheet sheet, final int i, final MaterialDto mat) {
+        final Row row = (Row)sheet.createRow(i);
+        Cell cell = row.createCell(0);
+        this.fillCellWithValue(cell, mat.getCodCategory());
+        cell = row.createCell(2);
+        this.fillCellWithValue(cell, mat.getNameCategory());
     }
-
-    private void fillCellWithValue(Cell cell, Object value){
-        if(value != null){
-            if(value instanceof String)
+    
+    private void fillCellWithValue(final Cell cell, final Object value) {
+        if (value != null) {
+            if (value instanceof String) {
                 cell.setCellValue((String)value);
-            else if(value instanceof Integer)
-                cell.setCellValue((Integer)value);
-            else if(value instanceof Float) {
-                CellStyle style = cell.getCellStyle();
-                style.setDataFormat(format.getFormat(NUMBER_FORMAT));
-                cell.setCellValue((Float) value);
             }
-            else
+            else if (value instanceof Integer) {
+                cell.setCellValue((double)(int)value);
+            }
+            else if (value instanceof Float) {
+                final CellStyle style = cell.getCellStyle();
+                style.setDataFormat(this.format.getFormat("#,##0.00_);[Red](#,##0.00)"));
+                cell.setCellValue((double)(float)value);
+            }
+            else if (value instanceof BigDecimal) {
+                final CellStyle style = cell.getCellStyle();
+                style.setDataFormat(this.format.getFormat("#,##0.00_);[Red](#,##0.00)"));
+                final BigDecimal x = (BigDecimal)value;
+                cell.setCellValue(x.doubleValue());
+            }
+            else {
                 cell.setCellValue("");
-
-        }else{
+            }
+        }
+        else {
             cell.setCellValue("");
-
         }
     }
-
-    private void fillTitle(HSSFSheet sheet) {
-        Row row = sheet.createRow(2);
+    
+    private void fillTitle(final HSSFSheet sheet, final String flujo) {
+        final Row row = (Row)sheet.createRow(2);
         row.setHeight((short)350);
-
-        CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
-        Font font = sheet.getWorkbook().createFont();
+        final CellStyle cellStyle = (CellStyle)sheet.getWorkbook().createCellStyle();
+        final Font font = (Font)sheet.getWorkbook().createFont();
         font.setBold(true);
-        font.setFontHeightInPoints((short) 10);
+        font.setFontHeightInPoints((short)10);
         cellStyle.setFont(font);
-
         Cell cell = row.createCell(2);
         cell.setCellStyle(cellStyle);
-        fillCellWithValue(cell, TITLE);
-
+        this.fillCellWithValue(cell, "TECNOPLUS");
         cell = row.createCell(3);
         cell.setCellStyle(cellStyle);
-        fillCellWithValue(cell, INTRASTAT_TYPE);
-
+        if (flujo.equalsIgnoreCase("I")) {
+            this.fillCellWithValue(cell, "IMPORT");
+        }
+        else {
+            this.fillCellWithValue(cell, "EXPORT");
+        }
     }
-
-    private void fillHeaders(HSSFSheet sheet){
-        Row row = sheet.createRow(4);
+    
+    private void fillHeaders(final HSSFSheet sheet) {
+        final Row row = (Row)sheet.createRow(4);
         row.setHeight((short)350);
-
-        CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
-        Font font = sheet.getWorkbook().createFont();
+        final CellStyle cellStyle = (CellStyle)sheet.getWorkbook().createCellStyle();
+        final Font font = (Font)sheet.getWorkbook().createFont();
         font.setBold(true);
-        font.setFontHeightInPoints((short) 10);
+        font.setFontHeightInPoints((short)10);
         cellStyle.setFont(font);
-
-        for(int i=0;i<columns.length; i++) {
+        for (int i = 0; i < this.columns.length; ++i) {
             sheet.setDefaultColumnStyle(i, cellStyle);
-            sheet.setColumnWidth(i, widths[i]);
+            sheet.setColumnWidth(i, this.widths[i]);
         }
-
-        CellStyle headerStyle = sheet.getWorkbook().createCellStyle();
-        Font headerFont = sheet.getWorkbook().createFont();
+        final CellStyle headerStyle = (CellStyle)sheet.getWorkbook().createCellStyle();
+        final Font headerFont = (Font)sheet.getWorkbook().createFont();
         headerFont.setBold(true);
-        headerFont.setFontHeightInPoints((short) 10);
+        headerFont.setFontHeightInPoints((short)10);
         headerStyle.setFont(headerFont);
-
-        for(int i=0;i<columns.length; i++) {
-            Cell cell = row.createCell(i);
+        for (int j = 0; j < this.columns.length; ++j) {
+            final Cell cell = row.createCell(j);
             cell.setCellStyle(headerStyle);
-            fillCellWithValue(cell, columns[i]);
+            this.fillCellWithValue(cell, this.columns[j]);
         }
     }
-
 }

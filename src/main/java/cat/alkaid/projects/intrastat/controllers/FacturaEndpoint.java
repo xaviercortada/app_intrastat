@@ -30,7 +30,7 @@ import cat.alkaid.projects.intrastat.services.FacturaService;
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("facturas")
-public class FacturaEndPoint
+public class FacturaEndpoint
 {
     @Autowired
     private FacturaService service;

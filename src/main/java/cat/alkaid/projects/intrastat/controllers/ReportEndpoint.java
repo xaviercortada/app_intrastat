@@ -21,7 +21,7 @@ import cat.alkaid.projects.intrastat.models.Account;
 import cat.alkaid.projects.intrastat.services.ExportService;
 import cat.alkaid.projects.intrastat.services.ReportService;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("report")
 public class ReportEndpoint {

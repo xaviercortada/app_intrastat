@@ -15,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import cat.alkaid.projects.intrastat.models.Nomenclature;
 import cat.alkaid.projects.intrastat.services.NomenclatureService;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("nomenclatures")
 public class NomenclatureEndpoint {

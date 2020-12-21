@@ -1,15 +1,23 @@
 package cat.alkaid.projects.intrastat.auth;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Retention;
-import javax.inject.Qualifier;
-import java.lang.annotation.Annotation;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
 
-@Qualifier
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER })
-public @interface AuthenticatedUser {
+@Component
+@RequestScope
+public class AuthenticatedUser {
+    private String name;
+
+    public AuthenticatedUser() {
+
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
 

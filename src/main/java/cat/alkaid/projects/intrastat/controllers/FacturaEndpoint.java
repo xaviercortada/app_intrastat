@@ -27,7 +27,7 @@ import cat.alkaid.projects.intrastat.models.Account;
 import cat.alkaid.projects.intrastat.models.Factura;
 import cat.alkaid.projects.intrastat.services.FacturaService;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("facturas")
 public class FacturaEndPoint

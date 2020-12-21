@@ -11,7 +11,6 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "proveedor")
 public class Proveedor {
 	
     @Id

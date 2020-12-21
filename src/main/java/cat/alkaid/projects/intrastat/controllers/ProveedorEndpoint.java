@@ -19,7 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import cat.alkaid.projects.intrastat.models.Proveedor;
 import cat.alkaid.projects.intrastat.services.ProveedorService;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("proveedores")
 //@Produces({ "application/xml", "application/json" })

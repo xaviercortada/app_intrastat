@@ -20,7 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 import cat.alkaid.projects.intrastat.models.User;
 import cat.alkaid.projects.intrastat.services.UserService;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("users")
 public class UserEndpoint {

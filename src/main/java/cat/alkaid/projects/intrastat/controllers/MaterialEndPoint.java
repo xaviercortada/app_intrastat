@@ -17,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import cat.alkaid.projects.intrastat.models.Material;
 import cat.alkaid.projects.intrastat.services.MaterialService;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("materiales")
 public class MaterialEndPoint

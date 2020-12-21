@@ -17,7 +17,7 @@ import cat.alkaid.projects.intrastat.models.Transaccion;
 import cat.alkaid.projects.intrastat.models.Transporte;
 import cat.alkaid.projects.intrastat.services.ProvinciaService;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("resources")
 public class ResourceEndpoint {

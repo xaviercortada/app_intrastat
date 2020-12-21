@@ -20,7 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 import cat.alkaid.projects.intrastat.models.Favorito;
 import cat.alkaid.projects.intrastat.services.FavoritoService;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("favoritos")
 public class FavoritosEndPoint {

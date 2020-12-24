@@ -137,19 +137,21 @@ public class FacturaService
     }
     
     public List<Factura> findByCodigo(final Account account, final String codigo) {
-        final TypedQuery<Factura> query = (TypedQuery<Factura>)this.em.createQuery("SELECT p FROM Factura p WHERE p.account.id = ?0 and p.company.id = ?1 and p.codigo = ?2", Factura.class);
+        //final TypedQuery<Factura> query = (TypedQuery<Factura>)this.em.createQuery("SELECT p FROM Factura p WHERE p.account.id = ?0 and p.company.id = ?1 and p.codigo = ?2", Factura.class);
+        final TypedQuery<Factura> query = (TypedQuery<Factura>)this.em.createQuery("SELECT p FROM Factura p WHERE p.account.id = ?0 and p.codigo = ?1", Factura.class);
         query.setParameter(0, (Object)account.getId());
-        query.setParameter(1, (Object)account.getActiveCompany());
-        query.setParameter(2, (Object)codigo);
+        //query.setParameter(1, (Object)account.getActiveCompany());
+        query.setParameter(1, (Object)codigo);
         return (List<Factura>)query.getResultList();
     }
     
     public List<Factura> findByState(final Account account, final String flujo, final String present) {
         String s = this.checkPresent(present);
         s = String.valueOf(s) + this.checkFlujo(flujo);
-        final TypedQuery<Factura> query = (TypedQuery<Factura>)this.em.createQuery("SELECT p FROM Factura p WHERE p.account.id = ?0 and p.company.id = ?1 " + s, Factura.class);
+        //final TypedQuery<Factura> query = (TypedQuery<Factura>)this.em.createQuery("SELECT p FROM Factura p WHERE p.account.id = ?0 and p.company.id = ?1 " + s, Factura.class);
+        final TypedQuery<Factura> query = (TypedQuery<Factura>)this.em.createQuery("SELECT p FROM Factura p WHERE p.account.id = ?0 " + s, Factura.class);
         query.setParameter(0, (Object)account.getId());
-        query.setParameter(1, (Object)account.getActiveCompany());
+        //query.setParameter(1, (Object)account.getActiveCompany());
         return (List<Factura>)query.getResultList();
     }
     

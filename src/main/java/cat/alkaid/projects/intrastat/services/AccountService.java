@@ -30,11 +30,24 @@ public class AccountService
     }
     
     public List<Account> findByUsername(final String username) {
-        final TypedQuery<Account> query = (TypedQuery<Account>)this.em.createQuery("SELECT p FROM Account p WHERE p.userName = ?0 ", Account.class);
+        final TypedQuery<Account> query = (TypedQuery<Account>)this.em.createQuery("SELECT p FROM Account p WHERE p.username = ?0 ", Account.class);
         query.setParameter(0, (Object)username);
         return (List<Account>)query.getResultList();
     }
     
+    public Account findUniqueByUsername(final String username) {
+        final TypedQuery<Account> query = (TypedQuery<Account>)this.em.createQuery("SELECT p FROM Account p WHERE p.username = ?0 ", Account.class);
+        query.setParameter(0, (Object)username);
+
+        List<Account> result = query.getResultList();
+
+        if(result.size() == 0) return null;
+
+        if(result.size() > 1) return null;
+
+        return result.get(0);
+    }
+
     public boolean create(final Account account) {
         try {
             this.em.persist((Object)account);
@@ -107,5 +120,16 @@ public class AccountService
             this.em.merge((Object)account);
             this.em.remove((Object)selected);
         }
+    }
+
+    public Long authenticate(String username, String password) {
+        List<Account> accounts = this.findByUsername(username);
+        if (accounts.size() == 1) {
+            Account account = accounts.get(0);
+            return account.getId();
+        }
+
+        return null;
+
     }
 }

@@ -6,14 +6,23 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.PostLoad;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.HashSet;
+import java.util.List;
+
 import javax.persistence.TemporalType;
 import javax.persistence.Temporal;
+
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
 import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.Embedded;
 import javax.persistence.Transient;
 import javax.persistence.Version;
@@ -28,7 +37,7 @@ import javax.persistence.Entity;
 @Entity
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Account
+public class Account implements UserDetails
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,7 +46,8 @@ public class Account
     @Version
     @Column(name = "version")
     private int version;
-    private String userName;
+    @Column(name = "userName")
+    private String username;
     private String password;
     private String token;
     private String activationCode;
@@ -124,12 +134,12 @@ public class Account
         this.activated = activated;
     }
     
-    public String getUserName() {
-        return this.userName;
+    public String getUsername() {
+        return this.username;
     }
     
-    public void setUserName(final String userName) {
-        this.userName = userName;
+    public void setUsername(final String userName) {
+        this.username = userName;
     }
     
     public boolean validate(final String password) {
@@ -172,10 +182,10 @@ public class Account
     
     @PostLoad
     public void onPostLoad() {
-        if (this.password != null) {
+/*         if (this.password != null) {
             this.plainPwd = this.decryptPassword(this.password);
         }
-    }
+ */    }
     
     private String encryptPassword(final String text) {
         try {
@@ -207,6 +217,31 @@ public class Account
     
     public void setActiveCompany(final Long activeCompany) {
         this.activeCompany = activeCompany;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
 

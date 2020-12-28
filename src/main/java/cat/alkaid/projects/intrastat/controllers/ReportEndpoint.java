@@ -44,7 +44,9 @@ public class ReportEndpoint {
             throws WebApplicationException, IOException {
         StreamingOutput streamout = this.reportService.Basic(this.authenticatedAccount(), id_perido, flujo);
 
-        response.setContentType("application/vnd.oasis.opendocument.spreadsheet");
+        //response.setContentType("application/vnd.oasis.opendocument.spreadsheet");
+        response.setContentType("application/vnd.ms-excel");
+        
         response.setHeader("content-disposition", "attachment; filename=\"Report-" + "intrastat" + "\".xls");
 
         streamout.write(response.getOutputStream());
@@ -60,7 +62,8 @@ public class ReportEndpoint {
         }
         final StreamingOutput streamout = this.reportService.Basic((List<Long>)selected, flujo);
 
-        response.setContentType("application/vnd.oasis.opendocument.spreadsheet");
+        //response.setContentType("application/vnd.oasis.opendocument.spreadsheet");
+        response.setContentType("application/vnd.ms-excel");
         response.setHeader("content-disposition", "attachment; filename=\"Report-" + "intrastat" + "\".xls");
 
         streamout.write(response.getOutputStream());
@@ -76,7 +79,8 @@ public class ReportEndpoint {
         }
         StreamingOutput streamout = this.exportService.to_csv(this.authenticatedAccount(), (List<Long>)selected, flujo);
 
-        response.setContentType("application/vnd.oasis.opendocument.spreadsheet");
+        //response.setContentType("application/vnd.oasis.opendocument.spreadsheet");
+        response.setContentType("text/csv");
         response.setHeader("content-disposition", "attachment; filename=\"Report-"+"intrastat"+"\".csv");
 
         streamout.write(response.getOutputStream());
@@ -88,7 +92,8 @@ public class ReportEndpoint {
             throws WebApplicationException, IOException {
         final StreamingOutput streamout = this.exportService.to_csv(this.authenticatedAccount(), id_perido, flujo);
 
-        response.setContentType("application/vnd.oasis.opendocument.spreadsheet");
+        //response.setContentType("application/vnd.oasis.opendocument.spreadsheet");
+        response.setContentType("text/csv");
         response.setHeader("content-disposition", "attachment; filename=\"Report-"+"intrastat"+"\".csv");
 
         streamout.write(response.getOutputStream());

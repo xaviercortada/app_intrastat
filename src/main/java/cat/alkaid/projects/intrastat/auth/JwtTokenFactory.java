@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -49,6 +50,12 @@ public class JwtTokenFactory {
         this.refreshExpirationDateInMs = refreshExpirationDateInMs;
     }
 
+    public String doRefreshToken(String jwtToken) {
+        UserDetails userDetails = new User(getUsernameFromToken(jwtToken), "", getRolesFromToken(jwtToken));
+
+        return doGenerateToken(userDetails);
+    }
+
     public String doGenerateToken(UserDetails userDetails) {
         String userName = userDetails.getUsername();
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
@@ -60,14 +67,11 @@ public class JwtTokenFactory {
 
     }
 
-    public String doGenerateRefreshToken(Map<String, Object> claims, String subject) {
-        final Collection<SimpleGrantedAuthority> roles =
-        Arrays.stream(claims.get("authorities").toString().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+    public String doGenerateRefreshToken(UserDetails userDetails) {
+        String userName = userDetails.getUsername();
+        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
 
-
-        return Jwts.builder().setId(UUID.randomUUID().toString()).claim("authorities", roles).setSubject(subject)
+        return Jwts.builder().setId(UUID.randomUUID().toString()).claim("authorities", authorities).setSubject(userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpirationDateInMs))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
@@ -77,12 +81,9 @@ public class JwtTokenFactory {
     public List<SimpleGrantedAuthority> getRolesFromToken(String token) {
         Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 
-        final List<SimpleGrantedAuthority> roles =
-				Arrays.stream(claims.get("authorities").toString().split(","))
-						.map(SimpleGrantedAuthority::new)
-						.collect(Collectors.toList());
+        final List<SimpleGrantedAuthority> roles = Arrays.stream(claims.get("authorities").toString().split(","))
+                .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
-       
         return roles;
 
     }
@@ -110,11 +111,11 @@ public class JwtTokenFactory {
     }
 
     public Map<String, Object> getMapFromIoJsonwebtokenClaims(DefaultClaims claims) {
-		Map<String, Object> expectedMap = new HashMap<String, Object>();
-		for (Entry<String, Object> entry : claims.entrySet()) {
-			expectedMap.put(entry.getKey(), entry.getValue());
-		}
-		return expectedMap;
-	}
+        Map<String, Object> expectedMap = new HashMap<String, Object>();
+        for (Entry<String, Object> entry : claims.entrySet()) {
+            expectedMap.put(entry.getKey(), entry.getValue());
+        }
+        return expectedMap;
+    }
 
 }

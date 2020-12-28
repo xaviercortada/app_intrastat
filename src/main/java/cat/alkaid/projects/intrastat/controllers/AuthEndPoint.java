@@ -1,15 +1,10 @@
 package cat.alkaid.projects.intrastat.controllers;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +15,6 @@ import cat.alkaid.projects.intrastat.auth.AuthAccessElement;
 import cat.alkaid.projects.intrastat.auth.AuthLoginElement;
 import cat.alkaid.projects.intrastat.auth.JwtTokenFactory;
 import cat.alkaid.projects.intrastat.security.AppUserDetailsService;
-import io.jsonwebtoken.impl.DefaultClaims;
 import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "http://localhost:8081")
@@ -35,11 +29,6 @@ public class AuthEndPoint {
 
     @PostMapping("/login")
     public AuthAccessElement createToken(@RequestBody AuthLoginElement ele) throws Exception {
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String s = encoder.encode(ele.getPassword());
-
-
         try {
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     ele.getUsername(), ele.getPassword());
@@ -49,15 +38,25 @@ public class AuthEndPoint {
         }
         UserDetails userDetails = appUserDetailsService.loadUserByUsername(ele.getUsername());
         String token = tokenFactory.doGenerateToken(userDetails);
-        return new AuthAccessElement(token);
+        String refreshToken = tokenFactory.doGenerateRefreshToken(userDetails);
+        return new AuthAccessElement(token, refreshToken);
     }
 
     @PostMapping("/token")
-    public String refreshToken(HttpServletRequest request, HttpServletResponse response) {
-        DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
+    public AuthAccessElement refreshToken(@RequestBody AuthLoginElement ele) {
+        String jwtToken = ele.getRefreshToken();
 
-        Map<String, Object> expectedMap = tokenFactory.getMapFromIoJsonwebtokenClaims(claims);
-        return tokenFactory.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
+        try {
+            if (StringUtils.hasText(jwtToken) && tokenFactory.validateToken(jwtToken)) {
+                String newToken = tokenFactory.doRefreshToken(jwtToken);
+                return new AuthAccessElement(newToken, "");
+            }
+            throw new BadCredentialsException("Invalid token");
+
+        } catch (Exception e) {
+            throw e;
+        }
+
     }
 
 }

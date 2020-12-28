@@ -106,7 +106,7 @@ public class AccountEndpoint {
         DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
 
         Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
-        return tokenFactory.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
+        return ""; //tokenFactory.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
     }
 
     @PostMapping("/changePassword")

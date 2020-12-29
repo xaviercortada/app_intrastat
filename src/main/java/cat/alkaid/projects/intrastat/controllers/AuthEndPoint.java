@@ -54,7 +54,8 @@ public class AuthEndPoint {
             throw new BadCredentialsException("Invalid token");
 
         } catch (Exception e) {
-            throw e;
+
+            throw new BadCredentialsException("Expired token");
         }
 
     }

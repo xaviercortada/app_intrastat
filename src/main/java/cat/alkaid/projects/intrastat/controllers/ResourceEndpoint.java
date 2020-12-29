@@ -35,7 +35,7 @@ public class ResourceEndpoint {
 
 	@GetMapping("/paises")
 	public List<Pais> listAllPais() {
-		TypedQuery<Pais> query = em.createQuery("SELECT p FROM Pais p", Pais.class); 
+		TypedQuery<Pais> query = em.createQuery("SELECT p FROM Pais p order by p.name", Pais.class); 
 		final List<Pais> paises = query.getResultList();
 		return paises;
 	}

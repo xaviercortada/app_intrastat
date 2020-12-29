@@ -22,7 +22,7 @@ public class ProveedorService {
     }
 
     public List<Proveedor> findAll(){
-        TypedQuery<Proveedor>query = em.createQuery("SELECT p FROM Proveedor p",Proveedor.class);
+        TypedQuery<Proveedor>query = em.createQuery("SELECT p FROM Proveedor p order by p.name",Proveedor.class);
         return query.getResultList();
     }
 

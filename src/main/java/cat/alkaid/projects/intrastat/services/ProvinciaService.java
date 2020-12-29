@@ -22,7 +22,7 @@ public class ProvinciaService {
     }
 
     public List<Provincia> findAll(){
-        TypedQuery<Provincia>query = em.createQuery("SELECT p FROM Provincia p",Provincia.class);
+        TypedQuery<Provincia>query = em.createQuery("SELECT p FROM Provincia p order by p.name",Provincia.class);
         return query.getResultList();
     }
 

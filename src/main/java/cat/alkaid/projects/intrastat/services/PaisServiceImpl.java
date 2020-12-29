@@ -19,7 +19,7 @@ public class PaisServiceImpl implements PaisService {
 
     @Override
     public List<Pais> findAll(){
-        TypedQuery<Pais>query = em.createQuery("SELECT p FROM Pais p",Pais.class);
+        TypedQuery<Pais>query = em.createQuery("SELECT p FROM Pais p order by p.name",Pais.class);
         return query.getResultList();
     }	
 

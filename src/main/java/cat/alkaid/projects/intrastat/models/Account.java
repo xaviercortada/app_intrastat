@@ -36,7 +36,7 @@ import javax.persistence.Entity;
 
 @Entity
 @XmlRootElement
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(value = {"authorities"})
 public class Account implements UserDetails
 {
     @Id

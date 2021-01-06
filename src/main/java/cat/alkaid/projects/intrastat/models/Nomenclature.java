@@ -24,8 +24,10 @@ public class Nomenclature {
 	private String englishDesc;
 	private String frenchDesc;
 	private String germanDesc;
-	public Object getCodeCN8() {
-		return null;
+
+
+	public String getCodeCN8() {
+		return this.code.substring(0, 8);
 	}
 	
 }

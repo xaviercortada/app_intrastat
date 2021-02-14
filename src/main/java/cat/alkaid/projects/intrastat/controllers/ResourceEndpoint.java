@@ -8,6 +8,7 @@ import javax.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,6 +34,13 @@ public class ResourceEndpoint {
 		return Provincias;
 	}
 
+	@GetMapping("/provincias/{codigo:[0-9][0-9]*}")
+	public Provincia getProvincia(@PathVariable("codigo") final Integer codigo) {
+		TypedQuery<Provincia> query = em.createQuery("SELECT p FROM Provincia p where codigo = ?0", Provincia.class); 
+        query.setParameter(0, (Object) codigo);
+		return query.getSingleResult();
+	}
+
 	@GetMapping("/paises")
 	public List<Pais> listAllPais() {
 		TypedQuery<Pais> query = em.createQuery("SELECT p FROM Pais p order by p.name", Pais.class); 
@@ -40,6 +48,13 @@ public class ResourceEndpoint {
 		return paises;
 	}
 	
+	@GetMapping("/paises/{codigo:[0-9][0-9]*}")
+	public Pais getPais(@PathVariable("codigo") final Integer codigo) {
+		TypedQuery<Pais> query = em.createQuery("SELECT p FROM Pais p where codigo = ?0", Pais.class); 
+        query.setParameter(0, (Object) codigo);
+		return query.getSingleResult();
+	}
+
 	@GetMapping("/transportes")
 	public List<Transporte> listAllTransporte() {
 		TypedQuery<Transporte> query = em.createQuery("SELECT p FROM Transporte p", Transporte.class); 

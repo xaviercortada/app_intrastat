@@ -4,13 +4,18 @@ import java.util.List;
 import java.lang.Long;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NamedStoredProcedureQuery;
 import javax.persistence.NoResultException;
+import javax.persistence.ParameterMode;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.StoredProcedureParameter;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Service;
 
+import cat.alkaid.projects.intrastat.models.AuxDto;
 import cat.alkaid.projects.intrastat.models.Nomenclature;
 
 @Service
@@ -19,7 +24,7 @@ public class NomenclatureService {
 	@PersistenceContext
 	private EntityManager em;
 
-	public Nomenclature findByCodigo(String codigo) {
+	public Nomenclature findById(String codigo) {
 		TypedQuery<Nomenclature> query = em.createQuery("SELECT p FROM Nomenclature p WHERE p.code = ?0",
 				Nomenclature.class);
 		query.setParameter(0, codigo);
@@ -96,8 +101,7 @@ public class NomenclatureService {
 
 	public Long countItemsByCodigo(String codigo) {
 		try {
-			Query query = em
-					.createQuery("SELECT COUNT(p) FROM Nomenclature p WHERE p.level > 2 and code like ?0");
+			Query query = em.createQuery("SELECT COUNT(p) FROM Nomenclature p WHERE p.level > 2 and code like ?0");
 			query.setParameter(0, '%' + codigo + '%');
 
 			return (Long) query.getSingleResult();
@@ -105,6 +109,44 @@ public class NomenclatureService {
 		} catch (NoResultException nre) {
 			return new Long(-1);
 		}
+	}
+
+	public List<Nomenclature> searchByText(String section, String text) {
+		StoredProcedureQuery storedProcedure = em.createStoredProcedureQuery("searchNomenclature", Nomenclature.class)
+				.registerStoredProcedureParameter(1, String.class, ParameterMode.IN).setParameter(1, section)
+				.registerStoredProcedureParameter(2, String.class, ParameterMode.IN).setParameter(2, text);
+
+		return storedProcedure.getResultList();
+	}
+
+	/*
+	 * public List<AuxDto> searchByText(String texto) { TypedQuery<AuxDto> query =
+	 * em.createQuery(
+	 * "SELECT NEW cat.alkaid.projects.intrastat.models.AuxDto(p.code, p.code, p.description) FROM Nomenclature p WHERE description like ?0"
+	 * , AuxDto.class); query.setParameter(0, '%' + texto + '%');
+	 * 
+	 * return query.setFirstResult(0) // offset .setMaxResults(20) // limit
+	 * .getResultList(); }
+	 */
+
+	public List<AuxDto> searchByCodigo(String codigo) {
+		TypedQuery<AuxDto> query = em.createQuery(
+				"SELECT NEW cat.alkaid.projects.intrastat.models.AuxDto(p.code, p.code, p.description) FROM Nomenclature p WHERE code like ?0",
+				AuxDto.class);
+		query.setParameter(0, '%' + codigo + '%');
+
+		return query.setFirstResult(0) // offset
+				.setMaxResults(20) // limit
+				.getResultList();
+	}
+
+	public AuxDto searchById(String codigo) {
+		TypedQuery<AuxDto> query = em.createQuery(
+				"SELECT NEW cat.alkaid.projects.intrastat.models.AuxDto(p.code, p.code, p.description) FROM Nomenclature p WHERE code = ?0",
+				AuxDto.class);
+		query.setParameter(0, codigo);
+
+		return query.getSingleResult();
 	}
 
 	public List<Nomenclature> findItems(String texto, int firstR, int maxR) {
@@ -124,8 +166,8 @@ public class NomenclatureService {
 
 	public List<Nomenclature> findItemsByCodigo(String codigo, int firstR, int maxR) {
 		try {
-			TypedQuery<Nomenclature> query = em.createQuery(
-					"SELECT p FROM Nomenclature p WHERE p.level > 2 and code like ?0", Nomenclature.class);
+			TypedQuery<Nomenclature> query = em
+					.createQuery("SELECT p FROM Nomenclature p WHERE p.level > 2 and code like ?0", Nomenclature.class);
 			query.setParameter(0, '%' + codigo + '%');
 			query.setFirstResult(firstR);
 			query.setMaxResults(maxR);
@@ -140,12 +182,13 @@ public class NomenclatureService {
 	public List<Nomenclature> findDetailItemsByCodigo(String codigo) {
 		try {
 			Nomenclature nomen = em.find(Nomenclature.class, codigo);
-			
+
 			String section = nomen.getSection().replace(" ", "");
 
 			TypedQuery<Nomenclature> query = em.createQuery(
-					"SELECT p FROM Nomenclature p WHERE p.level = ?0 and (section like ?1 or code like ?2)", Nomenclature.class);
-			query.setParameter(0, nomen.getLevel()+1);
+					"SELECT p FROM Nomenclature p WHERE p.level = ?0 and (section like ?1 or code like ?2)",
+					Nomenclature.class);
+			query.setParameter(0, nomen.getLevel() + 1);
 			query.setParameter(1, nomen.getSection() + '%');
 			query.setParameter(2, section + '%');
 			query.setMaxResults(30);

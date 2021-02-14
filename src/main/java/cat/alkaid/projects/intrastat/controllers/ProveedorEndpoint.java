@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import cat.alkaid.projects.intrastat.models.AuxDto;
 import cat.alkaid.projects.intrastat.models.Proveedor;
 import cat.alkaid.projects.intrastat.services.ProveedorService;
 
@@ -48,6 +49,12 @@ public class ProveedorEndpoint {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
 		return proveedor;
+	}
+
+	@GetMapping("/name/{texto}")
+	public List<AuxDto> findByName(@PathVariable("texto") final String texto) {
+		final List<AuxDto> proveedors = service.findByName(texto);
+		return proveedors;
 	}
 
 	@GetMapping("")

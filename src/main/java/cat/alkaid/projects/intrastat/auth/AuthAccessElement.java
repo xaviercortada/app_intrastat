@@ -16,7 +16,8 @@ public class AuthAccessElement implements Serializable {
     private Long accountId;
     private Long companyId;
 
-    public AuthAccessElement(String token, String refreshToken) {
+    public AuthAccessElement(String fullName, String token, String refreshToken) {
+        this.authId = fullName;
         this.authToken = token;
         this.refreshToken = refreshToken;
     }

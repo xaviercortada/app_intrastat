@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import cat.alkaid.projects.intrastat.models.AuxDto;
 import cat.alkaid.projects.intrastat.models.Nomenclature;
 import cat.alkaid.projects.intrastat.services.NomenclatureService;
 
@@ -23,8 +24,8 @@ public class NomenclatureEndpoint {
 	NomenclatureService service;
 
 	@GetMapping("/{codigo:[0-9][0-9]*}")
-	public Nomenclature findByCode(@PathVariable("codigo") String codigo) {
-		Nomenclature nomenclature = service.findByCodigo(codigo);
+	public Nomenclature findById(@PathVariable("codigo") String codigo) {
+		Nomenclature nomenclature = service.findById(codigo);
 		if (nomenclature == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
@@ -65,7 +66,55 @@ public class NomenclatureEndpoint {
 		}			
 	}
 
-	@GetMapping("/search/texto")
+	@GetMapping("/search/{section}")
+	public List<Nomenclature> findItemsByName(@PathVariable(name = "section", required = true) final String section) {
+		try{
+			final List<Nomenclature> nomenclatures = service.searchByText(section, "");
+			return nomenclatures;
+		}catch(Throwable e){
+			e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}			
+	}
+
+	@GetMapping("/search/{section}/{text}")
+	public List<Nomenclature> findItemsByName(@PathVariable(name = "section", required = true) final String section,
+		@PathVariable(name = "text", required = true) 
+		String text) {
+		try{
+			final List<Nomenclature> nomenclatures = service.searchByText(section, text);
+			return nomenclatures;
+		}catch(Throwable e){
+			e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}			
+	}
+
+	@GetMapping("/codigo/{texto}")
+	public List<AuxDto> findItemsByCodigo(@PathVariable("texto") final String texto) {
+		try{
+			// final Long total = service.countItems(texto);
+			final List<AuxDto> nomenclatures = service.searchByCodigo(texto);
+			return nomenclatures;
+		}catch(Throwable e){
+			e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}			
+	}
+
+	@GetMapping("/id/{codigo}")
+	public AuxDto findItemById(@PathVariable("codigo") final String codigo) {
+		try{
+			// final Long total = service.countItems(texto);
+			final AuxDto nomenclatures = service.searchById(codigo);
+			return nomenclatures;
+		}catch(Throwable e){
+			e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}			
+	}
+
+	@GetMapping("/search_/texto")
 	//public List<Nomenclature> findItemsByText(@QueryParam("texto") final String texto,
 	public List<Nomenclature> findItemsByText(@RequestParam("texto") final String texto,
 			@RequestParam("current_page") final int currentPage,
@@ -82,7 +131,7 @@ public class NomenclatureEndpoint {
 		}			
 	}
 
-	@GetMapping("/search/codigo")
+	@GetMapping("/search_/codigo")
 	public List<Nomenclature> findItemsByCodigo(@RequestParam("codigo") final String codigo,
 			@RequestParam("current_page") final int currentPage,
 			@RequestParam("total_pages") final int totalPages,

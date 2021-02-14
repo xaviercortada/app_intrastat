@@ -1,5 +1,6 @@
 package cat.alkaid.projects.intrastat.controllers;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.ModelAndView;
 
 import cat.alkaid.projects.intrastat.auth.AuthAccessElement;
 import cat.alkaid.projects.intrastat.auth.AuthLoginElement;
@@ -82,9 +85,11 @@ public class AccountEndpoint {
     }
 
     @PostMapping("/signin")
-    public AuthAccessElement signin(@RequestBody AuthLoginElement ele) {
+    public ModelAndView signin(ModelMap model) {
+       model.addAttribute("attribute", "forwardWithForwardPrefix");
+       return new ModelAndView("forward:/auth/login", model);
 
-        List<Account> accounts = this.service.findByUsername(ele.getUsername());
+/*         List<Account> accounts = this.service.findByUsername(ele.getUsername());
         if (accounts.size() == 1) {
             Account account = accounts.get(0);
             // String token = getJWTToken(account.getId().toString(),
@@ -99,7 +104,7 @@ public class AccountEndpoint {
             return accessElement;
         }
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-    }
+ */    }
 
     @PostMapping("/token")
     public String refreshToken(HttpServletRequest request, HttpServletResponse response) {

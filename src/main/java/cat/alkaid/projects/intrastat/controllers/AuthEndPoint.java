@@ -1,5 +1,7 @@
 package cat.alkaid.projects.intrastat.controllers;
 
+import javax.annotation.security.RolesAllowed;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cat.alkaid.projects.intrastat.auth.AuthAccessElement;
 import cat.alkaid.projects.intrastat.auth.AuthLoginElement;
 import cat.alkaid.projects.intrastat.auth.JwtTokenFactory;
+import cat.alkaid.projects.intrastat.models.Account;
 import cat.alkaid.projects.intrastat.security.AppUserDetailsService;
 import lombok.RequiredArgsConstructor;
 
@@ -38,9 +41,10 @@ public class AuthEndPoint {
             throw new Exception("Invalid username or password", e);
         }
         UserDetails userDetails = appUserDetailsService.loadUserByUsername(ele.getUsername());
+        Account account = (Account) userDetails;
         String token = tokenFactory.doGenerateToken(userDetails);
         String refreshToken = tokenFactory.doGenerateRefreshToken(userDetails);
-        return new AuthAccessElement(token, refreshToken);
+        return new AuthAccessElement(account.getPerson().getFullName(), token, refreshToken);
     }
 
     @PostMapping("/token")
@@ -50,7 +54,7 @@ public class AuthEndPoint {
         try {
             if (StringUtils.hasText(jwtToken) && tokenFactory.validateToken(jwtToken)) {
                 String newToken = tokenFactory.doRefreshToken(jwtToken);
-                return new AuthAccessElement(newToken, "");
+                return new AuthAccessElement("", newToken, "");
             }
             throw new BadCredentialsException("Invalid token");
 

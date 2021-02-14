@@ -54,9 +54,12 @@ public class IntrastatApplication extends SpringBootServletInitializer {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.csrf().disable().addFilterAfter(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
-					.authorizeRequests().antMatchers(HttpMethod.GET, "/proveedores/**").permitAll()
-					.antMatchers(HttpMethod.POST, "/accounts/**").permitAll().antMatchers(HttpMethod.POST, "/auth/**")
-					.permitAll().anyRequest().authenticated();
+					.authorizeRequests()
+					.antMatchers(HttpMethod.GET, "/proveedores/**").permitAll()
+					.antMatchers(HttpMethod.POST, "/accounts/**").permitAll()
+					.antMatchers(HttpMethod.POST, "/auth/check").authenticated()
+					.antMatchers(HttpMethod.POST, "/auth/**").permitAll()
+					.anyRequest().authenticated();
 
 			http.cors();
 		}

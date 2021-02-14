@@ -4,21 +4,32 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 @XmlRootElement
-public class AuthAccessElement implements Serializable
-{
+public class AuthAccessElement implements Serializable {
     private static final long serialVersionUID = 8966318271610368678L;
     public static final String PARAM_AUTH_ID = "auth-id";
     public static final String PARAM_COMPANY_ID = "company-id";
     public static final String PARAM_AUTH_TOKEN = "auth-token";
     private String authId;
     private String authToken;
+    private String refreshToken;
     private String authPermission;
     private Long accountId;
     private Long companyId;
-    
-    public AuthAccessElement() {
+
+    public AuthAccessElement(String fullName, String token, String refreshToken) {
+        this.authId = fullName;
+        this.authToken = token;
+        this.refreshToken = refreshToken;
     }
-    
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
     public AuthAccessElement(final String authId, final Long id) {
         this.authId = authId;
         this.accountId = id;

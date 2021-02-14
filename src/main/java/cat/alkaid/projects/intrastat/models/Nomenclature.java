@@ -2,6 +2,9 @@ package cat.alkaid.projects.intrastat.models;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedStoredProcedureQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureParameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -9,6 +12,11 @@ import lombok.Data;
 
 @Data
 @Entity
+@NamedStoredProcedureQuery(name = "searchNomenclature", procedureName = "searchNomenclature", 
+	parameters = {
+		@StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "section"),
+		@StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "text") 
+	})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Nomenclature {
 
@@ -17,15 +25,17 @@ public class Nomenclature {
 	private String code;
 	private String section;
 	private String description;
-	
-	private String sunit;
-	private String sunitDesc;
 
-	private String englishDesc;
-	private String frenchDesc;
-	private String germanDesc;
-	public Object getCodeCN8() {
-		return null;
+	private String sunit;
+	// private String sunitDesc;
+
+	/*
+	 * private String englishDesc; private String frenchDesc; private String
+	 * germanDesc;
+	 */
+
+	public String getCodeCN8() {
+		return this.code.substring(0, 8);
 	}
-	
+
 }

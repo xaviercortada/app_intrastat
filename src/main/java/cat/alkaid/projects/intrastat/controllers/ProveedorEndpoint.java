@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import cat.alkaid.projects.intrastat.models.AuxDto;
 import cat.alkaid.projects.intrastat.models.Proveedor;
 import cat.alkaid.projects.intrastat.services.ProveedorService;
 
@@ -30,7 +32,7 @@ public class ProveedorEndpoint {
 	
 
 	@PostMapping("")
-	public Proveedor create(final Proveedor proveedor) {
+	public Proveedor create(@RequestBody Proveedor proveedor) {
 		try{
 			service.create(proveedor); 
 		}catch(Throwable e){
@@ -47,6 +49,12 @@ public class ProveedorEndpoint {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
 		return proveedor;
+	}
+
+	@GetMapping("/name/{texto}")
+	public List<AuxDto> findByName(@PathVariable("texto") final String texto) {
+		final List<AuxDto> proveedors = service.findByName(texto);
+		return proveedors;
 	}
 
 	@GetMapping("")

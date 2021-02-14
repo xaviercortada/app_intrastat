@@ -54,6 +54,11 @@ public class FacturaEndpoint
         return factura;
     }
     
+    @GetMapping("/new")
+    public Factura empty() {
+        return new Factura();
+    }
+
     @GetMapping("/{id:[0-9][0-9]*}")
     public Factura findById(@PathVariable("id") final Long id) {
         final Factura factura = this.service.findById(id);

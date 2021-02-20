@@ -42,6 +42,12 @@ public class ProveedorEndpoint {
 		return proveedor;
 	}
 
+	@GetMapping("/id/{id:[0-9][0-9]*}")
+	public AuxDto searchById(@PathVariable("id") final Long id) {
+		return service.searchById(id);
+	}
+
+
 	@GetMapping("/{id:[0-9][0-9]*}")
 	public Proveedor findById(@PathVariable("id") final Long id) {
 		Proveedor proveedor = service.findById(id);
@@ -51,10 +57,9 @@ public class ProveedorEndpoint {
 		return proveedor;
 	}
 
-	@GetMapping("/name/{texto}")
-	public List<AuxDto> findByName(@PathVariable("texto") final String texto) {
-		final List<AuxDto> proveedors = service.findByName(texto);
-		return proveedors;
+	@GetMapping("/search/{text}")
+	public List<AuxDto> findByName(@PathVariable("text") final String text) {
+		return service.searchByName(text);
 	}
 
 	@GetMapping("")

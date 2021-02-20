@@ -13,6 +13,12 @@ public class AuxDto {
         this.description = description;
     }
 
+    public AuxDto(Long id, String codigo, String description) {
+        this.id = Long.toString(id);
+        this.codigo = codigo;
+        this.description = description;
+    }
+
     public AuxDto(String id, String codigo, String description) {
         this.id = id;
         this.codigo = codigo;

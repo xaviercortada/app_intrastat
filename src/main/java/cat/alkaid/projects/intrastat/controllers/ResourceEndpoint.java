@@ -62,6 +62,13 @@ public class ResourceEndpoint {
 		return transportes;
 	}
 
+	@GetMapping("/transportes/{codigo:[0-9][0-9]*}")
+	public Transporte getTransporte(@PathVariable("codigo") final String codigo) {
+		TypedQuery<Transporte> query = em.createQuery("SELECT p FROM Transporte p where codigo = ?0", Transporte.class); 
+        query.setParameter(0, (Object) codigo);
+		return query.getSingleResult();
+	}
+
 	@GetMapping("/transacciones")
 	public List<Transaccion> listAllTransaccion() {
 		TypedQuery<Transaccion> query = em.createQuery("SELECT p FROM Transaccion p", Transaccion.class); 

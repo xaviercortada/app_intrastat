@@ -39,6 +39,11 @@ public class MaterialEndPoint
         }
         return material;
     }
+
+    @GetMapping("/new")
+    public Material empty() {
+        return new Material();
+    }
     
     @GetMapping("/{id:[0-9][0-9]*}")
     public Material findById(@PathVariable("id") Long id) {

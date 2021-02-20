@@ -26,7 +26,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 
 @Component
-public class JwtAuthorizationFilter extends OncePerRequestFilter {
+public class JWTAuthorizationFilter extends OncePerRequestFilter {
     private final String HEADER = "Authorization";
     private final String PREFIX = "Bearer ";
 

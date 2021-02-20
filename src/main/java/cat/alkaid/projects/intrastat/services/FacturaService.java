@@ -116,13 +116,12 @@ public class FacturaService {
         return true;
     }
 
-    public boolean update(final Factura factura) {
+    public Factura update(final Factura factura) {
         final Set<Material> materiales = (Set<Material>) factura.getMateriales();
         for (final Material mat : materiales) {
             mat.setFactura(factura);
         }
-        this.em.merge((Object) factura);
-        return false;
+        return (Factura) this.em.merge((Object) factura);
     }
 
     public boolean delete(final Long id) {

@@ -30,7 +30,7 @@ import lombok.EqualsAndHashCode;
 public class Material
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String codigo;
     private String entrega;

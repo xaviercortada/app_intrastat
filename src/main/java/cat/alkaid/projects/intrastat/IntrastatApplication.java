@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import cat.alkaid.projects.intrastat.security.AppUserDetailsService;
-import cat.alkaid.projects.intrastat.security.JwtAuthorizationFilter;
+import cat.alkaid.projects.intrastat.security.JWTAuthorizationFilter;
 
 @SpringBootApplication
 public class IntrastatApplication extends SpringBootServletInitializer {
@@ -30,7 +30,7 @@ public class IntrastatApplication extends SpringBootServletInitializer {
 	@Configuration
 	class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		@Autowired
-		private JwtAuthorizationFilter jwtAuthorizationFilter;
+		private JWTAuthorizationFilter jwtAuthorizationFilter;
 
 		@Autowired
 		private AppUserDetailsService appUserDetailService;

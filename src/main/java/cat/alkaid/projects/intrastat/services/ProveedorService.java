@@ -39,7 +39,13 @@ public class ProveedorService {
         }
     }
 
-    public List<AuxDto> findByName(String name) {
+    public AuxDto searchById(Long id) {
+        TypedQuery<AuxDto> query = em.createQuery("SELECT NEW cat.alkaid.projects.intrastat.models.AuxDto(p.id, p.codigo, p.name) FROM Proveedor p WHERE p.id like ?0", AuxDto.class);
+        query.setParameter(0, id);
+        return query.getSingleResult();
+    }
+
+    public List<AuxDto> searchByName(String name) {
         TypedQuery<AuxDto> query = em.createQuery("SELECT NEW cat.alkaid.projects.intrastat.models.AuxDto(p.id, p.codigo, p.name) FROM Proveedor p WHERE p.name like ?0", AuxDto.class);
         query.setParameter(0, "%" + name + "%");
         return query.setFirstResult(0) // offset

@@ -46,7 +46,7 @@ public class NomenclatureService {
 		}
 	}
 
-	public List<Nomenclature> findCapitulosBySeccion(String codigo) {
+	public List<Nomenclature> findCapitulosBySection(String codigo) {
 		try {
 			List<Nomenclature> secciones = findByLevel(1);
 			int codigoIni = Integer.parseInt(codigo.substring(0, 2));
@@ -74,10 +74,54 @@ public class NomenclatureService {
 	public List<Nomenclature> findItemsByText(String codigo, String texto) {
 		try {
 			TypedQuery<Nomenclature> query = em.createQuery(
-					"SELECT p FROM Nomenclature p WHERE p.level > 2 and p.code like ?0 and description like ?1",
+					"SELECT p FROM Nomenclature p WHERE p.level > 1 and p.code like ?0 and description like ?1",
 					Nomenclature.class);
 			query.setParameter(0, codigo + '%');
 			query.setParameter(1, '%' + texto + '%');
+
+			return query.getResultList();
+
+		} catch (NoResultException nre) {
+			return null;
+		}
+	}
+
+	public List<Nomenclature> findItemsByCodigo(String codigo) {
+		try {
+			TypedQuery<Nomenclature> query = em.createQuery(
+					"SELECT p FROM Nomenclature p WHERE p.level > 3 and p.code like ?0 ",
+					Nomenclature.class);
+			query.setParameter(0, codigo + '%');
+
+			return query.getResultList();
+
+		} catch (NoResultException nre) {
+			return null;
+		}
+	}
+
+	public List<Nomenclature> findItemsBySection(String codigo) {
+		try {
+			TypedQuery<Nomenclature> query = em.createQuery(
+					"SELECT p FROM Nomenclature p WHERE p.level = 3 and p.code like ?0",
+					Nomenclature.class);
+			query.setParameter(0, codigo + '%');
+
+
+			return query.getResultList();
+
+		} catch (NoResultException nre) {
+			return null;
+		}
+	}
+
+	public List<Nomenclature> findItemsBySection(String codigo, String text) {
+		try {
+			TypedQuery<Nomenclature> query = em.createQuery(
+					"SELECT p FROM Nomenclature p WHERE p.level = 3 and p.code like ?0 and description like ?1",
+					Nomenclature.class);
+			query.setParameter(0, codigo + '%');
+			query.setParameter(1, '%' + text + '%');
 
 			return query.getResultList();
 

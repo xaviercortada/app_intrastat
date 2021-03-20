@@ -43,10 +43,10 @@ public class NomenclatureEndpoint {
 		}			
 	}
 
-	@GetMapping("/capitulos/{codigo:[0-9][0-9]*}")
+	@GetMapping("/section/{codigo:[0-9][0-9]*}")
 	public List<Nomenclature> findCapitulosByLevel(@PathVariable("codigo") String codigo) {
 		try{
-			final List<Nomenclature> nomenclatures = service.findCapitulosBySeccion(codigo);
+			final List<Nomenclature> nomenclatures = service.findCapitulosBySection(codigo);
 			return nomenclatures;
 		}catch(Throwable e){
 			e.printStackTrace();
@@ -54,11 +54,11 @@ public class NomenclatureEndpoint {
 		}			
 	}
 
-	@GetMapping("/capitulo/{codigo:[0-9][0-9]*}/items/{texto}")
-	public List<Nomenclature> findItemsByText(@PathVariable("codigo") String codigo, @PathVariable("texto") String texto) {
+	@GetMapping("/search/codigo/{codigo:[0-9][0-9]*}")
+	public List<Nomenclature> findItemsByCodigo(@PathVariable("codigo") String codigo) {
 		try{
-			String code = codigo.substring(0, 2);
-			final List<Nomenclature> nomenclatures = service.findItemsByText(code, texto);
+			// String code = codigo.substring(0, 2);
+			final List<Nomenclature> nomenclatures = service.findItemsByCodigo(codigo);
 			return nomenclatures;
 		}catch(Throwable e){
 			e.printStackTrace();
@@ -66,16 +66,43 @@ public class NomenclatureEndpoint {
 		}			
 	}
 
-	@GetMapping("/search/{section}")
-	public List<Nomenclature> findItemsByName(@PathVariable(name = "section", required = true) final String section) {
+	@GetMapping("/capitulo/{codigo:[0-9][0-9]*}")
+	public List<Nomenclature> findItemsByCapitulo(@PathVariable("codigo") String codigo) {
 		try{
-			final List<Nomenclature> nomenclatures = service.searchByText(section, "");
+			// String code = codigo.substring(0, 2);
+			final List<Nomenclature> nomenclatures = service.findItemsBySection(codigo);
 			return nomenclatures;
 		}catch(Throwable e){
 			e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}			
 	}
+
+
+	@GetMapping("/capitulo/{codigo:[0-9][0-9]*}/text/{text}")
+	public List<Nomenclature> findItemsByCapituloText(@PathVariable("codigo") String codigo, 
+			@PathVariable("text") final String text) {
+		try{
+			// String code = codigo.substring(0, 2);
+			final List<Nomenclature> nomenclatures = service.findItemsBySection(codigo, text);
+			return nomenclatures;
+		}catch(Throwable e){
+			e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}			
+	}
+
+	@GetMapping("/section/{section}")
+	public List<Nomenclature> findItemsBySection(@PathVariable(name = "section", required = true) final String section) {
+		try{
+			final List<Nomenclature> nomenclatures = service.findCapitulosBySection(section);
+			return nomenclatures;
+		}catch(Throwable e){
+			e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}			
+	}
+
 
 	@GetMapping("/search/{section}/{text}")
 	public List<Nomenclature> findItemsByName(@PathVariable(name = "section", required = true) final String section,
@@ -91,7 +118,7 @@ public class NomenclatureEndpoint {
 	}
 
 	@GetMapping("/codigo/{texto}")
-	public List<AuxDto> findItemsByCodigo(@PathVariable("texto") final String texto) {
+	public List<AuxDto> findItemsByCodigoText(@PathVariable("texto") final String texto) {
 		try{
 			// final Long total = service.countItems(texto);
 			final List<AuxDto> nomenclatures = service.searchByCodigo(texto);

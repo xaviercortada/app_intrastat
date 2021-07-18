@@ -7,20 +7,27 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
+import cat.alkaid.projects.intrastat.models.Account;
 import cat.alkaid.projects.intrastat.models.Favorito;
+import cat.alkaid.projects.intrastat.models.Nomenclature;
 
-@Service
+@Repository
+@Transactional
 public class FavoritoService {
 	
     @PersistenceContext
     private EntityManager em;
     
-    public boolean create(Favorito favorito){
+    public boolean create(final Account account, String codigo){
 		try{
-			em.persist(favorito); 
+            Favorito item = new Favorito();
+            item.setAccount(account);
+            item.setCode(codigo);
+			em.persist(item); 
 		}catch(Throwable e){
 			e.printStackTrace();
 		}
@@ -52,6 +59,22 @@ public class FavoritoService {
         return false;
     }
 
+    
 
+	public List<Nomenclature> findItemsByAccount(final Account account) {
+		try {
+			TypedQuery<Nomenclature> query = em.createQuery(
+					"SELECT p FROM Nomenclature p, Favorito f WHERE p.code = f.code and f.account.id = ?0", // and f.company.id = ?1",
+					Nomenclature.class);
+                    query.setParameter(0, (Object) account.getId());
+                    // query.setParameter(1, (Object) account.getActiveCompany());
+            
+
+			return query.getResultList();
+
+		} catch (NoResultException nre) {
+			return null;
+		}
+	}
 
 }

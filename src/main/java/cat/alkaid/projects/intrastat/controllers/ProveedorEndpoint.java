@@ -71,7 +71,7 @@ public class ProveedorEndpoint {
 
 	@PutMapping("/{id:[0-9][0-9]*}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void update(@PathVariable(name = "id") Long id, final Proveedor proveedor) {
+	public void update(@PathVariable(name = "id") Long id,  @RequestBody Proveedor proveedor) {
 		try{
 			service.update(proveedor);
 		}catch(Throwable e){

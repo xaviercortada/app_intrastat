@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import cat.alkaid.projects.intrastat.auth.IAuthenticationFacade;
+import cat.alkaid.projects.intrastat.models.Account;
 import cat.alkaid.projects.intrastat.models.Favorito;
+import cat.alkaid.projects.intrastat.models.Nomenclature;
 import cat.alkaid.projects.intrastat.services.FavoritoService;
 
 @CrossOrigin(origins = "http://localhost:8081")
@@ -28,27 +31,25 @@ public class FavoritosEndPoint {
 	@Autowired
 	FavoritoService service;
 
-	@PostMapping("")
-	public Favorito create(final Favorito favorito) {
-		try{
-			service.create(favorito);
-		}catch(Throwable e){
-			e.printStackTrace();
-		}
-		return favorito;
-	}
+	@Autowired
+    private IAuthenticationFacade authenticationFacade;
 
-	@PutMapping("/{code:[0-9][0-9]*}")
-	public Favorito update(@PathVariable("code") String code,@RequestBody Favorito favorito) {
+    private Account authenticatedAccount() {
+        return authenticationFacade.getAuthentication();
+    };
+
+
+	@PostMapping("/{code:[0-9][0-9]*}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void create(@PathVariable("code") String code) {
 		try{
-			Favorito item = service.findByCodigo(favorito.getCode());
+			Favorito item = service.findByCodigo(code);
 			if (item == null) {
-				service.create(favorito);
+				service.create(this.authenticatedAccount(), code);
 			}
 		}catch(Throwable e){
 			e.printStackTrace();
 		}
-		return favorito;
 	}
 
 	@GetMapping("/{codigo:[0-9][0-9]*}")
@@ -64,6 +65,12 @@ public class FavoritosEndPoint {
 	public List<Favorito> listAll(@RequestParam(value = "start", required = false) Integer startPosition,
 			@RequestParam(value = "max", required = false) Integer maxResult) {
 		final List<Favorito> favoritos = service.findAll();
+		return favoritos;
+	}
+
+	@GetMapping("/all")
+	public List<Nomenclature> showAll() {
+		final List<Nomenclature> favoritos = service.findItemsByAccount(this.authenticatedAccount());
 		return favoritos;
 	}
 

@@ -57,13 +57,12 @@ public class FacturaService {
     public List<Factura> findByPeriodo(final Account account, final Long idPer) {
         final Periodo per = this.periodoService.findById(idPer);
         final TypedQuery<Factura> query = (TypedQuery<Factura>) this.em.createQuery(
-                "SELECT p FROM Factura p WHERE p.account.id = ?0 and p.company.id = ?1 and Year(p.fecha) = ?2 and Month(p.fecha) = ?3 and p.account.id = ?4",
+                "SELECT p FROM Factura p WHERE p.account.id = ?0 and p.company.id = ?1 and Year(p.fecha) = ?2 and Month(p.fecha) = ?3",
                 Factura.class);
         query.setParameter(0, (Object) account.getId());
         query.setParameter(1, (Object) account.getActiveCompany());
         query.setParameter(2, (Object) per.getYear());
         query.setParameter(3, (Object) per.getMonth());
-        query.setParameter(4, (Object) account.getId());
         return (List<Factura>) query.getResultList();
     }
 

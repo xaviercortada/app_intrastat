@@ -29,10 +29,10 @@ public class User {
     
 //    @JsonSerialize(using = MyUserSerializer.class)
     
-    @Embedded
+/*     @Embedded
     @JsonUnwrapped
     private Person person;
-    
+ */    
     @OneToOne
     @JoinColumn(name = "account_id")
     @XmlTransient

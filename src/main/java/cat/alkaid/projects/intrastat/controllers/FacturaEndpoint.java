@@ -43,12 +43,13 @@ public class FacturaEndpoint {
 
     @PostMapping("")
     public Factura create(@RequestBody Factura factura) {
+        Factura item = null;
         try {
-            this.service.create(this.authenticatedAccount(), factura);
+            item = this.service.create(this.authenticatedAccount(), factura);
         } catch (Throwable e) {
             e.printStackTrace();
         }
-        return factura;
+        return item;
     }
 
     @GetMapping("/new")

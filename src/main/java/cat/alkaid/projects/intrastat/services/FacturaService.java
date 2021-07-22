@@ -95,24 +95,24 @@ public class FacturaService {
         return (List<Factura>) query.getResultList();
     }
 
-    public boolean create(final Account account, final Factura factura) {
+    public Factura create(final Account account, final Factura factura) {
+        Factura item = null;
+
         try {
 
             final Set<Material> materiales = (Set<Material>) factura.getMateriales();
-            if (materiales != null) {
-
-                for (final Material mat : materiales) {
-                    mat.setFactura(factura);
-                }
+            for (final Material mat : materiales) {
+                mat.setId(null);
+                mat.setFactura(factura);
             }
 
             factura.setAccount(account);
-            this.em.persist(factura);
+            item = this.em.merge(factura);
 
         } catch (Throwable e) {
             e.printStackTrace();
         }
-        return true;
+        return item;
     }
 
     public Factura update(final Factura factura) {

@@ -2,6 +2,7 @@ package cat.alkaid.projects.intrastat.models;
 
 import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -43,7 +44,7 @@ public class Material
     private String name;
     private BigDecimal vestadistico;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "factura_id", nullable = false)
     @XmlTransient
     private Factura factura;
